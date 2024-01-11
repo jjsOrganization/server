@@ -33,6 +33,11 @@ public class Estimate {  // 견적서
     @JoinColumn(name = "DESIGNER_EMAIL", nullable = false)
     private Designer designerEmail;  // 디자이너 이메일
 
+    // 김영한 jpa 방식으로 수정 - 4
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "EMAIL")
+    private Seller clientEmail2;
+
     @NotNull
     @Lob
     @Column(name = "ESTIMATE_INFO", nullable = false)

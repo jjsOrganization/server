@@ -28,6 +28,12 @@ public class Request {  // 의뢰서
     @JoinColumn(name = "DESIGNER_EMAIL", nullable = false)
     private Designer designerEmail;  // 디자이너 이메일
 
+    // 김영한 jpa 방식으로 수정 - 3
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "EMAIL")
+    private Seller clientEmail2;
+
     @NotNull
     @Lob
     @Column(name = "REQUEST_INFO", nullable = false)
