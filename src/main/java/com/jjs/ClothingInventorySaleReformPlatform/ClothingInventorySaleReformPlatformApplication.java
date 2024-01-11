@@ -8,7 +8,6 @@ public class ClothingInventorySaleReformPlatformApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ClothingInventorySaleReformPlatformApplication.class, args);
-
 	}
 
 }
