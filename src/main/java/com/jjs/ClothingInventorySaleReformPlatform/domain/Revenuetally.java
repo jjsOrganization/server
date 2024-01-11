@@ -16,13 +16,16 @@ public class Revenuetally {  // 수익 집계
     @Column(name = "SELLER_EMAIL", nullable = false, length = 30)
     private String sellerEmail;  // 판매자 이메일
 
+    // 김영한 jpa 방식으로 수정 - 2
     @MapsId
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "SELLER_EMAIL", nullable = false)
+    @OneToOne(mappedBy = "revenuetally" ,optional = false)
     private Seller seller;
 
     @NotNull
     @Column(name = "TOTAL_REVENUE", nullable = false)
     private Integer totalRevenue;  // 총 수입
 
+    // 김영한 jpa 방식으로 수정 - 1
+    @OneToOne(mappedBy = "revenuetally",optional = false)
+    private Designer designer;
 }
