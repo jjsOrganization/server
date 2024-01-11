@@ -37,10 +37,13 @@ public class Seller {  // 판매자
     @Column(name = "STORE_ADDRESS", length = 40)
     private String storeAddress;  // 매장 주소
 
+
+
     @OneToMany(mappedBy = "userEmail")
     private Set<Completelist> completelists = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "clientEmail")
+    // 김영한 jpa 방식으로 수정 - 4
+    @OneToMany(mappedBy = "clientEmail2")
     private Set<Estimate> estimates = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "sellerEmail")
@@ -49,10 +52,15 @@ public class Seller {  // 판매자
     @OneToMany(mappedBy = "sellerEmail")
     private Set<Question> questions = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "clientEmail")
+    // 김영한 jpa 방식으로 수정 - 3
+    @OneToMany(mappedBy = "clientEmail2")
     private Set<Request> requests = new LinkedHashSet<>();
 
-    @OneToOne(mappedBy = "seller")
+
+    // 김영한 jpa 방식으로 수정 - 2
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sellerEmail", nullable = false)
     private Revenuetally revenuetally;
+
 
 }

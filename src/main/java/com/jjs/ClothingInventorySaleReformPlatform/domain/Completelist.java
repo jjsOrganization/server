@@ -16,10 +16,19 @@ public class Completelist {
     @Column(name = "ID")
     private Integer id;  // 쓸모없는 컬럼
 
+    /*
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "USER_EMAIL", nullable = false)
-    private Designer userEmail;  // 사용자(누구든 상관 없는거 같은데?) 이메일
+    @JoinColumn(name = "EMAIL", nullable = false)
+    private Designer userEmail2;  // 사용자(누구든 상관 없는거 같은데?) 이메일
+    */
+    @NotNull
+    @Column(name = "USER_EMAIL")
+    private String userEmail;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "EMAIL", nullable = false)
+    private Designer useremail;
 
     @Column(name = "PRODUCT_NUMBER")
     private Integer productNumber;  // 상품 번호

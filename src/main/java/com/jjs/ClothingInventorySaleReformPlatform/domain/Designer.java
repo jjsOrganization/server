@@ -38,9 +38,11 @@ public class Designer {  // 디자이너
     @Column(name = "ADDRESS", nullable = false, length = 40)
     private String address;  // 주소
 
-    @OneToMany(mappedBy = "userEmail")
-    private Set<Completelist> completelists = new LinkedHashSet<>();
 
+    /*
+    @OneToMany(mappedBy = "userEmail2")
+    private Set<Completelist> completelists = new LinkedHashSet<>();
+*/
     @OneToMany(mappedBy = "designerEmail")
     private Set<Estimate> estimates = new LinkedHashSet<>();
 
@@ -56,7 +58,9 @@ public class Designer {  // 디자이너
     @OneToMany(mappedBy = "designerEmail")
     private Set<Request> requests = new LinkedHashSet<>();
 
-    @OneToOne(mappedBy = "designer")
+    // 김영한 jpa 방식으로 수정 - 1
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SELLER_EMAIL")
     private Revenuetally revenuetally;
 
 }
