@@ -53,6 +53,7 @@ public class Seller {  // 판매자
     private String phonenumber;  // 전화번호
 
 
+
 /*
     @OneToMany(mappedBy = "userEmail")
     private Set<Completelist> completelists = new LinkedHashSet<>();
