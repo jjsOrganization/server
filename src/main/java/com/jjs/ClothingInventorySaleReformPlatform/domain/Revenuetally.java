@@ -29,4 +29,5 @@ public class Revenuetally {  // 수익 집계 - 사용자이메일, 총수익
     @OneToOne(mappedBy = "revenuetally",optional = false)
     private Designer designer;
 */
+
 }
