@@ -8,17 +8,17 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "PORTFOLIO", schema = "jjs")
-public class Portfolio {  // 포트폴리오
+@Table(name = "PORTFOLIO")
+public class Portfolio {  // 포트폴리오 - 디자이너이메일, 설명, 이전결과사진, 이전결과설명, 포트폴리오번호
     @Id
     @Column(name = "PORTFOLIO_NUMBER", nullable = false)
     private Integer id;  // 포트폴리오 번호
-
+/*
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "DESINGER_EMAIL", nullable = false)
     private Designer desingerEmail;  // 디자이너 이메일
-
+*/
     @NotNull
     @Lob
     @Column(name = "EXPLANATION", nullable = false)

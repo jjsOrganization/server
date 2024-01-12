@@ -11,17 +11,18 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "REQUEST", schema = "jjs")
-public class Request {  // 의뢰서
+@Table(name = "REQUEST")
+public class Request {  // 의뢰서 - 의뢰번호, 의뢰자이메일, 디자이너이메일, 의뢰정보, 의뢰사진, 상태, 상품번호
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "REQUEST_NUMBER", nullable = false)
     private Integer id;  // 의뢰 번호
-
+/*
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "CLIENT_EMAIL", nullable = false)
     private Purchaser clientEmail;  // 의뢰자(고객) 이메일
+
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -33,7 +34,7 @@ public class Request {  // 의뢰서
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "EMAIL")
     private Seller clientEmail2;
-
+*/
     @NotNull
     @Lob
     @Column(name = "REQUEST_INFO", nullable = false)
@@ -46,7 +47,7 @@ public class Request {  // 의뢰서
     @NotNull
     @Column(name = "STATUS", nullable = false)
     private Character status;  // 상태
-
+/*
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "PRODUCT_NUMBER", nullable = false)
@@ -54,5 +55,5 @@ public class Request {  // 의뢰서
 
     @OneToMany(mappedBy = "requestNumber")
     private Set<Estimate> estimates = new LinkedHashSet<>();
-
+*/
 }

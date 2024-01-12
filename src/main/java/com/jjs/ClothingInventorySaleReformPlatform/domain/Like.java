@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "`LIKE`", schema = "jjs")
+@Table(name = "`LIKE`")
 public class Like {  // 좋아요 (테이블)
     @EmbeddedId
     private LikeId id;  //

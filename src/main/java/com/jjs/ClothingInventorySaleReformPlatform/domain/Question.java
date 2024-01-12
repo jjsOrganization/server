@@ -8,13 +8,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "QUESTION", schema = "jjs")
-public class Question {  // 질문
+@Table(name = "QUESTION")
+public class Question {  // 질문 - 질문번호, 구매자이메일, 디자이너이메일, 판매자이메일, 상품번호, 견적서번호, 질문내용
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "QUESTION_NUMBER", nullable = false)
     private Integer id;  // 질문 번호
-
+/*
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "PURCHASER_EMAIL", nullable = false)
@@ -38,7 +38,7 @@ public class Question {  // 질문
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ESTIMATE_NUMBER")
     private Estimate estimateNumber;  // 견적서 번호
-
+*/
     @Lob
     @Column(name = "QUESTION_EXPLANATION")
     private String questionExplanation;  // 질문 내용
