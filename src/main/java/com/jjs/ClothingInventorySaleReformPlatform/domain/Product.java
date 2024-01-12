@@ -12,8 +12,8 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "PRODUCT", schema = "jjs")
-public class Product {  // 상품
+@Table(name = "PRODUCT")
+public class Product {  // 상품 - 상품번호, 상품명, 가격, 상품사진, 상품정보, 재고수, 판매자이메일, 카테고리명
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PRODUCT_NUMBER", nullable = false)
@@ -40,7 +40,7 @@ public class Product {  // 상품
     @NotNull
     @Column(name = "STOCK_NUMBER", nullable = false)
     private Integer stockNumber;  // 재고수
-
+/*
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "SELLER_EMAIL", nullable = false)
@@ -63,5 +63,5 @@ public class Product {  // 상품
 
     @OneToMany(mappedBy = "productNumber")
     private Set<Review> reviews = new LinkedHashSet<>();
-
+*/
 }
