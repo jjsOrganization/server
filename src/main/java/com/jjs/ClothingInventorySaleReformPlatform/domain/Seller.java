@@ -12,16 +12,15 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "SELLER", schema = "jjs")
+@Table(name = "SELLER")
 public class Seller {  // 판매자
+
+    // 이메일, 비밀번호, 이름, 닉네임, 매장명, 매장주소, 사업자번호, 전화번호
+
     @Id
     @Size(max = 30)
-    @Column(name = "EMAIL", nullable = false, length = 30)
+    @Column(name = "EMAIL", nullable = false, length = 30, unique = true)
     private String email;  // 이메일
-
-    @Size(max = 30)
-    @Column(name = "STORE_NAME", length = 30)
-    private String storeName;  // 매장명
 
     @Size(max = 30)
     @NotNull
@@ -29,16 +28,32 @@ public class Seller {  // 판매자
     private String password;  // 비밀번호
 
     @Size(max = 15)
-    @NotNull
-    @Column(name = "PHONENUMBER", nullable = false, length = 15)
-    private String phonenumber;  // 전화번호
+    @Column(name = "NAME", length = 15)
+    private String name;  // 이름
+
+    @Size(max = 15)
+    @Column(name = "NICKNAME", length = 15, unique = true)
+    private String nickname;  // 닉네임
+
+    @Size(max = 30)
+    @Column(name = "STORE_NAME", length = 30)
+    private String storeName;  // 매장명
 
     @Size(max = 40)
     @Column(name = "STORE_ADDRESS", length = 40)
-    private String storeAddress;  // 매장 주소
+    private String storeAddress;  // 매장 주소 (집주소 필요 없음)
+
+    @Size(max = 10)
+    @Column(name = "BUSINESSNUMBER", length = 10)
+    private String businessNumber;  // 사업자 번호
+
+    @Size(max = 15)
+    @NotNull
+    @Column(name = "PHONENUMBER", nullable = false, length = 15, unique = true)
+    private String phonenumber;  // 전화번호
 
 
-
+/*
     @OneToMany(mappedBy = "userEmail")
     private Set<Completelist> completelists = new LinkedHashSet<>();
 
@@ -61,6 +76,6 @@ public class Seller {  // 판매자
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sellerEmail", nullable = false)
     private Revenuetally revenuetally;
-
+*/
 
 }

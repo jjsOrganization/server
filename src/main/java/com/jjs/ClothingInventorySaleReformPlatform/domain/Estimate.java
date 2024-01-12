@@ -11,13 +11,32 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "ESTIMATE", schema = "jjs")
+@Table(name = "ESTIMATE")
 public class Estimate {  // 견적서
+
+    // 견적서번호, 의뢰번호, 의뢰자이메일, 디자이너이메일, 견적서정보, 견적서사진, 가격
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ESTIMATE_NUMBER", nullable = false)
     private Integer id;  // 견적서 번호
 
+
+    @NotNull
+    @Lob
+    @Column(name = "ESTIMATE_INFO", nullable = false)
+    private String estimateInfo;  // 견적서 정보
+
+    @NotNull
+    @Column(name = "ESTIMATE_IMG", nullable = false)
+    private byte[] estimateImg;  // 견적서 사진
+
+    @NotNull
+    @Column(name = "PRICE", nullable = false)
+    private Integer price;  // 가격
+
+
+    /*
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "REQUEST_NUMBER", nullable = false)
@@ -38,18 +57,9 @@ public class Estimate {  // 견적서
     @JoinColumn(name = "EMAIL")
     private Seller clientEmail2;
 
-    @NotNull
-    @Lob
-    @Column(name = "ESTIMATE_INFO", nullable = false)
-    private String estimateInfo;  // 견적서 정보
 
-    @NotNull
-    @Column(name = "ESTIMATE_IMG", nullable = false)
-    private byte[] estimateImg;  // 견적서 사진
 
-    @NotNull
-    @Column(name = "PRICE", nullable = false)
-    private Integer price;  // 가격
+
 
     @OneToMany(mappedBy = "estimateNumber")
     private Set<Completelist> completelists = new LinkedHashSet<>();
@@ -59,5 +69,5 @@ public class Estimate {  // 견적서
 
     @OneToMany(mappedBy = "estimateNumber")
     private Set<Question> questions = new LinkedHashSet<>();
-
+*/
 }

@@ -11,8 +11,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "LIKETALLY", schema = "jjs")
-public class Liketally {  // 좋아요 집계
+@Table(name = "LIKETALLY")
+public class Liketally {  // 좋아요 집계 - 아이디(pk), 포트폴리오 번호, 좋아요집계
     @Id
     @Column(name = "ID")
     private Integer id;  // 쓸모없는 컬럼

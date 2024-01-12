@@ -12,8 +12,10 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "CATEGORY", schema = "jjs")
+@Table(name = "CATEGORY")
 public class Category {  // 카테고리
+
+    // 카테고리명, 카테고리별 물 사용량
     @Id
     @Size(max = 30)
     @Column(name = "CATEGORY_NAME", nullable = false, length = 30)
@@ -22,8 +24,8 @@ public class Category {  // 카테고리
     @NotNull
     @Column(name = "WATER_USAGE_CATEGORY", nullable = false)
     private Integer waterUsageCategory;  // 카테고리별 물 사용량
-
+/*
     @OneToMany(mappedBy = "categoryName")
     private Set<Watersaved> watersaveds = new LinkedHashSet<>();
-
+*/
 }
