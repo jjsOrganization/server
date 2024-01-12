@@ -8,13 +8,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "REVIEW", schema = "jjs")
-public class Review {  // 후기
+@Table(name = "REVIEW")
+public class Review {  // 후기 - 후기번호, 상품번호, 구매자이메일, 후기내용
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "REVIEW_NUMBER", nullable = false)
     private Integer id;  // 후기 번호
 
+/*
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "PRODUCT_NUMBER", nullable = false)
@@ -24,7 +25,7 @@ public class Review {  // 후기
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "PURCHASER_EMAIL", nullable = false)
     private Purchaser purchaserEmail; // 구매자 이메일
-
+*/
     @NotNull
     @Lob
     @Column(name = "REVIEW_EXPLANATION", nullable = false)

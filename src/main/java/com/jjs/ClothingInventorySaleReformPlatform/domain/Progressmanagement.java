@@ -8,13 +8,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "PROGRESSMANAGEMENT", schema = "jjs")
-public class Progressmanagement {  // 형상 관리
+@Table(name = "PROGRESSMANAGEMENT")
+public class Progressmanagement {  // 형상 관리 - 형상번호, 견적서번호, 디자이너이메일, 형상정보, 형상이미지
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PROGRESS_NUMBER", nullable = false)
     private Integer id;  // 형상 번호
-
+/*
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ESTIMATE_NUMBER", nullable = false)
@@ -24,7 +24,7 @@ public class Progressmanagement {  // 형상 관리
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "DESIGNER_EMAIL", nullable = false)
     private Designer designerEmail;  // 디자이너 이메일
-
+*/
     @NotNull
     @Lob
     @Column(name = "PROGRESS_INFO", nullable = false)

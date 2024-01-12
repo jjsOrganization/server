@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "WATERSAVEDTALLY", schema = "jjs")
+@Table(name = "WATERSAVEDTALLY")
 public class Watersavedtally {  // 절약된 물 집계
 
     @Id
