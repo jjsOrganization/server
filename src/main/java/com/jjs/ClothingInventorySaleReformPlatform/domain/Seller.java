@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain;
 
+import com.jjs.ClothingInventorySaleReformPlatform.dto.SellerDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -33,7 +34,7 @@ public class Seller {  // 판매자
 
     @Size(max = 15)
     @Column(name = "NICKNAME", length = 15, unique = true)
-    private String nickname;  // 닉네임
+    private String nickName;  // 닉네임
 
     @Size(max = 30)
     @Column(name = "STORE_NAME", length = 30)
@@ -50,9 +51,21 @@ public class Seller {  // 판매자
     @Size(max = 15)
     @NotNull
     @Column(name = "PHONENUMBER", nullable = false, length = 15, unique = true)
-    private String phonenumber;  // 전화번호
+    private String phoneNumber;  // 전화번호
 
+    public static Seller toSeller(SellerDTO sellerDTO) {
+        Seller seller = new Seller();
 
+        seller.setEmail(sellerDTO.getEmail());
+        seller.setPassword(sellerDTO.getPassword());
+        seller.setNickName(sellerDTO.getNickName());
+        seller.setName(sellerDTO.getName());
+        seller.setBusinessNumber(sellerDTO.getBusinessNumber());
+        seller.setStoreAddress(sellerDTO.getStoreAddress());
+        seller.setPhoneNumber(sellerDTO.getPhoneNumber());
+
+        return seller;
+    }
 /*
     @OneToMany(mappedBy = "userEmail")
     private Set<Completelist> completelists = new LinkedHashSet<>();

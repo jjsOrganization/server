@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain;
 
+import com.jjs.ClothingInventorySaleReformPlatform.dto.DesignerDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -45,10 +46,22 @@ public class Designer {  // 디자이너
     @Size(max = 15)
     @NotNull
     @Column(name = "PHONENUMBER", nullable = false, length = 15, unique = true)
-    private String phonenumber;  // 전화번호
+    private String phoneNumber;  // 전화번호
 
 
+    public static Designer toDesigner(DesignerDTO designerDTO) {
+        Designer designer = new Designer();
 
+        designer.setEmail(designerDTO.getEmail());
+        designer.setPassword(designerDTO.getPassword());
+        designer.setDesignerName(designerDTO.getDesignerName());
+        designer.setName(designerDTO.getName());
+        designer.setBusinessNumber(designerDTO.getBusinessNumber());
+        designer.setAddress(designerDTO.getAddress());
+        designer.setPhoneNumber(designerDTO.getPhoneNumber());
+
+        return designer;
+    }
 
     /*
     @OneToMany(mappedBy = "userEmail2")
