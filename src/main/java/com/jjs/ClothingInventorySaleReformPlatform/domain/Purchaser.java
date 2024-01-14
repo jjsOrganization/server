@@ -1,6 +1,5 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain;
 
-import com.jjs.ClothingInventorySaleReformPlatform.dto.PurchaserDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -40,20 +39,8 @@ public class Purchaser {  // 구매자
     @Size(max = 15)
     @NotNull
     @Column(name = "PHONENUMBER", nullable = false, length = 15, unique = true)
-    private String phoneNumber;  // 전화번호
+    private String phonenumber;  // 전화번호
 
-    public static Purchaser toPurchaser(PurchaserDTO purchaserDTO) {
-        Purchaser purchaser = new Purchaser();
-
-        purchaser.setEmail(purchaserDTO.getEmail());
-        purchaser.setPassword(purchaserDTO.getPassword());
-        purchaser.setNickname(purchaserDTO.getNickname());
-        purchaser.setName(purchaserDTO.getName());
-        purchaser.setAddress(purchaserDTO.getAddress());
-        purchaser.setPhoneNumber(purchaserDTO.getPhonenumber());
-
-        return purchaser;
-    }
 
 /*
     @OneToMany(mappedBy = "clientEmail")
