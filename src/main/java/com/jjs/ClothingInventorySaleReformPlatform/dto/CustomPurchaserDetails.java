@@ -1,19 +1,19 @@
 package com.jjs.ClothingInventorySaleReformPlatform.dto;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.Purchaser;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+
+//jwt 토큰에 들어가는 값 정의 해놓는 클래스
+@RequiredArgsConstructor
 public class CustomPurchaserDetails implements UserDetails {
 
-    private final Purchaser purchaser;
-
-    public CustomPurchaserDetails(Purchaser purchaser) {
-        this.purchaser = purchaser;
-    }
+    private final User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -21,7 +21,7 @@ public class CustomPurchaserDetails implements UserDetails {
         collection.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
-                return purchaser.getRole();
+                return user.getRole();
             }
         });
 
@@ -29,29 +29,13 @@ public class CustomPurchaserDetails implements UserDetails {
     }
 
     @Override
-    public String getPassword() {  // password
-        return purchaser.getPassword();
+    public String getPassword() {
+        return user.getPassword();
     }
 
     @Override
-    public String getUsername() {  // email
-        return purchaser.getEmail();
-    }
-
-    public String getName() {
-        return purchaser.getName();
-    }
-
-    public String getNickname() {
-        return purchaser.getNickname();
-    }
-
-    public String getAddress() {
-        return purchaser.getAddress();
-    }
-
-    public String getPhoneNumber() {
-        return purchaser.getPhoneNumber();
+    public String getUsername() {
+        return user.getEmail();
     }
 
     @Override

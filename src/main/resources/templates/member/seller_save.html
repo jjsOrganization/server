@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>seller-save</title>
+    <title>sellerInfo-save</title>
     <!-- jquery cdn -->
     <script
             src="https://code.jquery.com/jquery-3.6.3.min.js"
@@ -16,12 +16,12 @@
 </head>
 <body>
 <!-- action속성: form에 작성한 데이터를 어디로 보낼지 지정 -->
-<form role = "form" action="/member/seller-save" method="post" th:object="${sellerDTO}">
+<form role = "form" action="/member/sellerInfo-save" method="post" th:object="${sellerDTO}">
     <!-- name속성: 서버로 전송할 때 변수이름의 역할 -->
 
-    이메일: <input type="text" th:field="*{email}"  onblur="emailCheck()" class = "seller-save"
+    이메일: <input type="text" th:field="*{email}"  onblur="emailCheck()" class = "sellerInfo-save"
                 placeholder="이메일을 입력하세요"
-                th:class="${#fields.hasErrors('email')}? 'seller-save fieldError' : 'seller-save'">
+                th:class="${#fields.hasErrors('email')}? 'sellerInfo-save fieldError' : 'sellerInfo-save'">
     <p th:if="${#fields.hasErrors('email')}"
        th:errors="*{email}">Incorrect date</p><br>
     <p id="check-result"></p>

@@ -1,6 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.jwt;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.Purchaser;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.User;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.CustomPurchaserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -52,24 +52,16 @@ public class JWTFilter extends OncePerRequestFilter {
 
         //토큰에서 username과 role 획득
         String username = jwtUtil.getUsername(token);
-        String nickname = jwtUtil.getNickname(token);
-        String name = jwtUtil.getName(token);
-        String address = jwtUtil.getAddress(token);
-        String phoneNumber = jwtUtil.getPhoneNumber(token);
         String role = jwtUtil.getRole(token);
 
         // Purchaser를 생성하여 값 set
-        Purchaser purchaser = new Purchaser();
-        purchaser.setEmail(username);
-        purchaser.setPassword("temppassword");  // 임시값(아무값이나 상관없음)
-        purchaser.setNickname(nickname);
-        purchaser.setName(name);
-        purchaser.setAddress(address);
-        purchaser.setPhoneNumber(phoneNumber);
-        purchaser.setRole(role);
+        User user = new User();
+        user.setEmail(username);
+        user.setPassword("temppassword");  // 임시값(아무값이나 상관없음)
+        user.setRole(role);
 
         //UserDetails에 회원 정보 객체 담기
-        CustomPurchaserDetails customPurchaserDetails = new CustomPurchaserDetails(purchaser);
+        CustomPurchaserDetails customPurchaserDetails = new CustomPurchaserDetails(user);
 
         //스프링 시큐리티 인증 토큰 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(customPurchaserDetails, null, customPurchaserDetails.getAuthorities());

@@ -1,41 +1,26 @@
 package com.jjs.ClothingInventorySaleReformPlatform.controller;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.Purchaser;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.PurchaserDTO;
-import com.jjs.ClothingInventorySaleReformPlatform.service.PurchaserService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.UserDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @ResponseBody
-public class PurchaserController {
+@RequiredArgsConstructor
+public class UserController {
 
-    private final PurchaserService purchaserService;
-
-    public PurchaserController(PurchaserService purchaserService) {
-        this.purchaserService = purchaserService;
-    }
+    private final UserService userService;
 
     @PostMapping("/join")
-    public String joinProcess(PurchaserDTO purchaserDTO) {
-        System.out.println(purchaserDTO.getEmail());
-        purchaserService.joinProcess(purchaserDTO);
+    public String joinProcess(UserDTO userDTO) {
+        System.out.println(userDTO.getEmail());
+        userService.joinProcess(userDTO);
 
         return "ok";
     }
-
-
-
-
 
     /*
     @GetMapping("/member/purchaser-save")

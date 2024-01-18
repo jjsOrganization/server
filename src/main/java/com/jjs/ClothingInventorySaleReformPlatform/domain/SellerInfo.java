@@ -1,20 +1,19 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain;
 
-import com.jjs.ClothingInventorySaleReformPlatform.dto.SellerDTO;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 @Getter
 @Setter
 @Entity
-@Table(name = "SELLER")
-public class Seller {  // 판매자
+@Table(name = "SELLERINFO")
+public class SellerInfo {  // 판매자
 
     // 이메일, 비밀번호, 이름, 닉네임, 매장명, 매장주소, 사업자번호, 전화번호
 
@@ -22,19 +21,6 @@ public class Seller {  // 판매자
     @Size(max = 30)
     @Column(name = "EMAIL", nullable = false, length = 30, unique = true)
     private String email;  // 이메일
-
-    @Size(max = 30)
-    @NotNull
-    @Column(name = "PASSWORD", nullable = false, length = 30)
-    private String password;  // 비밀번호
-
-    @Size(max = 15)
-    @Column(name = "NAME", length = 15)
-    private String name;  // 이름
-
-    @Size(max = 15)
-    @Column(name = "NICKNAME", length = 15, unique = true)
-    private String nickName;  // 닉네임
 
     @Size(max = 30)
     @Column(name = "STORE_NAME", length = 30)
@@ -53,19 +39,19 @@ public class Seller {  // 판매자
     @Column(name = "PHONENUMBER", nullable = false, length = 15, unique = true)
     private String phoneNumber;  // 전화번호
 
-    public static Seller toSeller(SellerDTO sellerDTO) {
-        Seller seller = new Seller();
-
-        seller.setEmail(sellerDTO.getEmail());
-        seller.setPassword(sellerDTO.getPassword());
-        seller.setNickName(sellerDTO.getNickName());
-        seller.setName(sellerDTO.getName());
-        seller.setBusinessNumber(sellerDTO.getBusinessNumber());
-        seller.setStoreAddress(sellerDTO.getStoreAddress());
-        seller.setPhoneNumber(sellerDTO.getPhoneNumber());
-
-        return seller;
-    }
+//    public static SellerInfo toSeller(SellerDTO sellerDTO) {
+//        SellerInfo sellerInfo = new SellerInfo();
+//
+//        sellerInfo.setEmail(sellerDTO.getEmail());
+//        sellerInfo.setPassword(sellerDTO.getPassword());
+//        sellerInfo.setNickName(sellerDTO.getNickName());
+//        sellerInfo.setName(sellerDTO.getName());
+//        sellerInfo.setBusinessNumber(sellerDTO.getBusinessNumber());
+//        sellerInfo.setStoreAddress(sellerDTO.getStoreAddress());
+//        sellerInfo.setPhoneNumber(sellerDTO.getPhoneNumber());
+//
+//        return sellerInfo;
+//    }
 /*
     @OneToMany(mappedBy = "userEmail")
     private Set<Completelist> completelists = new LinkedHashSet<>();
