@@ -5,6 +5,7 @@ import com.jjs.ClothingInventorySaleReformPlatform.dto.PurchaserDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.PurchaserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,11 +13,45 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
-@ToString
 public class PurchaserService {
     private final PurchaserRepository purchaserRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    public PurchaserService(PurchaserRepository purchaserRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.purchaserRepository = purchaserRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
+
+    public void joinProcess(PurchaserDTO purchaserDTO) {
+        String email = purchaserDTO.getEmail();
+        String password = purchaserDTO.getPassword();
+        String nickname = purchaserDTO.getNickname();
+        String name = purchaserDTO.getName();
+        String address = purchaserDTO.getAddress();
+        String phoneNumber = purchaserDTO.getPhoneNumber();
+
+        Boolean isExist = purchaserRepository.existsByEmail(email);
+
+        if(isExist) {
+            return;
+        }
+
+        Purchaser data = new Purchaser();
+
+        data.setEmail(email);
+        data.setPassword(bCryptPasswordEncoder.encode(password));
+        data.setNickname(nickname);
+        data.setName(name);
+        data.setAddress(address);
+        data.setPhoneNumber(phoneNumber);
+        data.setRole("ROLE_USER");
+
+        purchaserRepository.save(data);
+    }
+
+
+
+    /*
     @Transactional
     public void save(PurchaserDTO purchaserDTO) {
         Purchaser purchaser = Purchaser.toPurchaser(purchaserDTO);
@@ -62,4 +97,6 @@ public class PurchaserService {
             throw new IllegalStateException("이미 존재하는 닉네임입니다.");
         }
     }
+
+     */
 }

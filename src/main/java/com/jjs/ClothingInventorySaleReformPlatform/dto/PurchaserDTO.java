@@ -9,17 +9,17 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@ToString
 public class PurchaserDTO {
-    @NotEmpty(message = "이메일은 필수 입니다.")
+
     private String email;
 
     private String password;
     private String nickname;
     private String name;
     private String address;
-    private String phonenumber;
+    private String phoneNumber;
+
+    /*
 
     public static PurchaserDTO toPurchaserDTO(Purchaser purchaser) {
         PurchaserDTO purchaserDTO = new PurchaserDTO();
@@ -28,9 +28,11 @@ public class PurchaserDTO {
         purchaserDTO.setNickname(purchaser.getNickname());
         purchaserDTO.setName(purchaser.getName());
         purchaserDTO.setAddress(purchaser.getAddress());
-        purchaserDTO.setPhonenumber(purchaser.getPhoneNumber());
+        purchaserDTO.setPhoneNumber(purchaser.getPhoneNumber());
 
         return purchaserDTO;
     }
+
+     */
 
 }
