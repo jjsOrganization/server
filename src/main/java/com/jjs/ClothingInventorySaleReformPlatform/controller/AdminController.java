@@ -1,16 +1,15 @@
 package com.jjs.ClothingInventorySaleReformPlatform.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @ResponseBody
-public class HomeController {
+public class AdminController {
 
-    @GetMapping("/")
-    public String mainP() {
-        return "main Controller";
+    @GetMapping("/admin")
+    public String adminP() {
+        return "admin Controller";
     }
 }
