@@ -23,10 +23,7 @@ public class User {  // 구매자
     private String phoneNumber;  // 전화번호
 
     @Column(name = "ROLE")
-    private String role;
-
-
-
+    private String role;  // 권한
 
 
     /*

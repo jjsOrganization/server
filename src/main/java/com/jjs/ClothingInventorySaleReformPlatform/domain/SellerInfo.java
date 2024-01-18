@@ -1,9 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -12,32 +9,28 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "SELLERINFO")
+@Table(name = "SELLER")
 public class SellerInfo {  // 판매자
 
     // 이메일, 비밀번호, 이름, 닉네임, 매장명, 매장주소, 사업자번호, 전화번호
 
     @Id
-    @Size(max = 30)
-    @Column(name = "EMAIL", nullable = false, length = 30, unique = true)
-    private String email;  // 이메일
+    private String email;  // User 엔티티의 email과 동일
 
-    @Size(max = 30)
-    @Column(name = "STORE_NAME", length = 30)
-    private String storeName;  // 매장명
+    @Column(name = "STORE_NAME")
+    private String storeName;  // 상점 이름
 
-    @Size(max = 40)
-    @Column(name = "STORE_ADDRESS", length = 40)
-    private String storeAddress;  // 매장 주소 (집주소 필요 없음)
+    @Column(name = "STORE_ADDRESS")
+    private String storeAddress;  // 상점 주소
 
-    @Size(max = 10)
-    @Column(name = "BUSINESSNUMBER", length = 10)
+
+    @Column(name = "BUSINESS_NUMBER")
     private String businessNumber;  // 사업자 번호
 
-    @Size(max = 15)
-    @NotNull
-    @Column(name = "PHONENUMBER", nullable = false, length = 15, unique = true)
-    private String phoneNumber;  // 전화번호
+    @OneToOne
+    @MapsId  // SellerInfo 엔티티의 PK를 User 엔티티의 PK와 동일하게 매핑
+    @JoinColumn(name = "EMAIL")  // User 테이블의 email을 외래 키로 사용
+    private User user;  // User 엔티티에 대한 참조
 
 //    public static SellerInfo toSeller(SellerDTO sellerDTO) {
 //        SellerInfo sellerInfo = new SellerInfo();

@@ -32,21 +32,14 @@ public class AdminController {
 
         // 토큰에서 정보 추출
         String username = jwtUtil.getUsername(token);
-        String name = jwtUtil.getName(token);
-        String nickname = jwtUtil.getNickname(token);
-        String address = jwtUtil.getAddress(token);
-        String phoneNumber = jwtUtil.getPhoneNumber(token);
+
 
         // 디버깅 용도
-        logger.info("Accessed Admin Page: Username: {}, Name: {}, Nickname: {}, Address: {}, PhoneNumber{}", username, name, nickname, address, phoneNumber);
+        logger.info("Accessed Admin Page: Username: {}", username);
 
         // 정보 출력
         Map<String, String> userInfo = new HashMap<>();
         userInfo.put("Username", username);
-        userInfo.put("Name", name);
-        userInfo.put("Nickname", nickname);
-        userInfo.put("Address", address);
-        userInfo.put("PhoneNumber", phoneNumber);
 
         // 추가 정보를 맵에 저장
 

@@ -2,7 +2,7 @@ package com.jjs.ClothingInventorySaleReformPlatform.service;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.User;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.CustomPurchaserDetails;
-import com.jjs.ClothingInventorySaleReformPlatform.repository.PurchaserRepository;
+import com.jjs.ClothingInventorySaleReformPlatform.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,13 +13,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final PurchaserRepository purchaserRepository;
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
         // DB에서 조회
-        User userData = purchaserRepository.findByEmail(email);
+        User userData = userRepository.findByEmail(email);
 
         if (userData != null) {
 

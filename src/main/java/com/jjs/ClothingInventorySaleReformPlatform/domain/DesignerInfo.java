@@ -1,9 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,20 +8,20 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "DESIGNERINFO")
+@Table(name = "DESIGNER")
 public class DesignerInfo {  // 디자이너 부가 정보
+
     @Id
-    @Size(max = 30)
-    @Column(name = "EMAIL", nullable = false, length = 30, unique = true)
-    private String email;  // 이메일
+    private String email;  // User 엔티티의 email과 동일
 
-    @Size(max = 30)
-    @Column(name = "ADDRESS", nullable = false, length = 30)
-    private String address;
+    @Column(name = "ADDRESS")
+    private String address;  // 상점 이름
 
-    @Size(max = 10)
-    @Column(name = "BUSINESSNUMBER", length = 10)
-    private String businessNumber;  // 사업자 번호 (보류?)
+    @OneToOne
+    @MapsId  // PurchaseInfo 엔티티의 PK를 User 엔티티의 PK와 동일하게 매핑
+    @JoinColumn(name = "EMAIL")  // User 테이블의 email을 외래 키로 사용
+    private User user;  // User 엔티티에 대한 참조
+
 
 
 

@@ -12,6 +12,9 @@ public class UserDTO {
     private String password;
     private String name;
     private String phoneNumber;
+    private String role;
+    //private Type type;
+
 
     /*
     public static PurchaserDTO toPurchaserDTO(Purchaser purchaser) {

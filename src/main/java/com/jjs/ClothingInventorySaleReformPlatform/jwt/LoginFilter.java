@@ -49,10 +49,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         CustomPurchaserDetails customPurchaserDetails = (CustomPurchaserDetails) authentication.getPrincipal();
 
         String username = customPurchaserDetails.getUsername();  // email
-        String nickname = customPurchaserDetails.getNickname();  // nickname
-        String name = customPurchaserDetails.getName();  // name
-        String address = customPurchaserDetails.getAddress();  // address
-        String phoneNumber = customPurchaserDetails.getPhoneNumber();  // phoneNumber
+
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -60,7 +57,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(username, nickname, name, address, phoneNumber, role, 60*60*10L);
+        String token = jwtUtil.createJwt(username, role, 60*60*10L);
 
         response.addHeader("Authorization", "Bearer " + token);  // Authorization: 타입 인증토큰(Authorization: Bearer 인증토큰string)
         System.out.println("success");

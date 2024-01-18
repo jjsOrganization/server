@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.controller;
 
+import com.jjs.ClothingInventorySaleReformPlatform.dto.PurchaserDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.UserDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,17 @@ public class UserController {
 
     private final UserService userService;
 
+
+
+    @PostMapping("/auth/join-purchaser")
+    public String joinProcess(PurchaserDTO purchaserDTO) {
+        System.out.println(purchaserDTO.getEmail());
+        userService.joinPurchaser(purchaserDTO);
+
+        return "ok";
+    }
+
+    /*
     @PostMapping("/join")
     public String joinProcess(UserDTO userDTO) {
         System.out.println(userDTO.getEmail());
@@ -21,6 +33,7 @@ public class UserController {
 
         return "ok";
     }
+     */
 
     /*
     @GetMapping("/member/purchaser-save")
