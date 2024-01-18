@@ -29,13 +29,29 @@ public class CustomPurchaserDetails implements UserDetails {
     }
 
     @Override
-    public String getPassword() {
+    public String getPassword() {  // password
         return purchaser.getPassword();
     }
 
     @Override
-    public String getUsername() {
+    public String getUsername() {  // email
         return purchaser.getEmail();
+    }
+
+    public String getName() {
+        return purchaser.getName();
+    }
+
+    public String getNickname() {
+        return purchaser.getNickname();
+    }
+
+    public String getAddress() {
+        return purchaser.getAddress();
+    }
+
+    public String getPhoneNumber() {
+        return purchaser.getPhoneNumber();
     }
 
     @Override

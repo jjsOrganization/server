@@ -52,12 +52,20 @@ public class JWTFilter extends OncePerRequestFilter {
 
         //토큰에서 username과 role 획득
         String username = jwtUtil.getUsername(token);
+        String nickname = jwtUtil.getNickname(token);
+        String name = jwtUtil.getName(token);
+        String address = jwtUtil.getAddress(token);
+        String phoneNumber = jwtUtil.getPhoneNumber(token);
         String role = jwtUtil.getRole(token);
 
         // Purchaser를 생성하여 값 set
         Purchaser purchaser = new Purchaser();
         purchaser.setEmail(username);
         purchaser.setPassword("temppassword");  // 임시값(아무값이나 상관없음)
+        purchaser.setNickname(nickname);
+        purchaser.setName(name);
+        purchaser.setAddress(address);
+        purchaser.setPhoneNumber(phoneNumber);
         purchaser.setRole(role);
 
         //UserDetails에 회원 정보 객체 담기
