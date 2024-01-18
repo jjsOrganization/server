@@ -1,19 +1,20 @@
 package com.jjs.ClothingInventorySaleReformPlatform.dto;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.Purchaser;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+@RequiredArgsConstructor
 public class CustomPurchaserDetails implements UserDetails {
 
     private final Purchaser purchaser;
 
-    public CustomPurchaserDetails(Purchaser purchaser) {
-        this.purchaser = purchaser;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

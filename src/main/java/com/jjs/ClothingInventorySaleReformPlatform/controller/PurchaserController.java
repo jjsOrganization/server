@@ -17,13 +17,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @ResponseBody
+@RequiredArgsConstructor
 public class PurchaserController {
 
     private final PurchaserService purchaserService;
-
-    public PurchaserController(PurchaserService purchaserService) {
-        this.purchaserService = purchaserService;
-    }
 
     @PostMapping("/join")
     public String joinProcess(PurchaserDTO purchaserDTO) {

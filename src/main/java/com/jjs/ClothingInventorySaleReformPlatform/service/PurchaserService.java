@@ -13,14 +13,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class PurchaserService {
     private final PurchaserRepository purchaserRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    public PurchaserService(PurchaserRepository purchaserRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.purchaserRepository = purchaserRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
 
     public void joinProcess(PurchaserDTO purchaserDTO) {
         String email = purchaserDTO.getEmail();

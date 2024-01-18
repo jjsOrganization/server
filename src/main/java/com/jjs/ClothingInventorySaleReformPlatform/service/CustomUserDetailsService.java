@@ -3,19 +3,17 @@ package com.jjs.ClothingInventorySaleReformPlatform.service;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.Purchaser;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.CustomPurchaserDetails;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.PurchaserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final PurchaserRepository purchaserRepository;
-
-    public CustomUserDetailsService(PurchaserRepository purchaserRepository) {
-        this.purchaserRepository = purchaserRepository;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
