@@ -1,30 +1,23 @@
 package com.jjs.ClothingInventorySaleReformPlatform.service;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.Purchaser;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.PurchaserDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.User;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.UserDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.PurchaserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class PurchaserService {
+public class UserService {
     private final PurchaserRepository purchaserRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public void joinProcess(PurchaserDTO purchaserDTO) {
-        String email = purchaserDTO.getEmail();
-        String password = purchaserDTO.getPassword();
-        String nickname = purchaserDTO.getNickname();
-        String name = purchaserDTO.getName();
-        String address = purchaserDTO.getAddress();
-        String phoneNumber = purchaserDTO.getPhoneNumber();
+    public void joinProcess(UserDTO userDTO) {
+        String email = userDTO.getEmail();
+        String password = userDTO.getPassword();
+        String name = userDTO.getName();
+        String phoneNumber = userDTO.getPhoneNumber();
 
         Boolean isExist = purchaserRepository.existsByEmail(email);
 
@@ -32,13 +25,11 @@ public class PurchaserService {
             return;
         }
 
-        Purchaser data = new Purchaser();
+        User data = new User();
 
         data.setEmail(email);
         data.setPassword(bCryptPasswordEncoder.encode(password));
-        data.setNickname(nickname);
         data.setName(name);
-        data.setAddress(address);
         data.setPhoneNumber(phoneNumber);
         data.setRole("ROLE_USER");
 

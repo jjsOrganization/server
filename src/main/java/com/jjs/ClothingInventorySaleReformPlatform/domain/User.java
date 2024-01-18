@@ -1,37 +1,23 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain;
 
-import com.jjs.ClothingInventorySaleReformPlatform.dto.PurchaserDTO;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "PURCHASER")
-public class Purchaser {  // 구매자
+@Table(name = "USER")
+public class User {  // 구매자
     @Id
     @Column(name = "EMAIL", unique = true)  // unique = true : 유일값(중복x)
     private String email;  // 이메일
 
-
     @Column(name = "PASSWORD")
     private String password;  // 비밀번호
 
-    @Column(name = "NICKNAME", unique = true)
-    private String nickname;  // 닉네임
-
     @Column(name = "NAME")
     private String name;  // 이름
-
-
-    @Column(name = "ADDRESS")
-    private String address;  // 주소
-
 
     @Column(name = "PHONENUMBER", unique = true)
     private String phoneNumber;  // 전화번호
