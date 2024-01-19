@@ -1,40 +1,56 @@
 package com.jjs.ClothingInventorySaleReformPlatform.controller;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.Purchaser;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.DesignerDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.PurchaserDTO;
-import com.jjs.ClothingInventorySaleReformPlatform.service.PurchaserService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.SellerDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.UserDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+//@Controller
+@RestController
 @ResponseBody
-public class PurchaserController {
+@RequiredArgsConstructor
+public class UserController {
 
-    private final PurchaserService purchaserService;
+    private final UserService userService;
 
-    public PurchaserController(PurchaserService purchaserService) {
-        this.purchaserService = purchaserService;
-    }
-
-    @PostMapping("/join")
-    public String joinProcess(PurchaserDTO purchaserDTO) {
+    @PostMapping("/auth/join-purchaser")
+    public String joinPurchaser(PurchaserDTO purchaserDTO) {
         System.out.println(purchaserDTO.getEmail());
-        purchaserService.joinProcess(purchaserDTO);
+        userService.joinPurchaser(purchaserDTO);
+
+        return "ok";
+    }
+    @PostMapping("/auth/join-seller")
+    public String joinSeller(SellerDTO sellerDTO) {
+        System.out.println(sellerDTO.getEmail());
+        userService.joinSeller(sellerDTO);
 
         return "ok";
     }
 
+    @PostMapping("/auth/join-designer")
+    public String joinDesigner(DesignerDTO designerDTO) {
+        System.out.println(designerDTO.getEmail());
+        userService.joinDesigner(designerDTO);
 
+        return "ok";
+    }
 
+    /*
+    @PostMapping("/join")
+    public String joinProcess(UserDTO userDTO) {
+        System.out.println(userDTO.getEmail());
+        userService.joinProcess(userDTO);
+
+        return "ok";
+    }
+     */
 
     /*
     @GetMapping("/member/purchaser-save")

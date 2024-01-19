@@ -50,6 +50,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String username = customPurchaserDetails.getUsername();  // email
 
+
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();

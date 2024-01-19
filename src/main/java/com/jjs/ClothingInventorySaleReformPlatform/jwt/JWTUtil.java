@@ -19,8 +19,25 @@ public class JWTUtil {
     }
 
     public String getUsername(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);  // email
     }
+/*
+    public String getNickname(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("nickname", String.class);  // nickname
+    }
+
+    public String getName(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("name", String.class);  // name
+    }
+
+    public String getAddress(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("address", String.class);  // address
+    }
+
+    public String getPhoneNumber(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("phoneNumber", String.class);  // phoneNumber
+    }
+ */
 
     public String getRole(String token) {
 
