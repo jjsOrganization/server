@@ -14,7 +14,7 @@ public class DesignerInfo {  // 디자이너 부가 정보
     @Id
     private String email;  // User 엔티티의 email과 동일
 
-    @Column(name = "ADDRESS")
+    @Column(name = "ADDRESS", nullable = false)
     private String address;  // 상점 이름
 
     @OneToOne

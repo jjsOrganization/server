@@ -17,14 +17,14 @@ public class SellerInfo {  // 판매자
     @Id
     private String email;  // User 엔티티의 email과 동일
 
-    @Column(name = "STORE_NAME")
+    @Column(name = "STORE_NAME", nullable = false)
     private String storeName;  // 상점 이름
 
-    @Column(name = "STORE_ADDRESS")
+    @Column(name = "STORE_ADDRESS", nullable = false)
     private String storeAddress;  // 상점 주소
 
 
-    @Column(name = "BUSINESS_NUMBER")
+    @Column(name = "BUSINESS_NUMBER", nullable = false)
     private String businessNumber;  // 사업자 번호
 
     @OneToOne

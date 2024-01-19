@@ -11,7 +11,7 @@ import java.util.Collection;
 
 //jwt 토큰에 들어가는 값 정의 해놓는 클래스
 @RequiredArgsConstructor
-public class CustomPurchaserDetails implements UserDetails {
+public class CustomUserDetails implements UserDetails {
 
     private final User user;
 

@@ -1,7 +1,7 @@
 package com.jjs.ClothingInventorySaleReformPlatform.jwt;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.User;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.CustomPurchaserDetails;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -61,10 +61,10 @@ public class JWTFilter extends OncePerRequestFilter {
         user.setRole(role);
 
         //UserDetails에 회원 정보 객체 담기
-        CustomPurchaserDetails customPurchaserDetails = new CustomPurchaserDetails(user);
+        CustomUserDetails customUserDetails = new CustomUserDetails(user);
 
         //스프링 시큐리티 인증 토큰 생성
-        Authentication authToken = new UsernamePasswordAuthenticationToken(customPurchaserDetails, null, customPurchaserDetails.getAuthorities());
+        Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
 
         //세션에 사용자 등록
         SecurityContextHolder.getContext().setAuthentication(authToken);

@@ -4,12 +4,21 @@ import com.jjs.ClothingInventorySaleReformPlatform.dto.DesignerDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.PurchaserDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.SellerDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.UserDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.exception.ControllerExceptionHandler;
+import com.jjs.ClothingInventorySaleReformPlatform.exception.CustomValidationException;
 import com.jjs.ClothingInventorySaleReformPlatform.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 //@Controller
 @RestController
@@ -20,26 +29,56 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/auth/join-purchaser")
-    public String joinPurchaser(PurchaserDTO purchaserDTO) {
-        System.out.println(purchaserDTO.getEmail());
-        userService.joinPurchaser(purchaserDTO);
+    public String joinPurchaser(@Valid PurchaserDTO purchaserDTO, BindingResult bindingResult) {
 
-        return "ok";
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorMap = new HashMap<>();
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errorMap.put(error.getField(), error.getDefaultMessage());
+            }
+            throw new CustomValidationException("유효성 검사 실패", errorMap);
+        } else {
+            System.out.println(purchaserDTO.getEmail());
+            userService.joinPurchaser(purchaserDTO);
+
+            return "ok";
+        }
+
     }
     @PostMapping("/auth/join-seller")
-    public String joinSeller(SellerDTO sellerDTO) {
-        System.out.println(sellerDTO.getEmail());
-        userService.joinSeller(sellerDTO);
+    public String joinSeller(@Valid SellerDTO sellerDTO, BindingResult bindingResult) {
 
-        return "ok";
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorMap = new HashMap<>();
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errorMap.put(error.getField(), error.getDefaultMessage());
+            }
+            throw new CustomValidationException("유효성 검사 실패", errorMap);
+        } else {
+            System.out.println(sellerDTO.getEmail());
+            userService.joinSeller(sellerDTO);
+
+            return "ok";
+        }
+
     }
 
     @PostMapping("/auth/join-designer")
-    public String joinDesigner(DesignerDTO designerDTO) {
-        System.out.println(designerDTO.getEmail());
-        userService.joinDesigner(designerDTO);
+    public String joinDesigner(@Valid DesignerDTO designerDTO, BindingResult bindingResult) {
 
-        return "ok";
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorMap = new HashMap<>();
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errorMap.put(error.getField(), error.getDefaultMessage());
+            }
+            throw new CustomValidationException("유효성 검사 실패", errorMap);
+        } else {
+            System.out.println(designerDTO.getEmail());
+            userService.joinDesigner(designerDTO);
+
+            return "ok";
+        }
+
     }
 
     /*
