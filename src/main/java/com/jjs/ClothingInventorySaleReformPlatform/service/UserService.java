@@ -36,11 +36,16 @@ public class UserService {
         String phoneNumber = purchaserDTO.getPhoneNumber();
         String address = purchaserDTO.getAddress();
 
-        Boolean isExist = userRepository.existsByEmail(email);
+        Boolean isExistEmail = userRepository.existsByEmail(email);
+        Boolean isExistPhoneNumber = userRepository.existsByPhoneNumber(phoneNumber);
 
-        if(isExist) {
+        if(isExistEmail) {
             log.info("중복된 이메일 입니다.");
-            return ;
+            return;
+        }
+        if (isExistPhoneNumber) {
+            log.info("중복된 전화번호 입니다.");
+            return;
         }
 
         // User 엔티티 조회 또는 생성
@@ -76,10 +81,15 @@ public class UserService {
         String businessNumber = sellerDTO.getBusinessNumber();
 
         Boolean isExist = userRepository.existsByEmail(email);
+        Boolean isExistPhoneNumber = userRepository.existsByPhoneNumber(phoneNumber);
 
         if(isExist) {
             log.info("중복된 이메일 입니다.");
             return ;
+        }
+        if (isExistPhoneNumber) {
+            log.info("중복된 전화번호 입니다.");
+            return;
         }
 
         // User 엔티티 조회 또는 생성
@@ -113,10 +123,15 @@ public class UserService {
 
 
         Boolean isExist = userRepository.existsByEmail(email);
+        Boolean isExistPhoneNumber = userRepository.existsByPhoneNumber(phoneNumber);
 
         if(isExist) {
             log.info("중복된 이메일 입니다.");
             return ;
+        }
+        if (isExistPhoneNumber) {
+            log.info("중복된 전화번호 입니다.");
+            return;
         }
 
         // User 엔티티 조회 또는 생성

@@ -1,7 +1,7 @@
 package com.jjs.ClothingInventorySaleReformPlatform.service;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.User;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.CustomPurchaserDetails;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.CustomUserDetails;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (userData != null) {
 
             //UserDetails에 담아서 return하면 AutneticationManager가 검증 함
-            return new CustomPurchaserDetails(userData);
+            return new CustomUserDetails(userData);
         }
 
         return null;

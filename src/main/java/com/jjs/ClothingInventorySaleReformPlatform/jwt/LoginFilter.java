@@ -1,8 +1,7 @@
 package com.jjs.ClothingInventorySaleReformPlatform.jwt;
 
-import com.jjs.ClothingInventorySaleReformPlatform.dto.CustomPurchaserDetails;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.CustomUserDetails;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,7 +11,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -46,9 +44,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
 
         // UserDetails
-        CustomPurchaserDetails customPurchaserDetails = (CustomPurchaserDetails) authentication.getPrincipal();
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        String username = customPurchaserDetails.getUsername();  // email
+        String username = customUserDetails.getUsername();  // email
 
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();

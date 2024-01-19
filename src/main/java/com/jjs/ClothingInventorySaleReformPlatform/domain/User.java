@@ -10,19 +10,19 @@ import lombok.Setter;
 @Table(name = "USER")
 public class User {  // 구매자
     @Id
-    @Column(name = "EMAIL", unique = true)  // unique = true : 유일값(중복x)
+    @Column(name = "EMAIL",nullable = false, unique = true)  // unique = true : 유일값(중복x)
     private String email;  // 이메일
 
-    @Column(name = "PASSWORD")
+    @Column(name = "PASSWORD", nullable = false)
     private String password;  // 비밀번호
 
-    @Column(name = "NAME")
+    @Column(name = "NAME", nullable = false)
     private String name;  // 이름
 
-    @Column(name = "PHONENUMBER", unique = true)
+    @Column(name = "PHONENUMBER", unique = true, nullable = false)
     private String phoneNumber;  // 전화번호
 
-    @Column(name = "ROLE")
+    @Column(name = "ROLE", nullable = false)
     private String role;  // 권한
 
 
