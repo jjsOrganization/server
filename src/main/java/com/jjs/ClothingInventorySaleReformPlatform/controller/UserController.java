@@ -1,26 +1,43 @@
 package com.jjs.ClothingInventorySaleReformPlatform.controller;
 
+import com.jjs.ClothingInventorySaleReformPlatform.dto.DesignerDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.PurchaserDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.SellerDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.UserDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+//@Controller
+@RestController
 @ResponseBody
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-
-
     @PostMapping("/auth/join-purchaser")
-    public String joinProcess(PurchaserDTO purchaserDTO) {
+    public String joinPurchaser(PurchaserDTO purchaserDTO) {
         System.out.println(purchaserDTO.getEmail());
         userService.joinPurchaser(purchaserDTO);
+
+        return "ok";
+    }
+    @PostMapping("/auth/join-seller")
+    public String joinSeller(SellerDTO sellerDTO) {
+        System.out.println(sellerDTO.getEmail());
+        userService.joinSeller(sellerDTO);
+
+        return "ok";
+    }
+
+    @PostMapping("/auth/join-designer")
+    public String joinDesigner(DesignerDTO designerDTO) {
+        System.out.println(designerDTO.getEmail());
+        userService.joinDesigner(designerDTO);
 
         return "ok";
     }

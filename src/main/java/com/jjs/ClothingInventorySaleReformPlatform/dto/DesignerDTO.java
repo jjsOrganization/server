@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SellerDTO {
+public class DesignerDTO {
 
     private String email;
     private String password;
@@ -13,8 +13,6 @@ public class SellerDTO {
     private String phoneNumber;
     private String role;
 
-    // Seller 특화 정보
-    private String storeName;
-    private String storeAddress;
-    private String businessNumber;
+    // Designer 특화 정보
+    private String address;
 }
