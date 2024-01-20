@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+import com.jjs.ClothingInventorySaleReformPlatform.dto.UserLoginRequestDto;
 import com.jjs.ClothingInventorySaleReformPlatform.jwt.dto.TokenDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -70,10 +71,15 @@ public class JwtTokenProvider {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
+        // 로그인한 이메일 추가
+        String userEmail = ((com.jjs.ClothingInventorySaleReformPlatform.domain.User) authentication.getPrincipal()).getUsername();
+
+
         return TokenDto.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .email(userEmail)
                 .build();
     }
 

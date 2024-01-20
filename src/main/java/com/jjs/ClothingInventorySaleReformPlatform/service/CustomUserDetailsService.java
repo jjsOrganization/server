@@ -3,6 +3,7 @@ package com.jjs.ClothingInventorySaleReformPlatform.service;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.User;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
@@ -29,7 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
      * 실제로는 DB 자체에 encoding된 password 값을 갖고 있고 그냥 memer.getPassword()로 encoding된 password를 꺼내는 것이 좋지만, 예제에서는 편의를 위해 검증 객체를 생성할 때 encoding을 해줌.
      */
     private UserDetails createUserDetails(User member) {
-        System.out.println("33");
+        log.info("Spring Security : jwt 객체 리턴");
         return User.builder()
                 .email(member.getUsername())
                 .password(member.getPassword())
