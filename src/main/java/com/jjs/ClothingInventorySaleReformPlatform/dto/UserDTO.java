@@ -27,7 +27,6 @@ public class UserDTO {
     private String phoneNumber;
 
     private String role;
-    //private Type type;
 
 
     /*
