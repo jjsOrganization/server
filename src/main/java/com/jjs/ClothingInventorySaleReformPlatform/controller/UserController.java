@@ -82,9 +82,15 @@ public class UserController {
         return "success";
     }
 
+    /**
+     * 구매자, 판매자, 디자이너 회원가입
+     * 프론트 측에서 회원가입을 json 형식으로 요청을 한다면 @Valid 뒤에 @RequestBody를 붙여줘야됨
+     * 현재는 form-data로 요청을 받음
+     */
     // 구매자 회원가입
+    @ResponseBody
     @PostMapping("/auth/join-purchaser")
-    public String joinPurchaser(@Valid PurchaserDTO purchaserDTO, BindingResult bindingResult) {
+    public PurchaserDTO joinPurchaser(@Valid @RequestBody PurchaserDTO purchaserDTO, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorMap = new HashMap<>();
@@ -96,7 +102,17 @@ public class UserController {
             System.out.println(purchaserDTO.getEmail());
             userService.joinPurchaser(purchaserDTO);
 
-            return "ok";
+            return purchaserDTO;
+            /*
+            {
+    "email": "Test9@test.com",
+    "password": "testtest9",
+    "name": "test9",
+    "phoneNumber": "01011111139",
+    "role": null,
+    "address": "test9"
+}
+             */
         }
 
     }
