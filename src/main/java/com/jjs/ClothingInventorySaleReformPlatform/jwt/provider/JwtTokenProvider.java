@@ -55,9 +55,10 @@ public class JwtTokenProvider {
 
         long now = (new Date()).getTime();
         // Access Token 생성
-        // 숫자 86400000은 토큰의 유효기간으로 1일을 나타냅니다. 보통 토큰은 30분 정도로 생성하는데 테스트를 위해 1일로 설정했습니다.
+        // 숫자 86400000은 토큰의 유효기간으로 1일을 나타냅니다
         // 1일: 24*60*60*1000 = 86400000
-        Date accessTokenExpiresIn = new Date(now + 86400000);
+        // 30분: 0.5*60*60*1000 = 1800000
+        Date accessTokenExpiresIn = new Date(now + 1800000);  // AccessToken - 30분
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", authorities)
@@ -67,7 +68,7 @@ public class JwtTokenProvider {
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + 86400000))
+                .setExpiration(new Date(now + 86400000))  // RefreshToken - 1일
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
