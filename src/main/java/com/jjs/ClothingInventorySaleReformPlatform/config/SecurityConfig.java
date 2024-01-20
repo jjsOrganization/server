@@ -1,8 +1,7 @@
 package com.jjs.ClothingInventorySaleReformPlatform.config;
 
-import com.jjs.ClothingInventorySaleReformPlatform.jwt.JWTFilter;
-import com.jjs.ClothingInventorySaleReformPlatform.jwt.JWTUtil;
-import com.jjs.ClothingInventorySaleReformPlatform.jwt.LoginFilter;
+import com.jjs.ClothingInventorySaleReformPlatform.jwt.filter.JwtAuthenticationFilter;
+import com.jjs.ClothingInventorySaleReformPlatform.jwt.provider.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,27 +9,17 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    //AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
-    private final AuthenticationConfiguration authenticationConfiguration;
-    // JWTUtil 주입
-    private final JWTUtil jwtUtil;
-
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil) {
-
-        this.authenticationConfiguration = authenticationConfiguration;
-        this.jwtUtil = jwtUtil;
-    }
+    private final JwtTokenProvider jwtTokenProvider;
 
     //AuthenticationManager Bean 등록
     @Bean
@@ -57,17 +46,14 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/auth/join-purchaser", "/auth/join-seller", "/auth/join-designer").permitAll()
-                        .requestMatchers("/admin").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
+                        .requestMatchers("/auth/login", "/auth/login-test", "/", "/auth/join-purchaser", "/auth/join-seller", "/auth/join-designer").permitAll()
+                        .requestMatchers("/admin", "/auth/login-test").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
                         .anyRequest().authenticated());
 
-        // JWTFilter emdfhr
         http
-                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
-
-        //필터 추가 LoginFilter()는 인자를 받음 (AuthenticationManager() 메소드에 authenticationConfiguration 객체를 넣어야 함) 따라서 등록 필요
-        http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                // 기존의 http 설정들...
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+                        UsernamePasswordAuthenticationFilter.class);
 
         //세션 설정
         http
