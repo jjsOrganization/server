@@ -3,6 +3,7 @@ package com.jjs.ClothingInventorySaleReformPlatform.jwt.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * 클라이언트에 토큰을 보내기 위한 DTO
@@ -19,4 +20,19 @@ public class TokenDto {
     private String accessToken;
     private String refreshToken;
     private String email;
+
+    @Builder
+    public TokenDto(String grantType, String accessToken, String refreshToken) {
+        this.grantType = grantType;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }
+    // Entity -> DTO
+    public static TokenDto fromEntity(TokenDto member) {
+        return TokenDto.builder()
+                .grantType(member.grantType)
+                .accessToken(member.accessToken)
+                .refreshToken(member.refreshToken)
+                .build();
+    }
 }

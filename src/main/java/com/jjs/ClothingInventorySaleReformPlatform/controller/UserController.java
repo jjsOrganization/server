@@ -2,22 +2,28 @@ package com.jjs.ClothingInventorySaleReformPlatform.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.*;
-import com.jjs.ClothingInventorySaleReformPlatform.exception.ControllerExceptionHandler;
+import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorCode;
+import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorResponse;
+import com.jjs.ClothingInventorySaleReformPlatform.error.exception.BusinessException;
 import com.jjs.ClothingInventorySaleReformPlatform.exception.CustomValidationException;
 import com.jjs.ClothingInventorySaleReformPlatform.jwt.dto.TokenDto;
 import com.jjs.ClothingInventorySaleReformPlatform.service.UserService;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.AuthResultCode;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 //@Controller
 @RestController
@@ -85,7 +91,7 @@ public class UserController {
     /**
      * 구매자, 판매자, 디자이너 회원가입
      * 프론트 측에서 회원가입을 json 형식으로 요청을 한다면 @Valid 뒤에 @RequestBody를 붙여줘야됨
-     * 현재는 form-data로 요청을 받음
+     * 현재는 json으로 요청을 받음
      */
     // 구매자 회원가입
     @ResponseBody
@@ -118,6 +124,7 @@ public class UserController {
     }
 
     // 판매자 회원가입
+    /*
     @PostMapping("/auth/join-seller")
     public String joinSeller(@Valid SellerDTO sellerDTO, BindingResult bindingResult) {
 
@@ -133,8 +140,63 @@ public class UserController {
 
             return "ok";
         }
+    }
+     */
+
+    // 최종 로직 !!!!!!!!!!!!!1
+    @PostMapping("/auth/join-seller")
+    public ResponseEntity<Object> joinSeller(@Valid @RequestBody SellerDTO sellerDTO, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            List<ErrorResponse.FieldError> fieldErrors = bindingResult.getFieldErrors().stream()
+                    .map(fieldError -> new ErrorResponse.FieldError(
+                            fieldError.getField(),
+                            fieldError.getRejectedValue() == null ? "" : fieldError.getRejectedValue().toString(),
+                            fieldError.getDefaultMessage()))
+                    .collect(Collectors.toList());
+
+            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.INVALID_INPUT_VALUE, fieldErrors);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+
+        userService.joinSeller(sellerDTO);
+        //return ResponseEntity.ok().build();
+        ResultResponse resultResponse = ResultResponse.of(AuthResultCode.REGISTER_SUCCESS, Collections.singletonMap("email", sellerDTO.getEmail()));
+        return new ResponseEntity<>(resultResponse, HttpStatus.OK);
+
+    //public String joinSeller(@Valid SellerDTO sellerDTO, BindingResult bindingResult) {
+/*
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorMap = new HashMap<>();
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errorMap.put(error.getField(), error.getDefaultMessage());
+            }
+            AuthResponseDTO authResponseDTO = userService.joinSeller(sellerDTO);
+            ErrorResponse result = ErrorResponse.of(ErrorCode.USER_EMAIL_ALREADY_EXISTS, bindingResult);
+            //throw new CustomValidationException("유효성 검사 실패", errorMap);
+            return new ResponseEntity<>(result, );
+        } else {
+            System.out.println(sellerDTO.getEmail());
+            //userService.joinSeller(sellerDTO);
+            AuthResponseDTO authResponseDTO = userService.joinSeller(sellerDTO);
+            ResultResponse result = ResultResponse.of(AuthResultCode.REGISTER_SUCCESS, authResponseDTO);
+            return new ResponseEntity<>(result, HttpStatus.valueOf(result.getStatus()));
+            //return new ResponseEntity<>(sellerDTO, HttpStatus.OK);
+        }
+
+        //AuthResponseDTO authResponseDTO = userService.joinSeller(sellerDTO);
+        //ResultResponse result = ResultResponse.of(AuthResultCode.REGISTER_SUCCESS, authResponseDTO);
+
+ */
 
     }
+
+
+
+
+
+
+
 
     // 디자이너 회원가입
     @PostMapping("/auth/join-designer")
