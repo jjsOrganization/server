@@ -1,4 +1,4 @@
-package com.jjs.ClothingInventorySaleReformPlatform.exception;
+package com.jjs.ClothingInventorySaleReformPlatform.error.exception;
 
 import java.util.Map;
 

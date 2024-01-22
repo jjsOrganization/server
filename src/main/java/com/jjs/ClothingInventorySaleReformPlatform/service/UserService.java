@@ -4,7 +4,7 @@ import com.jjs.ClothingInventorySaleReformPlatform.domain.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.PurchaserInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.SellerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.User;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.AuthResponseDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.response.AuthResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.DesignerDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.PurchaserDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.SellerDTO;
@@ -78,12 +78,16 @@ public class UserService {
         Boolean isExistPhoneNumber = userRepository.existsByPhoneNumber(phoneNumber);
 
         if(isExistEmail) {
-            log.info("중복된 이메일 입니다.");
-            return;
+            List<ErrorResponse.FieldError> fieldErrors = List.of(
+                    new ErrorResponse.FieldError("email", email, "이메일이 이미 존재합니다.")
+            );
+            throw new BusinessException(ErrorCode.USER_EMAIL_ALREADY_EXISTS, fieldErrors);
         }
         if (isExistPhoneNumber) {
-            log.info("중복된 전화번호 입니다.");
-            return;
+            List<ErrorResponse.FieldError> fieldErrors = List.of(
+                    new ErrorResponse.FieldError("phoneNumber", phoneNumber, "전화번호가 이미 존재합니다.")
+            );
+            throw new BusinessException(ErrorCode.USER_PHONENUMBER_ALREADY_EXISTS, fieldErrors);
         }
 
         // User 엔티티 조회 또는 생성
@@ -118,26 +122,16 @@ public class UserService {
         String storeAddress = sellerDTO.getStoreAddress();
         String businessNumber = sellerDTO.getBusinessNumber();
 
-        Boolean isExist = userRepository.existsByEmail(email);
+        Boolean isExistEmail = userRepository.existsByEmail(email);
         Boolean isExistPhoneNumber = userRepository.existsByPhoneNumber(phoneNumber);
 
-        if(isExist) {
-            /*
-            log.info("중복된 이메일 입니다.");
-            return null;
-
-             */
+        if(isExistEmail) {
             List<ErrorResponse.FieldError> fieldErrors = List.of(
                     new ErrorResponse.FieldError("email", email, "이메일이 이미 존재합니다.")
             );
             throw new BusinessException(ErrorCode.USER_EMAIL_ALREADY_EXISTS, fieldErrors);
         }
         if (isExistPhoneNumber) {
-            /*
-            log.info("중복된 전화번호 입니다.");
-            return null;
-
-             */
             List<ErrorResponse.FieldError> fieldErrors = List.of(
                     new ErrorResponse.FieldError("phoneNumber", phoneNumber, "전화번호가 이미 존재합니다.")
             );
@@ -175,16 +169,20 @@ public class UserService {
         String address = designerDTO.getAddress();
 
 
-        Boolean isExist = userRepository.existsByEmail(email);
+        Boolean isExistEmail = userRepository.existsByEmail(email);
         Boolean isExistPhoneNumber = userRepository.existsByPhoneNumber(phoneNumber);
 
-        if(isExist) {
-            log.info("중복된 이메일 입니다.");
-            return ;
+        if(isExistEmail) {
+            List<ErrorResponse.FieldError> fieldErrors = List.of(
+                    new ErrorResponse.FieldError("email", email, "이메일이 이미 존재합니다.")
+            );
+            throw new BusinessException(ErrorCode.USER_EMAIL_ALREADY_EXISTS, fieldErrors);
         }
         if (isExistPhoneNumber) {
-            log.info("중복된 전화번호 입니다.");
-            return;
+            List<ErrorResponse.FieldError> fieldErrors = List.of(
+                    new ErrorResponse.FieldError("phoneNumber", phoneNumber, "전화번호가 이미 존재합니다.")
+            );
+            throw new BusinessException(ErrorCode.USER_PHONENUMBER_ALREADY_EXISTS, fieldErrors);
         }
 
         // User 엔티티 조회 또는 생성

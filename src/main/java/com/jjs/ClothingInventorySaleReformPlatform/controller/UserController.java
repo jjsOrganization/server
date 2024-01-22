@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.*;
 import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorCode;
 import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorResponse;
-import com.jjs.ClothingInventorySaleReformPlatform.error.exception.BusinessException;
-import com.jjs.ClothingInventorySaleReformPlatform.exception.CustomValidationException;
+import com.jjs.ClothingInventorySaleReformPlatform.error.exception.CustomValidationException;
 import com.jjs.ClothingInventorySaleReformPlatform.jwt.dto.TokenDto;
+import com.jjs.ClothingInventorySaleReformPlatform.response.ResultResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.service.UserService;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.AuthResultCode;
+import com.jjs.ClothingInventorySaleReformPlatform.response.AuthResultCode;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -88,62 +88,28 @@ public class UserController {
         return "success";
     }
 
-    /**
-     * 구매자, 판매자, 디자이너 회원가입
-     * 프론트 측에서 회원가입을 json 형식으로 요청을 한다면 @Valid 뒤에 @RequestBody를 붙여줘야됨
-     * 현재는 json으로 요청을 받음
-     */
     // 구매자 회원가입
-    @ResponseBody
     @PostMapping("/auth/join-purchaser")
-    public PurchaserDTO joinPurchaser(@Valid @RequestBody PurchaserDTO purchaserDTO, BindingResult bindingResult) {
+    public ResponseEntity<Object> joinPurchaser(@Valid @RequestBody PurchaserDTO purchaserDTO, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-            for (FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-            throw new CustomValidationException("유효성 검사 실패", errorMap);
-        } else {
-            System.out.println(purchaserDTO.getEmail());
-            userService.joinPurchaser(purchaserDTO);
+            List<ErrorResponse.FieldError> fieldErrors = bindingResult.getFieldErrors().stream()
+                    .map(fieldError -> new ErrorResponse.FieldError(
+                            fieldError.getField(),
+                            fieldError.getRejectedValue() == null ? "" : fieldError.getRejectedValue().toString(),
+                            fieldError.getDefaultMessage()))
+                    .collect(Collectors.toList());
 
-            return purchaserDTO;
-            /*
-            {
-    "email": "Test9@test.com",
-    "password": "testtest9",
-    "name": "test9",
-    "phoneNumber": "01011111139",
-    "role": null,
-    "address": "test9"
-}
-             */
+            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.INVALID_INPUT_VALUE, fieldErrors);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
 
+        userService.joinPurchaser(purchaserDTO);
+        ResultResponse resultResponse = ResultResponse.of(AuthResultCode.REGISTER_SUCCESS, Collections.singletonMap("email", purchaserDTO.getEmail()));
+        return new ResponseEntity<>(resultResponse, HttpStatus.OK);
     }
 
     // 판매자 회원가입
-    /*
-    @PostMapping("/auth/join-seller")
-    public String joinSeller(@Valid SellerDTO sellerDTO, BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-            for (FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-            throw new CustomValidationException("유효성 검사 실패", errorMap);
-        } else {
-            System.out.println(sellerDTO.getEmail());
-            userService.joinSeller(sellerDTO);
-
-            return "ok";
-        }
-    }
-     */
-
-    // 최종 로직 !!!!!!!!!!!!!1
     @PostMapping("/auth/join-seller")
     public ResponseEntity<Object> joinSeller(@Valid @RequestBody SellerDTO sellerDTO, BindingResult bindingResult) {
 
@@ -160,104 +126,30 @@ public class UserController {
         }
 
         userService.joinSeller(sellerDTO);
-        //return ResponseEntity.ok().build();
         ResultResponse resultResponse = ResultResponse.of(AuthResultCode.REGISTER_SUCCESS, Collections.singletonMap("email", sellerDTO.getEmail()));
         return new ResponseEntity<>(resultResponse, HttpStatus.OK);
-
-    //public String joinSeller(@Valid SellerDTO sellerDTO, BindingResult bindingResult) {
-/*
-        if (bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-            for (FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-            AuthResponseDTO authResponseDTO = userService.joinSeller(sellerDTO);
-            ErrorResponse result = ErrorResponse.of(ErrorCode.USER_EMAIL_ALREADY_EXISTS, bindingResult);
-            //throw new CustomValidationException("유효성 검사 실패", errorMap);
-            return new ResponseEntity<>(result, );
-        } else {
-            System.out.println(sellerDTO.getEmail());
-            //userService.joinSeller(sellerDTO);
-            AuthResponseDTO authResponseDTO = userService.joinSeller(sellerDTO);
-            ResultResponse result = ResultResponse.of(AuthResultCode.REGISTER_SUCCESS, authResponseDTO);
-            return new ResponseEntity<>(result, HttpStatus.valueOf(result.getStatus()));
-            //return new ResponseEntity<>(sellerDTO, HttpStatus.OK);
-        }
-
-        //AuthResponseDTO authResponseDTO = userService.joinSeller(sellerDTO);
-        //ResultResponse result = ResultResponse.of(AuthResultCode.REGISTER_SUCCESS, authResponseDTO);
-
- */
-
     }
-
-
-
-
-
-
-
 
     // 디자이너 회원가입
     @PostMapping("/auth/join-designer")
-    public String joinDesigner(@Valid DesignerDTO designerDTO, BindingResult bindingResult) {
+    public ResponseEntity<Object> joinDesigner(@Valid @RequestBody DesignerDTO designerDTO, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-            for (FieldError error : bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-            throw new CustomValidationException("유효성 검사 실패", errorMap);
-        } else {
-            System.out.println(designerDTO.getEmail());
-            userService.joinDesigner(designerDTO);
+            List<ErrorResponse.FieldError> fieldErrors = bindingResult.getFieldErrors().stream()
+                    .map(fieldError -> new ErrorResponse.FieldError(
+                            fieldError.getField(),
+                            fieldError.getRejectedValue() == null ? "" : fieldError.getRejectedValue().toString(),
+                            fieldError.getDefaultMessage()))
+                    .collect(Collectors.toList());
 
-            return "ok";
+            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.INVALID_INPUT_VALUE, fieldErrors);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
 
+        userService.joinDesigner(designerDTO);
+        ResultResponse resultResponse = ResultResponse.of(AuthResultCode.REGISTER_SUCCESS, Collections.singletonMap("email", designerDTO.getEmail()));
+        return new ResponseEntity<>(resultResponse, HttpStatus.OK);
+
     }
 
-    /*
-    @PostMapping("/join")
-    public String joinProcess(UserDTO userDTO) {
-        System.out.println(userDTO.getEmail());
-        userService.joinProcess(userDTO);
-
-        return "ok";
-    }
-     */
-
-    /*
-    @GetMapping("/member/purchaser-save")
-    public String purchaserSaveForm(Model model) {
-        model.addAttribute("purchaserDTO", new Purchaser()); //회원 정보를 입력받기 위해 폼(DTO) 전송
-        return "member/purchaser_save";
-    }
-
-    @PostMapping("/member/purchaser-save")
-    public String save(@Valid PurchaserDTO purchaserDTO, BindingResult result) { // 이메일 입력 받았는지 유효성 검사
-        if (result.hasErrors()) {
-            return "member/purchaser_save";
-        }
-        purchaserService.save(purchaserDTO);
-        return "redirect:/";
-    }
-
-    @GetMapping("/member/purchaser-login")
-    public String loginForm() {
-        return "member/purchaser_login";
-    }
-
-    @PostMapping("/member/purchaser-login")
-    public String login(@Valid PurchaserDTO purchaserDTO, HttpSession session) { // 수정 안함
-        String loginEmail = purchaserService.login(purchaserDTO);
-        if (loginEmail != null) {
-            session.setAttribute("loginEmail", loginEmail);
-            return "main";
-        }else{
-            return "member/purchaser-login";
-        }
-    }
-
-     */
 }

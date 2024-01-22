@@ -1,4 +1,4 @@
-package com.jjs.ClothingInventorySaleReformPlatform.dto;
+package com.jjs.ClothingInventorySaleReformPlatform.response;
 
 import lombok.Getter;
 

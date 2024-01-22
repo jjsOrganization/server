@@ -1,4 +1,4 @@
-package com.jjs.ClothingInventorySaleReformPlatform.exception;
+package com.jjs.ClothingInventorySaleReformPlatform.error.exception;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
