@@ -21,6 +21,6 @@ public class PurchaserInfo {
     @JoinColumn(name = "EMAIL")  // User 테이블의 email을 외래 키로 사용
     private User user;  // User 엔티티에 대한 참조
 
-    // Getter, Setter, 생성자 등 필요한 메서드 추가
+
 }
 
