@@ -1,4 +1,4 @@
-package com.jjs.ClothingInventorySaleReformPlatform.repository;
+package com.jjs.ClothingInventorySaleReformPlatform.repository.auth;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.PurchaserInfo;
 import org.springframework.data.jpa.repository.JpaRepository;

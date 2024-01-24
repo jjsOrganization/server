@@ -1,5 +1,6 @@
-package com.jjs.ClothingInventorySaleReformPlatform.dto;
+package com.jjs.ClothingInventorySaleReformPlatform.dto.auth;
 
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -9,7 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SellerDTO {
+public class DesignerDTO {
 
     @NotBlank(message = "이메일 주소를 입력해주세요.")
     @Email(message = "올바른 이메일 주소를 입력해주세요.")
@@ -27,13 +28,7 @@ public class SellerDTO {
     private String phoneNumber;
     private String role;
 
-    // Seller 특화 정보
-    @NotBlank(message = "매장명을 입력해주세요.")
-    private String storeName;
-
-    @NotBlank(message = "매장 주소를 입력해주세요.")
-    private String storeAddress;
-
-    @NotBlank(message = "사업자 번호를 입력해주세요.")
-    private String businessNumber;
+    // Designer 특화 정보
+    @NotBlank(message = "주소를 입력해주세요.")
+    private String address;
 }

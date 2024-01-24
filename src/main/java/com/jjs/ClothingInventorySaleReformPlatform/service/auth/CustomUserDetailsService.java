@@ -1,7 +1,7 @@
-package com.jjs.ClothingInventorySaleReformPlatform.service;
+package com.jjs.ClothingInventorySaleReformPlatform.service.auth;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.User;
-import com.jjs.ClothingInventorySaleReformPlatform.repository.MemberRepository;
+import com.jjs.ClothingInventorySaleReformPlatform.repository.auth.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
