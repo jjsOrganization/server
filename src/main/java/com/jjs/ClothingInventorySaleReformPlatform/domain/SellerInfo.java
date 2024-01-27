@@ -1,10 +1,13 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.product.Product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,6 +34,8 @@ public class SellerInfo {  // 판매자
     @MapsId  // SellerInfo 엔티티의 PK를 User 엔티티의 PK와 동일하게 매핑
     @JoinColumn(name = "EMAIL")  // User 테이블의 email을 외래 키로 사용
     private User user;  // User 엔티티에 대한 참조
+
+
 
 //    public static SellerInfo toSeller(SellerDTO sellerDTO) {
 //        SellerInfo sellerInfo = new SellerInfo();

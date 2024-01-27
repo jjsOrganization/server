@@ -29,7 +29,11 @@ public enum ErrorCode {
     MEMBER_ALREADY_LOGOUT(400, "M006", "member already logout"),
 
     // Auth
-    REFRESH_TOKEN_INVALID(400, "A001", "refresh token invalid");
+    REFRESH_TOKEN_INVALID(400, "A001", "refresh token invalid"),
+
+    // Product
+    INVALID_BAD_REQUEST(400, "P001", "bad request, 유효성 검사 실패"),
+    IMAGE_EMPTY(400, "P002", "bad request, 첫번째 상품 이미지는 필수 입력 값 입니다");
 
     private int status;
     private final String code;
