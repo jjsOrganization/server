@@ -8,11 +8,13 @@ import com.jjs.ClothingInventorySaleReformPlatform.dto.product.ProductFormDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.auth.SellerRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.product.ProductImgRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.product.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -52,5 +54,20 @@ public class ProductService {
 
         return product.getId();
 
+    }
+
+
+    // 상품 삭제
+    public void deleteProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+
+        // 상품 이미지 삭제
+        product.getProductImg().forEach(productImg -> {
+            productImgService.deleteProductImg(productImg.getId());
+        });
+
+        // 상품 정보 삭제
+        productRepository.delete(product);
     }
 }

@@ -3,6 +3,7 @@ package com.jjs.ClothingInventorySaleReformPlatform.domain.product;
 import com.jjs.ClothingInventorySaleReformPlatform.common.entity.BaseEntity;
 import com.jjs.ClothingInventorySaleReformPlatform.common.entity.BaseTimeEntity;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.SellerInfo;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.product.ProductFormDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -39,6 +40,14 @@ public class Product extends BaseEntity {  // BaseEntity가 등록시간, 수정
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @OrderBy("id asc")
     private List<ProductImg> productImg;
+
+    public void updateProduct(ProductFormDTO productFormDTO) {
+        this.productName = productFormDTO.getProductName();
+        this.price = productFormDTO.getPrice();
+        this.productStock = productFormDTO.getProductStock();
+        this.productDetailText = productFormDTO.getItemDetail();
+        this.productSellStatus = productFormDTO.getProductSellStatus();
+    }
 
 
 /*

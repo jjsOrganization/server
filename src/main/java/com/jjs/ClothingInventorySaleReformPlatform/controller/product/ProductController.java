@@ -7,15 +7,14 @@ import com.jjs.ClothingInventorySaleReformPlatform.response.AuthResultCode;
 import com.jjs.ClothingInventorySaleReformPlatform.response.ResultResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.service.product.ProductImgService;
 import com.jjs.ClothingInventorySaleReformPlatform.service.product.ProductService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
@@ -30,7 +29,7 @@ public class ProductController {
     private final ProductImgService productImgService;
 
 
-    @PostMapping("/item/new")
+    @PostMapping("/item/register/new")
     public ResponseEntity<Object> itemNew(@Valid @ModelAttribute ProductFormDTO productFormDTO,
                                            BindingResult bindingResult,
                                            @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList) {
@@ -68,6 +67,20 @@ public class ProductController {
             //return ResponseEntity.ok().body("상품이 성공적으로 등록되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("상품 등록 중 에러가 발생하였습니다.");
+        }
+    }
+
+
+
+    @DeleteMapping("/item/delete/{productId}")  // (DELETE)http://localhost:8080/item/delete/1
+    public ResponseEntity<?> deleteProduct(@PathVariable Long productId) {
+        try {
+            productService.deleteProduct(productId);
+            return ResponseEntity.ok().body("Product deleted successfully");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error occurred during product deletion");
         }
     }
 

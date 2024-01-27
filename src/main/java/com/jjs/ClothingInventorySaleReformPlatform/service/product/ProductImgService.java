@@ -1,11 +1,15 @@
 package com.jjs.ClothingInventorySaleReformPlatform.service.product;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.util.StringUtils;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.ProductImg;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.product.ProductImgRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +21,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class ProductImgService {
 
     private final AmazonS3Client amazonS3Client;
@@ -46,6 +51,36 @@ public class ProductImgService {
         }
 
     }
+
+
+
+    public void fileDelete(String fileName) {
+        log.info("filename : " + fileName);
+        try {
+            amazonS3Client.deleteObject(this.bucket, fileName);
+        } catch (AmazonServiceException e) {
+            System.err.println(e.getErrorMessage());
+        }
+    }
+
+    // 상품 삭제에서 사용
+    public void deleteProductImg(Long productImgId) {
+        ProductImg productImg = productImgRepository.findById(productImgId)
+                .orElseThrow(() -> new EntityNotFoundException("Image not found"));
+
+        // S3에서 이미지 파일 삭제
+        if (productImg.getImgName() != null && !productImg.getImgName().isEmpty()) {
+            String filePath = "productRegister/" + productImg.getImgName();
+            amazonS3Client.deleteObject(bucket, filePath);
+        }
+
+        // 데이터베이스에서 ProductImg 레코드 삭제
+        productImgRepository.delete(productImg);
+    }
+
+
+
+
 
     /**
      * 업로드된 파일의 메타데이터를 생성
