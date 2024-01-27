@@ -23,9 +23,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductImgService productImgService;
     private final ProductImgRepository productImgRepository;
-    private final FileService fileService; // 이미지 파일 처리 서비스
 
-    private final String productImgLocation = "/upload/product"; // 이미지 업로드 경로
 
 
     public Long saveItem(ProductFormDTO productFormDTO, List<MultipartFile> itemImgFileList) throws Exception{
@@ -36,8 +34,7 @@ public class ProductService {
         product.setPrice(productFormDTO.getPrice());
         product.setProductStock(productFormDTO.getProductStock());
         product.setProductDetailText(productFormDTO.getItemDetail());
-        //product.setProductSellStatus(productFormDTO.getProductSellStatus());
-        product.setProductSellStatus(ProductSellStatus.SELL);  // 초기값은 판매중으로 고정 
+        product.setProductSellStatus(ProductSellStatus.SELL);  // 초기값은 판매중으로 고정
         productRepository.save(product);
 
         //이미지 등록
@@ -50,7 +47,7 @@ public class ProductService {
             else
                 productImg.setRepimgYn("N");
 
-            productImgService.saveItemImg(productImg, itemImgFileList.get(i));
+            productImgService.uploadFile(productImg, itemImgFileList.get(i));
         }
 
         return product.getId();
