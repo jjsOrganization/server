@@ -35,40 +35,38 @@ public class ProductController {
                                            BindingResult bindingResult,
                                            @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList) {
 
-        if (bindingResult.hasErrors()) {
-            List<ErrorResponse.FieldError> fieldErrors = bindingResult.getFieldErrors().stream()
-                    .map(fieldError -> new ErrorResponse.FieldError(
-                            fieldError.getField(),
-                            fieldError.getRejectedValue() == null ? "" : fieldError.getRejectedValue().toString(),
-                            fieldError.getDefaultMessage()))
-                    .collect(Collectors.toList());
+        ResponseEntity<Object> errorResponse = getObjectResponseEntity(bindingResult.hasErrors(), bindingResult, ErrorCode.INVALID_BAD_REQUEST);
+        if (errorResponse != null) return errorResponse;
+        //return ResponseEntity.badRequest().body("유효성 검사 실패");
 
-            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.INVALID_BAD_REQUEST, fieldErrors);
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-            //return ResponseEntity.badRequest().body("유효성 검사 실패");
-        }
-
-        if (itemImgFileList.get(0).isEmpty() && productFormDTO.getId() == null) {
-            List<ErrorResponse.FieldError> fieldErrors = bindingResult.getFieldErrors().stream()
-                    .map(fieldError -> new ErrorResponse.FieldError(
-                            fieldError.getField(),
-                            fieldError.getRejectedValue() == null ? "" : fieldError.getRejectedValue().toString(),
-                            fieldError.getDefaultMessage()))
-                    .collect(Collectors.toList());
-
-            ErrorResponse errorResponse = new ErrorResponse(ErrorCode.IMAGE_EMPTY, fieldErrors);
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-            //return ResponseEntity.badRequest().body("첫번째 상품 이미지는 필수 입력 값 입니다.");
-        }
+        ResponseEntity<Object> errorResponse1 = getObjectResponseEntity(itemImgFileList.get(0).isEmpty() && productFormDTO.getId() == null,
+                bindingResult, ErrorCode.IMAGE_EMPTY);
+        if (errorResponse1 != null) return errorResponse1;
 
         try {
             productService.saveItem(productFormDTO, itemImgFileList);
-            ResultResponse resultResponse = ResultResponse.of(AuthResultCode.REGISTER_PRODUCT_SUCCESS, Collections.singletonMap("productName", productFormDTO.getProductName()));
+            ResultResponse resultResponse = ResultResponse.of(AuthResultCode.REGISTER_PRODUCT_SUCCESS,
+                    Collections.singletonMap("productName", productFormDTO.getProductName()));
             return new ResponseEntity<>(resultResponse, HttpStatus.OK);
             //return ResponseEntity.ok().body("상품이 성공적으로 등록되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("상품 등록 중 에러가 발생하였습니다.");
         }
+    }
+
+    private static ResponseEntity<Object> getObjectResponseEntity(boolean bindingResult, BindingResult bindingResult1, ErrorCode invalidBadRequest) {
+        if (bindingResult) {
+            List<ErrorResponse.FieldError> fieldErrors = bindingResult1.getFieldErrors().stream()
+                    .map(fieldError -> new ErrorResponse.FieldError(
+                            fieldError.getField(),
+                            fieldError.getRejectedValue() == null ? "" : fieldError.getRejectedValue().toString(),
+                            fieldError.getDefaultMessage()))
+                    .collect(Collectors.toList());
+
+            ErrorResponse errorResponse = new ErrorResponse(invalidBadRequest, fieldErrors);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        return null;
     }
 
 

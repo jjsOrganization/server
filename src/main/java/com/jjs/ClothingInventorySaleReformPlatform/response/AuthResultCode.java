@@ -17,6 +17,9 @@ public enum AuthResultCode {
     // Product
     REGISTER_PRODUCT_SUCCESS(200, "P001", "상품 등록이 완료되었습니다.");
 
+    // Portfolio
+//    REGISTER_PORTFOLIO_SUCCESS(200, "F001", "포트폴리오 등록이 완료되었습니다.");
+
     private int status;
     private final String code;
     private final String message;
