@@ -47,8 +47,8 @@ public class SecurityConfig{
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/auth/login", "/auth/login-test", "/", "/auth/join-purchaser", "/auth/join-seller", "/auth/join-designer","/designer/portfolio").permitAll()
-                        .requestMatchers("/admin", "/auth/login-test").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
-                        .requestMatchers("/item/register/new", "/item/register/{productId}", "/item/delete/{productId}").hasRole("SELLER")
+                        .requestMatchers("/admin", "/auth/login-test", "/item/all").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
+                        .requestMatchers("/item/register/new", "/item/register/{productId}", "/item/delete/{productId}", "/item/register").hasRole("SELLER")
                         .anyRequest().authenticated());
 
         http

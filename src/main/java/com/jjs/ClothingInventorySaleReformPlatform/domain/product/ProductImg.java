@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jjs.ClothingInventorySaleReformPlatform.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,7 +27,8 @@ public class ProductImg extends BaseTimeEntity {
 
     private String repimgYn; //대표 이미지 여부
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     private Product product;
 
