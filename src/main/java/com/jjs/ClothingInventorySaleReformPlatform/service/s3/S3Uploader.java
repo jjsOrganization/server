@@ -34,15 +34,14 @@ public class S3Uploader {
     @Transactional
     public String uploadFile(MultipartFile file) throws IOException {
         // 저장될 파일의 경로 설정
-        String storedFileName = generateFileName(file);
+        String storedFileName = "PortfolioImages/" +  generateFileName(file);
 
         try {
             // S3에 파일 업로드
-            amazonS3Client.putObject(bucket, "PortfolioImages/" + storedFileName, file.getInputStream(), getObjectMetadata(file));
+            amazonS3Client.putObject(bucket, storedFileName, file.getInputStream(), getObjectMetadata(file));
 
-            System.out.println(amazonS3Client.getUrl(bucket, generateFileName(file)).toString());
             // 업로드된 이미지의 URL 반환
-            return amazonS3Client.getUrl(bucket, generateFileName(file)).toString();
+            return amazonS3Client.getUrl(bucket, storedFileName).toString();
 
         } catch (SdkClientException e) {
             throw new IOException("Error uploading file to S3", e);
@@ -79,6 +78,6 @@ public class S3Uploader {
      * @return 고유한 파일명
      */
     private String generateFileName(MultipartFile file) {
-        return UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
+        return UUID.randomUUID() + "-" + file.getOriginalFilename();
     }
 }

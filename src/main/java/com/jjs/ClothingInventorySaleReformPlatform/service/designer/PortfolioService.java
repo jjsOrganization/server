@@ -31,15 +31,24 @@ public class PortfolioService {
 
     public void savePortfolio(PortfolioDTO portfolioDTO) throws IOException {
         Portfolio portfolio = new Portfolio();
+        User user = new User();  //이메일은 User타입이기 때문에 엔티티로 변환해주는 과정 필요
 
-        //이메일은 User타입이기 때문에 엔티티로 변환해주는 과정 필요
-        User user = new User();
         user.setEmail(portfolioDTO.getDesignerEmail());
-        portfolio.setDesignerEmail(user);
-        portfolio.setExplanation(portfolioDTO.getExplanation());
-        portfolio.setDesignerImage(s3Uploader.uploadFile(portfolioDTO.getDesignerImage()));
+        Optional<Portfolio> storedDesignerEmail = portfolioRepository.findByDesignerEmail(user);
 
-        portfolioRepository.save(portfolio);
+        // 이메일 이미 존재 할 경우
+        if (storedDesignerEmail.isPresent()) {
+            throw new RuntimeException("이미 존재하는 이메일입니다.");
+        }
+        else{
+            user.setEmail(portfolioDTO.getDesignerEmail());
+            portfolio.setDesignerEmail(user);
+            portfolio.setExplanation(portfolioDTO.getExplanation());
+            portfolio.setDesignerImage(s3Uploader.uploadFile(portfolioDTO.getDesignerImage()));
+
+            portfolioRepository.save(portfolio);
+        }
+
     }
 
     /**

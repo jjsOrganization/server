@@ -46,7 +46,8 @@ public class SecurityConfig{
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/auth/login", "/auth/login-test", "/", "/auth/join-purchaser", "/auth/join-seller", "/auth/join-designer","/designer/portfolio").permitAll()
+                        .requestMatchers("/auth/login", "/auth/login-test", "/", "/auth/join-purchaser", "/auth/join-seller", "/auth/join-designer",
+                                "/designer/portfolio","/swagger-ui/**","/v3/api-docs/**", "/swagger-resources/**","/designer/portfolio/**").permitAll()
                         .requestMatchers("/admin", "/auth/login-test").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
                         .requestMatchers("/item/new").hasRole("SELLER")
                         .anyRequest().authenticated());

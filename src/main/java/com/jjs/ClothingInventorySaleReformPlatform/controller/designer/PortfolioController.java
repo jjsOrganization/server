@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.controller.designer;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.User;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.designer.PortfolioDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.designer.PortfolioInfoDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorCode;
@@ -7,6 +8,9 @@ import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.response.AuthResultCode;
 import com.jjs.ClothingInventorySaleReformPlatform.response.ResultResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.service.designer.PortfolioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,10 +27,12 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "포트폴리오 컨트롤러", description = "포트폴리오 API 입니다.")
 public class PortfolioController {
 
     private final PortfolioService portfolioService;
 
+    @Operation(summary = "포트폴리오 등록", description = "입력한 포트폴리오 정보를 저장합니다.")
     @PostMapping("/designer/portfolio")
     public ResponseEntity<Object> uploadPortfolio(@Valid @ModelAttribute PortfolioDTO portfolioDTO,
                                                   BindingResult bindingResult) throws IOException {
@@ -48,8 +54,8 @@ public class PortfolioController {
             //
             return new ResponseEntity<>(resultResponse, HttpStatus.OK);
 
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("상품 등록 중 에러가 발생하였습니다.");
+        } catch (Exception e) { // service에서 throw된 에러 메세지 반환
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
 
     }
@@ -60,8 +66,10 @@ public class PortfolioController {
      * @param bindingResult
      * @return
      */
+    @Operation(summary = "포트폴리오 조회", description = "로그인 된 디자이너의 포트폴리오 정보를 조회합니다.")
     @GetMapping("/designer/portfolio")
-    public ResponseEntity<Object> getPortfolio(@Valid @RequestBody Map<String,String> requestData, BindingResult bindingResult) throws IOException {
+    public ResponseEntity<Object> loadPortfolio(@Valid @RequestBody @Parameter(name = "designerEmail", description = "이메일 하나만 입력하세요.",
+            example = "{'designerEmail':'sss@ssss.com'}") Map<String,String> requestData, BindingResult bindingResult) throws IOException {
         ResponseEntity<Object> errorResponse = getObjectResponseEntity(bindingResult.hasErrors(),
                 bindingResult, ErrorCode.INVALID_BAD_REQUEST);
         if (errorResponse != null) return errorResponse;

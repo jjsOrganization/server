@@ -12,6 +12,7 @@ import com.jjs.ClothingInventorySaleReformPlatform.response.ResultResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.service.auth.CustomUserDetailsService;
 import com.jjs.ClothingInventorySaleReformPlatform.service.auth.UserService;
 import com.jjs.ClothingInventorySaleReformPlatform.response.AuthResultCode;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 @RestController
 @ResponseBody
 @RequiredArgsConstructor
+@Tag(name = "회원가입 및 로그인 컨트롤러", description = "로그인, 로그인 테스트, 회원가입 API")
 public class UserController {
 
     private final UserService userService;

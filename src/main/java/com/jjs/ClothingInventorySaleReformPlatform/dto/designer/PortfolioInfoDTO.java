@@ -1,10 +1,8 @@
 package com.jjs.ClothingInventorySaleReformPlatform.dto.designer;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 포트폴리오 정보를 가져와서 저장하는 DTO
@@ -15,8 +13,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 public class PortfolioInfoDTO {
 
+    @Schema(description = "자기소개 및 설명")
     private String explanation; // 자기소개 & 설명
 
+    @Schema(description = "디자이너 이미지 경로")
     private String designerImagePath; // 디자이너 이미지 경로
 
 
