@@ -1,29 +1,38 @@
-package com.jjs.ClothingInventorySaleReformPlatform.domain;
+package com.jjs.ClothingInventorySaleReformPlatform.domain.product;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+@Entity
 @Getter
 @Setter
-@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "CATEGORY")
 public class Category {  // 카테고리
 
-    // 카테고리명, 카테고리별 물 사용량
     @Id
-    @Size(max = 30)
-    @Column(name = "CATEGORY_NAME", nullable = false, length = 30)
-    private String categoryName;  // 카테고리명
+    @Column(name="categoryId")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long categoryId;
 
-    @NotNull
+    // 카테고리명, 카테고리별 물 사용량
+    @Column( name="categoryName", nullable=false, length=100 )
+    private String categoryName;
+
     @Column(name = "WATER_USAGE_CATEGORY", nullable = false)
     private Integer waterUsageCategory;  // 카테고리별 물 사용량
+
+    @Builder
+    public Category(String categoryName) {
+        this.categoryName = categoryName;
+    }
 /*
     @OneToMany(mappedBy = "categoryName")
     private Set<Watersaved> watersaveds = new LinkedHashSet<>();

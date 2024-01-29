@@ -1,20 +1,20 @@
-package com.jjs.ClothingInventorySaleReformPlatform.service;
+package com.jjs.ClothingInventorySaleReformPlatform.service.auth;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.PurchaserInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.SellerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.User;
+import com.jjs.ClothingInventorySaleReformPlatform.repository.auth.*;
 import com.jjs.ClothingInventorySaleReformPlatform.response.AuthResponseDTO;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.DesignerDTO;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.PurchaserDTO;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.SellerDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.DesignerDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.PurchaserDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.SellerDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorCode;
 
 import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.error.exception.BusinessException;
 import com.jjs.ClothingInventorySaleReformPlatform.jwt.dto.TokenDto;
 import com.jjs.ClothingInventorySaleReformPlatform.jwt.provider.JwtTokenProvider;
-import com.jjs.ClothingInventorySaleReformPlatform.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

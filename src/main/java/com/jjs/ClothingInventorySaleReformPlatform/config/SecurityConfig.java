@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class SecurityConfig{
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -46,8 +46,10 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/auth/login", "/auth/login-test", "/", "/auth/join-purchaser", "/auth/join-seller", "/auth/join-designer").permitAll()
-                        .requestMatchers("/admin", "/auth/login-test").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
+                        .requestMatchers("/auth/login", "/auth/login-test", "/", "/auth/join-purchaser", "/auth/join-seller", "/auth/join-designer",
+                                "/designer/portfolio","/swagger-ui/**","/v3/api-docs/**", "/swagger-resources/**","/designer/portfolio/**").permitAll()
+                        .requestMatchers("/admin", "/auth/login-test", "/product/all", "/product/all/{keyword}").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
+                        .requestMatchers("/product/register/new", "/product/register/{productId}", "/product/delete/{productId}", "/product/register").hasRole("SELLER")
                         .anyRequest().authenticated());
 
         http
@@ -68,7 +70,4 @@ public class SecurityConfig {
 
         return new BCryptPasswordEncoder();
     }
-
-
-
 }

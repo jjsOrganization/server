@@ -1,41 +1,36 @@
-package com.jjs.ClothingInventorySaleReformPlatform.controller;
+package com.jjs.ClothingInventorySaleReformPlatform.controller.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.*;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.DesignerDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.PurchaserDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.SellerDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.UserLoginRequestDto;
 import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorCode;
 import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorResponse;
-import com.jjs.ClothingInventorySaleReformPlatform.error.exception.CustomValidationException;
 import com.jjs.ClothingInventorySaleReformPlatform.jwt.dto.TokenDto;
 import com.jjs.ClothingInventorySaleReformPlatform.jwt.provider.JwtTokenProvider;
-import com.jjs.ClothingInventorySaleReformPlatform.response.AuthResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.response.ResultResponse;
-import com.jjs.ClothingInventorySaleReformPlatform.service.CustomUserDetailsService;
-import com.jjs.ClothingInventorySaleReformPlatform.service.UserService;
+import com.jjs.ClothingInventorySaleReformPlatform.service.auth.CustomUserDetailsService;
+import com.jjs.ClothingInventorySaleReformPlatform.service.auth.UserService;
 import com.jjs.ClothingInventorySaleReformPlatform.response.AuthResultCode;
-import jakarta.servlet.http.HttpServletRequest;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 //@Controller
 @RestController
 @ResponseBody
 @RequiredArgsConstructor
+@Tag(name = "회원가입 및 로그인 컨트롤러", description = "로그인, 로그인 테스트, 회원가입 API")
 public class UserController {
 
     private final UserService userService;

@@ -1,4 +1,4 @@
-package com.jjs.ClothingInventorySaleReformPlatform.dto;
+package com.jjs.ClothingInventorySaleReformPlatform.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
