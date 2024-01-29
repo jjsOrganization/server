@@ -10,6 +10,8 @@ import com.jjs.ClothingInventorySaleReformPlatform.response.AuthResultCode;
 import com.jjs.ClothingInventorySaleReformPlatform.response.ResultResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.service.product.ProductImgService;
 import com.jjs.ClothingInventorySaleReformPlatform.service.product.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "상품", description = "상품 관리와 관련된 API 입니다.")
 public class ProductController {
     private final ProductRepository productRepository;
 
@@ -38,7 +41,8 @@ public class ProductController {
     private final AuthenticationFacade authenticationFacade;
 
     // 상품 등록
-    @PostMapping("/item/register/new")
+    @Operation(summary = "상품 등록", description = "상품 정보를 등록하는 것으로 이미지는 한 개 이상이 필수입니다.")
+    @PostMapping("/product/register/new")
     public ResponseEntity<Object> itemNew(@Valid @ModelAttribute ProductFormDTO productFormDTO,
                                            BindingResult bindingResult,
                                            @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList) {
@@ -53,7 +57,6 @@ public class ProductController {
 
             ErrorResponse errorResponse = new ErrorResponse(ErrorCode.INVALID_BAD_REQUEST, fieldErrors);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-            //return ResponseEntity.badRequest().body("유효성 검사 실패");
         }
 
         if (itemImgFileList.get(0).isEmpty() && productFormDTO.getId() == null) {
@@ -66,21 +69,20 @@ public class ProductController {
 
             ErrorResponse errorResponse = new ErrorResponse(ErrorCode.IMAGE_EMPTY, fieldErrors);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-            //return ResponseEntity.badRequest().body("첫번째 상품 이미지는 필수 입력 값 입니다.");
         }
 
         try {
             productService.saveItem(productFormDTO, itemImgFileList);
             ResultResponse resultResponse = ResultResponse.of(AuthResultCode.REGISTER_PRODUCT_SUCCESS, Collections.singletonMap("productName", productFormDTO.getProductName()));
             return new ResponseEntity<>(resultResponse, HttpStatus.OK);
-            //return ResponseEntity.ok().body("상품이 성공적으로 등록되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("상품 등록 중 에러가 발생하였습니다.");
         }
     }
 
     // 상품 삭제
-    @DeleteMapping("/item/delete/{productId}")  // (DELETE)http://localhost:8080/item/delete/1
+    @Operation(summary = "상품 삭제", description = "로그인한 판매자는 본인이 등록한 상품을 삭제한다.")
+    @DeleteMapping("/product/delete/{productId}")  // (DELETE)http://localhost:8080/item/delete/1
     public ResponseEntity<?> deleteProduct(@PathVariable Long productId) {
         try {
             productService.deleteProduct(productId);
@@ -93,7 +95,8 @@ public class ProductController {
     }
 
     // 로그인한 판매자의 상품 전체 조회  (GET)http://localhost:8080/item/register
-    @GetMapping("/item/register")
+    @Operation(summary = "상품 전체 조회(로그인한 판매자)", description = "로그인 한 판매자는 마이페이지 또는 재고목록 확인을 위해 자신이 등록한 상품을 모두 조회한다.(이미지 제외)")
+    @GetMapping("/product/register")
     public ResponseEntity<List<ProductListDTO>> getMyProducts() {
         String currentUsername = authenticationFacade.getCurrentUsername();
         List<ProductListDTO> products = productService.getProductsFindAll(currentUsername);
@@ -101,7 +104,8 @@ public class ProductController {
     }
 
     // 로그인한 판매자의 특정 상품 조회
-    @GetMapping("/item/register/{productId}")
+    @Operation(summary = "상품 상세 조회(로그인한 판매자)", description = "로그인 한 판매자는 자신이 등록한 상품들 중 하나에 대하여 상세히 조회한다.(이미지 포함)")
+    @GetMapping("/product/register/{productId}")
     public ResponseEntity<ProductDetailDTO> getProductDetail(@PathVariable Long productId) {
         String currentUsername = authenticationFacade.getCurrentUsername();
         return productService.getProductsFindOne(productId, currentUsername)
@@ -110,14 +114,16 @@ public class ProductController {
     }
 
     // 판매자들이 등록한 전체 상품 조회
-    @GetMapping("/item/all")
+    @Operation(summary = "상품 전체 조회", description = "모든 회원은 판매자들이 등록한 상품들을 모두 조회할 수 있다.")
+    @GetMapping("/product/all")
     public ResponseEntity<List<ProductListDTO>> getAllProducts() {
         List<ProductListDTO> products = productService.getAllProducts();
         return ResponseEntity.ok(products);
     }
 
     // 특정 검색어가 포함된 상품들 전체 조회 - 상품 검색
-    @GetMapping("/all/{keyword}")
+    @Operation(summary = "상품 검색", description = "상품 전체 조회에 대하여 특정 검색어가 포함된 상품이 조회된다.")
+    @GetMapping("/product/all/{keyword}")
     public ResponseEntity<List<ProductListDTO>> searchProductsByName(@PathVariable String keyword) {
         List<ProductListDTO> products = productService.searchProductsByName(keyword);
         return ResponseEntity.ok(products);
@@ -128,7 +134,8 @@ public class ProductController {
 
 
     // 상품 수정
-    @PutMapping("/item/register/{productId}")
+    @Operation(summary = "상품 수정", description = "로그인한 판매자는 자신이 등록한 상품에 대하여 수정이 가능하다.")
+    @PutMapping("/product/register/{productId}")
     public ResponseEntity<?> updateProduct(@PathVariable Long productId,
                                            @Valid @ModelAttribute ProductFormDTO productFormDTO,
                                            BindingResult bindingResult,
@@ -144,7 +151,6 @@ public class ProductController {
 
             ErrorResponse errorResponse = new ErrorResponse(ErrorCode.INVALID_BAD_REQUEST, fieldErrors);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-            //return ResponseEntity.badRequest().body("유효성 검사 실패");
         }
 
         if (itemImgFileList.get(0).isEmpty() && productFormDTO.getId() == null) {
@@ -157,18 +163,13 @@ public class ProductController {
 
             ErrorResponse errorResponse = new ErrorResponse(ErrorCode.IMAGE_EMPTY, fieldErrors);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-            //return ResponseEntity.badRequest().body("첫번째 상품 이미지는 필수 입력 값 입니다.");
         }
 
         try {
-            //productService.updateProduct(productId, productFormDTO, itemImgFileList);
             productService.updateProduct(productId, productFormDTO, itemImgFileList);
-            //productService.updateProduct(productFormDTO.getId(), productFormDTO, itemImgFileList);
             ResultResponse resultResponse = ResultResponse.of(AuthResultCode.REGISTER_PRODUCT_SUCCESS, Collections.singletonMap("productName", productFormDTO.getProductName()));
             return new ResponseEntity<>(resultResponse, HttpStatus.OK);
-            //return ResponseEntity.ok().body("상품이 성공적으로 등록되었습니다.");
         } catch (Exception e) {
-            //return ResponseEntity.internalServerError().body("상품 등록 중 에러가 발생하였습니다.");
             log.error("상품 수정 중 에러 발생", e);
             return ResponseEntity.internalServerError().body("상품 수정 중 에러가 발생하였습니다. 오류: " + e.getMessage());
         }

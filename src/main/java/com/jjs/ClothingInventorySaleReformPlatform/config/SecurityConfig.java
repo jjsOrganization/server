@@ -48,8 +48,8 @@ public class SecurityConfig{
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/auth/login", "/auth/login-test", "/", "/auth/join-purchaser", "/auth/join-seller", "/auth/join-designer",
                                 "/designer/portfolio","/swagger-ui/**","/v3/api-docs/**", "/swagger-resources/**","/designer/portfolio/**").permitAll()
-                        .requestMatchers("/admin", "/auth/login-test", "/item/all").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
-                        .requestMatchers("/item/register/new", "/item/register/{productId}", "/item/delete/{productId}", "/item/register").hasRole("SELLER")
+                        .requestMatchers("/admin", "/auth/login-test", "/product/all", "/product/all/{keyword}").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
+                        .requestMatchers("/product/register/new", "/product/register/{productId}", "/product/delete/{productId}", "/product/register").hasRole("SELLER")
                         .anyRequest().authenticated());
 
         http

@@ -4,6 +4,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.util.StringUtils;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.Product;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.ProductImg;
@@ -88,79 +89,58 @@ public class ProductImgService {
         return UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
     }
 
-    // 상품 삭제에서 사용
-    public void deleteProductImg(Long productImgId) {
-        ProductImg productImg = productImgRepository.findById(productImgId)
-                .orElseThrow(() -> new EntityNotFoundException("Image not found"));
-
-        // S3에서 이미지 파일 삭제
-        if (productImg.getImgName() != null && !productImg.getImgName().isEmpty()) {
-            String filePath = "productRegister/" + productImg.getImgName();
-            amazonS3Client.deleteObject(bucket, filePath);
-        }
-
-        // 데이터베이스에서 ProductImg 레코드 삭제
-        productImgRepository.delete(productImg);
+    // 상품 이미지 삭제
+    public void deleteImagesFromS3(List<ProductImg> productImgs) {
+        productImgs.forEach(productImg -> {
+            if (productImg.getImgName() != null && !productImg.getImgName().isEmpty()) {
+                String filePath = "productRegister/" + productImg.getImgName();
+                amazonS3Client.deleteObject(bucket, filePath);
+            }
+        });
     }
 
-    public void updateProductImg(Long productId, MultipartFile file) throws IOException {
-        if (!file.isEmpty()) {
-            /*
-            ProductImg savedProductImg = productImgRepository.findById(productImgId)
-                    .orElseThrow(EntityNotFoundException::new); */
-            /*
-            ProductImg savedProductImg = productImgRepository.findById(productImgId)
-                    .orElseThrow(() -> new EntityNotFoundException("Image not found"));
-            System.out.println(savedProductImg.getImgName());
-            // S3에서 기존 이미지 파일 삭제
-            if (!StringUtils.isNullOrEmpty(savedProductImg.getImgName())) {
-                String oldFilePath = "productRegister/" + savedProductImg.getImgName();
-                amazonS3Client.deleteObject(bucket, oldFilePath);
-                //productImgRepository.delete(savedProductImg); // DB에서 삭제
+
+
+
+    public void updateProductImages(Long productId, List<MultipartFile> productImgFileList) throws IOException {
+        List<ProductImg> existingImgs = productImgRepository.findByProductId(productId);
+
+        // S3 및 데이터베이스에서 기존 이미지 삭제
+        existingImgs.forEach(productImg -> {
+            if (productImg.getImgName() != null && !productImg.getImgName().isEmpty()) {
+                amazonS3Client.deleteObject(bucket, "productRegister/" + productImg.getImgName());
+                productImgRepository.delete(productImg);
             }
+        });
 
-             */
-            // 특정 상품에 연결된 이미지를 찾습니다.
-            List<ProductImg> productImgs = productImgRepository.findByProductId(productId);
-
-            // 이미지가 이미 존재하는 경우, 기존 이미지를 업데이트합니다.
-            if (!productImgs.isEmpty()) {
-                for (ProductImg productImg : productImgs) {
-                    // S3에서 기존 이미지 파일 삭제
-                    if (!StringUtils.isNullOrEmpty(productImg.getImgName())) {
-                        String oldFilePath = "productRegister/" + productImg.getImgName();
-                        amazonS3Client.deleteObject(bucket, oldFilePath);
-                    }
-                    // 데이터베이스에서 ProductImg 레코드 삭제
-                    productImgRepository.delete(productImg);
-                }
+        // 새 이미지 파일 업로드 및 데이터베이스 저장
+        for (MultipartFile file : productImgFileList) {
+            if (!file.isEmpty()) {
+                uploadNewProductImg(productId, file);
             }
-
-
-            // S3에 새 이미지 파일 업로드
-            String oriImgName = file.getOriginalFilename();
-            String imgName = generateFileName(file);
-            String imgUrl = "productRegister/" + imgName;
-
-/*
-            // 상품 이미지 정보 업데이트
-            savedProductImg.updateItemImg(oriImgName, imgName, imgUrl);
-            productImgRepository.save(savedProductImg);
- */
-
-            ProductImg newProductImg = new ProductImg();
-            newProductImg.setProduct((Product) productImgRepository.findByProductId(productId)); ///
-            newProductImg.setImgName(imgName);
-            newProductImg.setOriImgName(oriImgName);
-            newProductImg.setImgUrl(imgUrl);
-            newProductImg.setProduct(productRepository.findById(productId)
-                    .orElseThrow(() -> new EntityNotFoundException("Product not found")));
-
-            productImgRepository.save(newProductImg); // 새 이미지 정보 저장
         }
-        // 이미지가 비어 있으면 이미지 업데이트를 하지 않음
     }
+    private void uploadNewProductImg(Long productId, MultipartFile file) throws IOException {
+        String oriImgName = file.getOriginalFilename();
+        String imgName = generateFileName(file);
+        String imgUrl = "productRegister/" + imgName;
 
+        // S3에 이미지 파일 업로드
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(file.getSize());
+        metadata.setContentType(file.getContentType());
+        amazonS3Client.putObject(new PutObjectRequest(bucket, imgUrl, file.getInputStream(), metadata));
+
+        // 새 이미지 정보 생성 및 저장
+        ProductImg newProductImg = new ProductImg();
+        newProductImg.setProduct(productRepository.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found")));
+        newProductImg.setImgName(imgName);
+        newProductImg.setOriImgName(oriImgName);
+        newProductImg.setImgUrl(imgUrl);
+
+        productImgRepository.save(newProductImg);
+    }
 
 }
 

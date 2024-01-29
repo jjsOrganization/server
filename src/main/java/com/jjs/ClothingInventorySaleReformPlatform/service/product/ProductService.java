@@ -29,6 +29,7 @@ public class ProductService {
 
 
 
+    // 상품 등록
     public Long saveItem(ProductFormDTO productFormDTO, List<MultipartFile> itemImgFileList) throws Exception{
 
         //상품 등록
@@ -63,41 +64,23 @@ public class ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found"));
 
-        // 상품 이미지 삭제
-        product.getProductImg().forEach(productImg -> {
-            productImgService.deleteProductImg(productImg.getId());
-        });
-
         // 상품 정보 삭제
         productRepository.delete(product);
+
+        // S3에서 이미지 파일 삭제 로직은 별도 메소드로 분리될 수 있음
+        productImgService.deleteImagesFromS3(product.getProductImg());
     }
 
-
-    // 상품 수정
+    // 상품 수정 - 게시글 수정 시, 기존의 이미지를 삭제하고 새로운 이미지를 추가하는 방식
+    @Transactional
     public Long updateProduct(Long productId, ProductFormDTO productFormDTO, List<MultipartFile> productImgFileList) throws Exception {
-        // 상품 정보 조회 및 업데이트
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found"));
 
         product.updateProduct(productFormDTO); // 상품 정보 업데이트
 
-        // 이미지 파일 리스트가 비어있지 않고, 제공된 이미지가 있는 경우에만 이미지 처리
         if (!productImgFileList.isEmpty()) {
-            List<Long> productImgIds = productFormDTO.getProductImgIds();
-
-            for (int i = 0; i < productImgFileList.size(); i++) {
-                MultipartFile file = productImgFileList.get(i);
-
-                if (!file.isEmpty()) {
-                    if (i < productImgIds.size()) {
-                        // 기존 이미지 업데이트
-                        productImgService.updateProductImg(productImgIds.get(i), file);
-                    } else {
-                        // 새 이미지 추가
-                        productImgService.uploadFile(new ProductImg(), file);
-                    }
-                }
-            }
+            productImgService.updateProductImages(productId, productImgFileList);
         }
 
         return product.getId();
