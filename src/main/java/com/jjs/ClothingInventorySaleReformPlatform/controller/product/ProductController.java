@@ -42,7 +42,7 @@ public class ProductController {
 
     // 상품 등록
     @Operation(summary = "상품 등록", description = "상품 정보를 등록하는 것으로 이미지는 한 개 이상이 필수입니다.")
-    @PostMapping("/product/register/new")
+    @PostMapping("/product/seller/register")
     public ResponseEntity<Object> itemNew(@Valid @ModelAttribute ProductFormDTO productFormDTO,
                                            BindingResult bindingResult,
                                            @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList) {
@@ -82,7 +82,7 @@ public class ProductController {
 
     // 상품 삭제
     @Operation(summary = "상품 삭제", description = "로그인한 판매자는 본인이 등록한 상품을 삭제한다.")
-    @DeleteMapping("/product/delete/{productId}")  // (DELETE)http://localhost:8080/item/delete/1
+    @DeleteMapping("/product/seller/register/{productId}")  // (DELETE)http://localhost:8080/item/delete/1
     public ResponseEntity<?> deleteProduct(@PathVariable Long productId) {
         try {
             productService.deleteProduct(productId);
@@ -96,7 +96,7 @@ public class ProductController {
 
     // 로그인한 판매자의 상품 전체 조회  (GET)http://localhost:8080/item/register
     @Operation(summary = "상품 전체 조회(로그인한 판매자)", description = "로그인 한 판매자는 마이페이지 또는 재고목록 확인을 위해 자신이 등록한 상품을 모두 조회한다.(이미지 제외)")
-    @GetMapping("/product/register")
+    @GetMapping("/product/seller/register")
     public ResponseEntity<List<ProductListDTO>> getMyProducts() {
         String currentUsername = authenticationFacade.getCurrentUsername();
         List<ProductListDTO> products = productService.getProductsFindAll(currentUsername);
@@ -121,6 +121,15 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+    // 상품 상세 조회
+    @Operation(summary = "상품 상세 조회", description = "모든 회원은 판매자들이 등록한 상품들 중 하나에 대하여 상세히 조회할 수 있다.")
+    @GetMapping("/product/all/detail/{productId}")
+    public ResponseEntity<ProductDetailDTO> getProductDetails(@PathVariable Long productId) {
+        return productService.getProductsFindDetail(productId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     // 특정 검색어가 포함된 상품들 전체 조회 - 상품 검색
     @Operation(summary = "상품 검색", description = "상품 전체 조회에 대하여 특정 검색어가 포함된 상품이 조회된다.")
     @GetMapping("/product/all/{keyword}")
@@ -135,7 +144,7 @@ public class ProductController {
 
     // 상품 수정
     @Operation(summary = "상품 수정", description = "로그인한 판매자는 자신이 등록한 상품에 대하여 수정이 가능하다.")
-    @PutMapping("/product/register/{productId}")
+    @PutMapping("/product/seller/register/{productId}")
     public ResponseEntity<?> updateProduct(@PathVariable Long productId,
                                            @Valid @ModelAttribute ProductFormDTO productFormDTO,
                                            BindingResult bindingResult,

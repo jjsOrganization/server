@@ -137,4 +137,10 @@ public class ProductService {
                 .map(this::productsFindAll)
                 .collect(Collectors.toList());
     }
+
+    // 상품 상세 조회
+    public Optional<ProductDetailDTO> getProductsFindDetail(Long productId) {
+        return productRepository.findById(productId)
+                .map(this::productsFindOne);
+    }
 }
