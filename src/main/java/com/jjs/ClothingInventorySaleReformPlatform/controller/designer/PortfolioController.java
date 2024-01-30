@@ -3,6 +3,7 @@ package com.jjs.ClothingInventorySaleReformPlatform.controller.designer;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.User;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.designer.PortfolioDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.designer.PortfolioInfoDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.product.response.ProductListDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorCode;
 import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.response.AuthResultCode;
@@ -49,7 +50,7 @@ public class PortfolioController {
             portfolioService.savePortfolio(portfolioDTO);
 
             // 수정 필요한 부분
-            ResultResponse resultResponse = ResultResponse.of(AuthResultCode.REGISTER_PRODUCT_SUCCESS,
+            ResultResponse resultResponse = ResultResponse.of(AuthResultCode.REGISTER_PORTFOLIO_SUCCESS,
                     Collections.singletonMap("DesignerEmail", portfolioDTO.getDesignerEmail()));
             //
             return new ResponseEntity<>(resultResponse, HttpStatus.OK);
@@ -62,10 +63,12 @@ public class PortfolioController {
 
     /**
      * 디자이너 이메일을 통해 포트폴리오 조회 메소드
+     * PathVariable로 변경 필요** -> 어떻게 portfolio_id를 가져와서 사용할것인지..?
      * @param requestData ( 디자이너 이메일)
      * @param bindingResult
      * @return
      */
+
     @Operation(summary = "포트폴리오 조회", description = "로그인 된 디자이너의 포트폴리오 정보를 조회합니다.")
     @GetMapping("/designer/portfolio")
     public ResponseEntity<Object> loadPortfolio(@Valid @RequestBody @Parameter(name = "designerEmail", description = "이메일 하나만 입력하세요.",
@@ -80,7 +83,46 @@ public class PortfolioController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @Operation(summary = "디자이너 검색(키워드)", description = "디자니어 전체 조회에 대하여 특정 검색어가 포함된 디자이너가 조회된다.")
+    @GetMapping("/designer/portfolio/search")
+    public ResponseEntity<List<PortfolioInfoDTO>> searchProductsByName(@RequestBody Map<String,String> searchData) {
+        List<PortfolioInfoDTO>  searchedDesigner = portfolioService.getPortfolioByName(searchData.get("keyword"));
+        return ResponseEntity.ok(searchedDesigner);
+    }
 
+    @Operation(summary = "포트폴리오 수정", description = "디자이너의 포트폴리오를 수정합니다.")
+    @PutMapping("/designer/portfolio/{portfolio_id}")
+    public ResponseEntity<Object> modifyPortfolio(@Valid @ModelAttribute PortfolioDTO portfolioDTO, BindingResult bindingResult,
+                                                  @PathVariable Long portfolio_id) throws IOException {
+
+        ResponseEntity<Object> errorResponse = getObjectResponseEntity(bindingResult.hasErrors(),
+                bindingResult, ErrorCode.INVALID_BAD_REQUEST);
+        if (errorResponse != null) return errorResponse;
+
+        try{
+            portfolioDTO.setID(portfolio_id); // 수정할 포트폴리오의 id 셋팅
+
+            portfolioService.updatePortfolio(portfolioDTO); // update 실행
+
+            // 수정 필요한 부분
+            ResultResponse resultResponse = ResultResponse.of(AuthResultCode.MODIFY_PORTFOLIO_SUCCESS,
+                    Collections.singletonMap("DesignerEmail", portfolioDTO.getDesignerEmail()));
+            //
+
+            return new ResponseEntity<>(resultResponse, HttpStatus.OK);
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body(e.getMessage());
+
+        }
+
+    }
+
+    @Operation(summary = "전체 디자이너 조회", description = "모든 회원은 디자이너 검색 가능")
+    @GetMapping("/portfolio/all")
+    public ResponseEntity<List<PortfolioInfoDTO>> getAllPortfolio() throws IOException {
+        List<PortfolioInfoDTO> portfolios = portfolioService.getAllPortfolio();
+        return ResponseEntity.ok(portfolios);
+    }
     /**
      * 에러 메세지 생성하는 메소드
      *

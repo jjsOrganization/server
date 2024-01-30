@@ -24,7 +24,6 @@ public class DesignerInfo {  // 디자이너 부가 정보
 
 
 
-
 //    public static Designer toDesigner(DesignerDTO designerDTO) {
 //        Designer designer = new Designer();
 //
