@@ -16,6 +16,9 @@ public class PortfolioInfoDTO {
     @Schema(description = "자기소개 및 설명")
     private String explanation; // 자기소개 & 설명
 
+    @Schema(description = "디자이너 이름")
+    private String designerName;
+
     @Schema(description = "디자이너 이미지 경로")
     private String designerImagePath; // 디자이너 이미지 경로
 

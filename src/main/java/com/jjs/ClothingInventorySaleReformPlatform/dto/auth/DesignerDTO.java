@@ -1,6 +1,5 @@
 package com.jjs.ClothingInventorySaleReformPlatform.dto.auth;
 
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -26,6 +25,7 @@ public class DesignerDTO {
     @NotBlank(message = "휴대폰 번호를 입력해주세요.")
     @Pattern(regexp = "(01[016789])(\\d{3,4})(\\d{4})", message = "올바른 휴대폰 번호를 입력해주세요.")
     private String phoneNumber;
+
     private String role;
 
     // Designer 특화 정보

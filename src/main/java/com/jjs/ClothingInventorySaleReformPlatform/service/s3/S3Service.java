@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.service.s3;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class S3Uploader {
+public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     private final AmazonS3Client amazonS3Client;
@@ -25,7 +26,7 @@ public class S3Uploader {
 
     /**
      * S3에 이미지를 업로드
-     *
+     * 이미지 저장 안하는 경우도 처리 필요, 확장자 다른 경우 처리 필요 !!!
      * @param file 업로드할 이미지 파일
      * @return S3에 저장된 이미지의 URL
      * @throws IOException 파일 업로드 중 발생한 예외
@@ -49,6 +50,23 @@ public class S3Uploader {
     }
 
     /**
+     * s3에 저장된 이미지 객체 삭제하는 메소드
+     * 이미지가 저장되어 있지 않는 경우 처리 필요!!
+     * @param fileUrl
+     * @throws IOException
+     */
+    @Transactional
+    public void fileDelete(String fileUrl) throws IOException {
+            try {
+                amazonS3Client.deleteObject(bucket, fileUrl);
+            } catch (AmazonServiceException e) {
+                System.err.println(e.getErrorMessage());
+                System.exit(1);
+            }
+            System.out.println(String.format("[%s] deletion complete", fileUrl));
+    }
+
+    /**
      * 업로드된 파일의 메타데이터를 생성
      *
      * @param file 업로드된 파일
@@ -59,16 +77,6 @@ public class S3Uploader {
         objectMetadata.setContentDisposition(file.getContentType());
         objectMetadata.setContentLength(file.getSize());
         return objectMetadata;
-    }
-
-    /**
-     * 파일의 확장자 추출
-     */
-
-    public String extractExtension(String originName) {
-        int index = originName.lastIndexOf('.');
-
-        return originName.substring(index, originName.length());
     }
 
     /**

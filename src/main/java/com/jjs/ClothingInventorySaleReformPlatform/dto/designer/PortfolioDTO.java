@@ -11,6 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 public class PortfolioDTO {
 
+    @Schema(description = "포트폴리오 ID")
+    private Long ID;
+
     @NotBlank(message = "해당란은 필수 입력 값입니다.")
     @Schema(description = "자기소개 및 경력 설명")
     private String explanation; // 자기소개 & 설명
@@ -22,6 +25,9 @@ public class PortfolioDTO {
     @Schema(description = "디자이너 이미지")
     private MultipartFile designerImage; // 디자이너 이미지
 
+    @NotNull(message = " 디자이너 이름은 필수 입력 값입니다.")
+    @Schema(description = "디자이너 이름")
+    private String designerName;
 
     @NotBlank(message = " 디자이너 이메일은 필수 입력 값입니다.")
     @Schema(description = "디자이너 이메일")

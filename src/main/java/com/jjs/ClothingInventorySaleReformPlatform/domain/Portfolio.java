@@ -1,7 +1,9 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain;
 
+import com.jjs.ClothingInventorySaleReformPlatform.common.entity.BaseEntity;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.designer.PortfolioDTO;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +12,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "PORTFOLIO")
-public class Portfolio {  // 포트폴리오 - 디자이너이메일, 설명, 이전결과사진, 이전결과설명, 포트폴리오번호
+public class Portfolio extends BaseEntity {  // 포트폴리오 - 디자이너이메일, 설명, 이전결과사진, 이전결과설명, 포트폴리오번호
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PORTFOLIO_ID", nullable = false)
@@ -20,6 +22,9 @@ public class Portfolio {  // 포트폴리오 - 디자이너이메일, 설명, �
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "DESINGER_EMAIL", nullable = false)
     private User designerEmail;  // 디자이너 이메일
+
+    @Column(name = "DESIGNER_NAME")
+    private String name;
 
     @NotNull
     @Lob

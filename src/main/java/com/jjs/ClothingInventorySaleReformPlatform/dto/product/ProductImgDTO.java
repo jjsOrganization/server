@@ -1,8 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.dto.product;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.ProductImg;
-import jakarta.persistence.Entity;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.modelmapper.ModelMapper;
 

@@ -130,9 +130,6 @@ public class ProductController {
     }
 
 
-
-
-
     // 상품 수정
     @Operation(summary = "상품 수정", description = "로그인한 판매자는 자신이 등록한 상품에 대하여 수정이 가능하다.")
     @PutMapping("/product/register/{productId}")
