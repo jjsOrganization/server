@@ -110,6 +110,7 @@ public class ProductService {
                 .filter(product -> product.getCreateBy().equals(sellerUsername))
                 .map(this::productsFindOne);
     }
+
     private ProductDetailDTO productsFindOne(Product product) {  // 상품 상세 조회 dto
         ProductDetailDTO dto = new ProductDetailDTO();
         dto.setId(product.getId());

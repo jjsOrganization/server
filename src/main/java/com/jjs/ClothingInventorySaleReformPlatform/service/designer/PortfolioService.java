@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.stream;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -79,8 +81,8 @@ public class PortfolioService {
         User user = new User();
         user.setEmail(portfolioDTO.getDesignerEmail());
 
-        ImageUrlMapping obj = portfolioRepository.findPortfolioById(portfolioDTO.getID()).get();
-        s3Service.fileDelete(String.valueOf(obj));
+        ImageUrlMapping imageUrlById = portfolioRepository.findPortfolioById(portfolioDTO.getID()).get();
+        s3Service.fileDelete(imageUrlById.getDesignerImage());
 
         String storedImageUrl = s3Service.uploadFile(portfolioDTO.getDesignerImage());
 
@@ -101,6 +103,7 @@ public class PortfolioService {
      */
     private PortfolioInfoDTO findAllPortfolio(Portfolio portfolio) {
         PortfolioInfoDTO portfolioInfoDTO = new PortfolioInfoDTO();
+        portfolioInfoDTO.setExplanation(portfolio.getExplanation());
         portfolioInfoDTO.setDesignerName(portfolio.getName());
         portfolioInfoDTO.setDesignerImagePath(portfolio.getDesignerImage());
         return portfolioInfoDTO;
@@ -130,7 +133,9 @@ public class PortfolioService {
                 .collect(Collectors.toList());
     }
 
-
+    public Optional<Portfolio> getPortfolioById(Long id) {
+        return portfolioRepository.findById(id);
+    }
 
 
 
