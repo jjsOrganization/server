@@ -12,6 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Service
@@ -20,9 +23,12 @@ import java.util.UUID;
 public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+
+    @Value("${cloud.aws.region.static}")
+    private String region;
+
     private final AmazonS3Client amazonS3Client;
 
-    private String defaultUrl = "https://s3.amazonaws.com/";
 
     /**
      * S3에 이미지를 업로드
@@ -58,7 +64,7 @@ public class S3Service {
     @Transactional
     public void fileDelete(String fileUrl) throws IOException {
             try {
-                amazonS3Client.deleteObject(bucket, fileUrl);
+                amazonS3Client.deleteObject(bucket, getFileKeyFromUrl(fileUrl));
             } catch (AmazonServiceException e) {
                 System.err.println(e.getErrorMessage());
                 System.exit(1);
@@ -86,6 +92,26 @@ public class S3Service {
      * @return 고유한 파일명
      */
     private String generateFileName(MultipartFile file) {
+        log.info("file = " + file.getOriginalFilename());
         return UUID.randomUUID() + "-" + file.getOriginalFilename();
+    }
+
+    /**
+     * DB에 저장된 객체 URL에서 키 값을 추출하는 메소드
+     * 추가적으로 저장된 이미지의 URL은 DB와 S3 객체 URL에 인코딩 되어 저장되는데,
+     * 키 값은 인코딩 되지 않고 저장된다, 따라서 키 값을 조회하려면 디코딩 진행 후 조회해야 함.
+     * @param fileUrl
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    public String getFileKeyFromUrl(String fileUrl) throws UnsupportedEncodingException {
+        // S3 버킷 이름과 리전을 이용해 동적으로 URL 생성
+        String s3Url = "https://" + bucket + ".s3." + region + ".amazonaws.com/";
+
+        // 생성된 URL을 제거해 파일 키 추출
+        String fileKey = fileUrl.replace(s3Url, "");
+        fileKey = URLDecoder.decode(fileKey, StandardCharsets.UTF_8);
+
+        return fileKey;
     }
 }
