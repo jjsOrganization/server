@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.controller.auth;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.PurchaserInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.DesignerDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.PurchaserDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.SellerDTO;
@@ -12,6 +13,8 @@ import com.jjs.ClothingInventorySaleReformPlatform.response.AuthResultCode;
 import com.jjs.ClothingInventorySaleReformPlatform.response.ResultResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.service.auth.CustomUserDetailsService;
 import com.jjs.ClothingInventorySaleReformPlatform.service.auth.UserService;
+import com.jjs.ClothingInventorySaleReformPlatform.service.cart.CartService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,12 +37,14 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final UserService userService;
+    private final CartService cartService;
     private final CustomUserDetailsService customUserDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
 
     @PostMapping("/auth/login")
+    @Operation(summary = "로그인", description = "구매자/판매자/디자이너 로그인을 합니다.")
     public ResponseEntity<Object> login(@RequestBody UserLoginRequestDto memberLoginRequestDto) {
         try {
             String memberId = memberLoginRequestDto.getMemberId();
@@ -89,6 +94,7 @@ public class UserController {
 
     // 구매자 회원가입
     @PostMapping("/auth/join-purchaser")
+    @Operation(summary = "구매자 회원가입", description = "구매자 회원가입을 합니다.")
     public ResponseEntity<Object> joinPurchaser(@Valid @RequestBody PurchaserDTO purchaserDTO, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -104,12 +110,20 @@ public class UserController {
         }
 
         userService.joinPurchaser(purchaserDTO);
+
+        // 구매자는 회원가입과 동시에 장바구니 생성
+        PurchaserInfo purchaserInfo = new PurchaserInfo();
+        purchaserInfo.setEmail(purchaserDTO.getEmail());
+        // 장바구니 생성
+        cartService.createCart(purchaserInfo);
+
         ResultResponse resultResponse = ResultResponse.of(AuthResultCode.REGISTER_SUCCESS, Collections.singletonMap("email", purchaserDTO.getEmail()));
         return new ResponseEntity<>(resultResponse, HttpStatus.OK);
     }
 
     // 판매자 회원가입
     @PostMapping("/auth/join-seller")
+    @Operation(summary = "판매자 회원가입", description = "판매자 회원가입을 합니다.")
     public ResponseEntity<Object> joinSeller(@Valid @RequestBody SellerDTO sellerDTO, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -131,6 +145,7 @@ public class UserController {
 
     // 디자이너 회원가입
     @PostMapping("/auth/join-designer")
+    @Operation(summary = "디자이너 회원가입", description = "디자이너 회원가입을 합니다.")
     public ResponseEntity<Object> joinDesigner(@Valid @RequestBody DesignerDTO designerDTO, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
