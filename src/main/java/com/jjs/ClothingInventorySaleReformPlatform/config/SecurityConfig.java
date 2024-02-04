@@ -51,6 +51,7 @@ public class SecurityConfig{
                         .requestMatchers("/admin", "/auth/login-test", "/product/all", "/product/all/{keyword}", "/product/all/{productId}",
                                 "/product/all/detail/{productId}").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
                         .requestMatchers("/product/seller/register", "/product/seller/register/{productId}", "/product/seller/register").hasRole("SELLER")
+                        .requestMatchers("/cart/purchaser/add/{productId}", "/cart/purchaser/**").hasRole("PURCHASER")
                         .anyRequest().authenticated());
 
         http
