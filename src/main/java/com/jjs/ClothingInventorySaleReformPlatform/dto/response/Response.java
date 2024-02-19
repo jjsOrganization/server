@@ -23,6 +23,15 @@ public class Response {
         private Object data;
         private Object error;
     }
+    @Getter
+    @Builder
+    private static class Body2 {
+
+        private int state;
+        private String result;
+        private String massage;
+        private Object error;
+    }
 
     public ResponseEntity<?> success(Object data, String msg, HttpStatus status) {
         Body body = Body.builder()
@@ -54,6 +63,15 @@ public class Response {
      */
     public ResponseEntity<?> success(String msg) {
         return success(Collections.emptyList(), msg, HttpStatus.OK);
+    }
+    public ResponseEntity<?> success(String msg, HttpStatus status) {
+        Body2 body = Body2.builder()
+                .state(status.value())
+                .result("success")
+                .massage(msg)
+                .error(Collections.emptyList())
+                .build();
+        return ResponseEntity.ok(body);
     }
 
     /**

@@ -36,18 +36,6 @@ public class User implements UserDetails {  // 구매자
     @Column(name = "ROLE", nullable = false)
     private String role;  // 권한
 
-/*
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Builder.Default
-    private List<String> roles = new ArrayList<>();
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-    }
- */
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -1,5 +1,7 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.delivery.DeliveryStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.order.OrderStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
