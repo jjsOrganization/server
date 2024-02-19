@@ -56,12 +56,16 @@ public class OrderService {
         for (OrderDetailDTO detail : orderDTO.getOrderDetails()) {
             Product product = productRepository.findById(detail.getProductId())
                     .orElseThrow(() -> new IllegalArgumentException("상품 정보를 찾을 수 없습니다."));
+
+            if (detail.getQuantity() > product.getProductStock()) {
+                throw new IllegalArgumentException("상품 [" + product.getProductName() + "]의 재고가 부족합니다. 요청 수량: "
+                        + detail.getQuantity() + ", 재고: " + product.getProductStock());
+            }
+
             OrderDetail orderDetail = new OrderDetail();
             orderDetail.setOrder(saveOrder);
             orderDetail.setProduct(product);
             orderDetail.setQuantity(detail.getQuantity());
-            //Cart pro = cartRepository.findByPurchaserInfoEmail(purchaserInfo.getEmail());
-            //orderDetail.setQuantity(pro.getCount());
             orderDetail.setPrice(product.getPrice() * detail.getQuantity());
             orderDetailRepository.save(orderDetail);
         }

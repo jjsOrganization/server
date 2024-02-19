@@ -101,6 +101,13 @@ public class ProductService {
         dto.setItemDetail(product.getProductDetailText());
         dto.setProductStock(product.getProductStock());
         dto.setProductSellStatus(product.getProductSellStatus());
+
+        // 상품 이미지 추가함...
+        if (!product.getProductImg().isEmpty()) {
+            dto.setImgUrl(product.getProductImg().get(0).getImgUrl());
+        } else {
+            dto.setImgUrl(null);
+        }
         return dto;
     }
 
