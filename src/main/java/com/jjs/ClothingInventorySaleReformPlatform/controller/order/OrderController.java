@@ -29,6 +29,9 @@ public class OrderController {
         try {
             Long orderId = orderService.createOrder(orderDTO);
             return response.success(orderId, "상품 구매 중", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+          log.error("Order post fail: ", e);
+          return response.fail(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return response.fail("주문 생성 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
