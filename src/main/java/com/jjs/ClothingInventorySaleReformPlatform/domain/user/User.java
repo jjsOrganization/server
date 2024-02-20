@@ -1,4 +1,4 @@
-package com.jjs.ClothingInventorySaleReformPlatform.domain;
+package com.jjs.ClothingInventorySaleReformPlatform.domain.user;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

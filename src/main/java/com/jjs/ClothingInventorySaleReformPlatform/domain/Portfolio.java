@@ -1,9 +1,8 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain;
 
 import com.jjs.ClothingInventorySaleReformPlatform.common.entity.BaseEntity;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.designer.PortfolioDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;

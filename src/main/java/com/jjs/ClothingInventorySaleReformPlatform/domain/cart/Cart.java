@@ -1,7 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.cart;
 
-import com.jjs.ClothingInventorySaleReformPlatform.common.entity.BaseEntity;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.PurchaserInfo;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;

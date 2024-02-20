@@ -1,7 +1,7 @@
 package com.jjs.ClothingInventorySaleReformPlatform.service.designer;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.Portfolio;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.User;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.User;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.designer.PortfolioDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.designer.PortfolioInfoDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.designer.PortfolioRepository;

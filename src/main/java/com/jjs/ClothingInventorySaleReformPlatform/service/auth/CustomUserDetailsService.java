@@ -1,6 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.service.auth;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.User;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.User;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.auth.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

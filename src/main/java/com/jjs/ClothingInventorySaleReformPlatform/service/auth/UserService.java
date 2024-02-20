@@ -1,9 +1,9 @@
 package com.jjs.ClothingInventorySaleReformPlatform.service.auth;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.DesignerInfo;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.PurchaserInfo;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.SellerInfo;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.User;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.SellerInfo;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.User;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.auth.*;
 import com.jjs.ClothingInventorySaleReformPlatform.response.AuthResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.DesignerDTO;

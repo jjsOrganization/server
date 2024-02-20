@@ -1,6 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.order;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.PurchaserInfo;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,8 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.product;
 
 import com.jjs.ClothingInventorySaleReformPlatform.common.entity.BaseEntity;
-import com.jjs.ClothingInventorySaleReformPlatform.common.entity.BaseTimeEntity;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.SellerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.product.ProductFormDTO;
 import jakarta.persistence.*;
 import lombok.*;

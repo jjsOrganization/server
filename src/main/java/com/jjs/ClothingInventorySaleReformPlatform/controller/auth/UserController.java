@@ -1,6 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.controller.auth;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.PurchaserInfo;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.DesignerDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.PurchaserDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.SellerDTO;

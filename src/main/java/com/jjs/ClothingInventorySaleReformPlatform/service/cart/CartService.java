@@ -1,6 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.service.cart;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.PurchaserInfo;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.cart.Cart;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.cart.CartProduct;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.Product;

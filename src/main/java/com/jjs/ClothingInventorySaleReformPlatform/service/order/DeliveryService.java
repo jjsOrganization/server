@@ -1,9 +1,9 @@
-package com.jjs.ClothingInventorySaleReformPlatform.service;
+package com.jjs.ClothingInventorySaleReformPlatform.service.order;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.delivery.Delivery;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.delivery.DeliveryStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.order.Order;
-import com.jjs.ClothingInventorySaleReformPlatform.repository.DeliveryRepository;
+import com.jjs.ClothingInventorySaleReformPlatform.repository.order.DeliveryRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.order.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

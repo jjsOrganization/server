@@ -1,6 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.repository.auth;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.User;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, String> {
