@@ -72,7 +72,7 @@ public class JwtTokenProvider {
                 .compact();
 
         // 로그인한 이메일 추가
-        String userEmail = ((com.jjs.ClothingInventorySaleReformPlatform.domain.User) authentication.getPrincipal()).getUsername();
+        String userEmail = ((com.jjs.ClothingInventorySaleReformPlatform.domain.user.User) authentication.getPrincipal()).getUsername();
 
 
         return TokenDto.builder()

@@ -1,7 +1,7 @@
 package com.jjs.ClothingInventorySaleReformPlatform.repository.designer;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.Portfolio;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.User;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.designer.mapping.ImageUrlMapping;
 

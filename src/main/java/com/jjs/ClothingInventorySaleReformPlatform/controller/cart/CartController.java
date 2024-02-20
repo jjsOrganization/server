@@ -1,6 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.controller.cart;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.PurchaserInfo;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.cart.Cart;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.Product;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.cart.CountDto;
@@ -20,7 +20,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -76,33 +75,27 @@ public class CartController {
     }
 
     // 특정 사용자의 장바구니 상품 조회
-    @GetMapping("/cart/purchaser/{cartId}")
+    @GetMapping("/cart/purchaser")
     @Operation(summary = "장바구니 상품 조회", description = "로그인한 회원(구매자)에 대한 장바구니 내의 상품을 조회합니다. ")
-    public ResponseEntity<?> userCartView(@PathVariable Long cartId) {
+    public ResponseEntity<?> userCartView() {
 
+        // 현재 로그인한 사용자의 이메일을 가져옴
         String currentUsername = getCurrentUsername();
-        PurchaserInfo purchaserInfo = purchaserRepository.findPurchaserByEmail(currentUsername);
 
+        // 현재 로그인한 사용자의 구매자 정보를 조회
+        PurchaserInfo purchaserInfo = purchaserRepository.findPurchaserByEmail(currentUsername);
         if (purchaserInfo == null) {
             return response.fail("구매자 정보를 찾을 수 없습니다.", HttpStatus.BAD_REQUEST);  // 구매자 정보를 찾을 수 없을 때 처리
         }
 
-        Optional<Cart> cart = cartRepository.findById(cartId);
-        if (cart.isEmpty()) {
+        // 로그인한 사용자의 장바구니 조회
+        Cart userCart = cartRepository.findByPurchaserInfoEmail(currentUsername);
+        if (userCart == null) {
             return response.fail("장바구니를 찾을 수 없습니다.", HttpStatus.BAD_REQUEST);  // 없는 장바구니에 접근했을 때 처리
         }
 
-        // 로그인한 사용자의 장바구니를 조회합니다.
-        Cart userCart = cartRepository.findByPurchaserInfoEmail(currentUsername);
-        if (userCart == null || !userCart.getId().equals(cartId)) {
-            return response.fail("잘못된 장바구니에 접근했습니다.", HttpStatus.FORBIDDEN);  // 다른 사용자의 장바구니에 접근했을 때 처리
-        }
-
-        //Cart userCart = cart.get();
+        // 장바구니에 담긴 상품 목록 조회
         List<ProductInfoDTO> cartProducts = cartService.userCartView(userCart);
-
-
-
         return response.success(cartProducts, "장바구니 상품 조회에 성공했습니다.", HttpStatus.OK);  // 성공 응답
     }
 

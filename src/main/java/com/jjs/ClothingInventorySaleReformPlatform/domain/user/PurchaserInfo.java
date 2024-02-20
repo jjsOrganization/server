@@ -1,5 +1,6 @@
-package com.jjs.ClothingInventorySaleReformPlatform.domain;
+package com.jjs.ClothingInventorySaleReformPlatform.domain.user;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

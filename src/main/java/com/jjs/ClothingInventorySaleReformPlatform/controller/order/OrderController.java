@@ -1,9 +1,8 @@
 package com.jjs.ClothingInventorySaleReformPlatform.controller.order;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.order.Order;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.order.OrderDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Response;
-import com.jjs.ClothingInventorySaleReformPlatform.service.DeliveryService;
+import com.jjs.ClothingInventorySaleReformPlatform.service.order.DeliveryService;
 import com.jjs.ClothingInventorySaleReformPlatform.service.order.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
