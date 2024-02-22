@@ -32,7 +32,7 @@ public class OrderService {
     private final CartRepository cartRepository;
 
     @Transactional
-    public Long createOrder(OrderDTO orderDTO) {
+    public Long createCartOrder(OrderDTO orderDTO) {
         // 인증 정보에서 구매자 이메일 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
@@ -74,10 +74,52 @@ public class OrderService {
     }
 
     @Transactional
-    public void updateOrder(Long orderId, OrderDTO orderDTO) {
+    public Long createPageOrder(OrderDTO orderDTO) {
+        // 인증 정보에서 구매자 이메일 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
 
+        // 구매자 정보 조회
+        PurchaserInfo purchaserInfo = purchaserRepository.findPurchaserByEmail(currentUsername);
+
+        // Order 엔티티 생성
+        Order order = new Order();
+        order.setPurchaserInfo(purchaserInfo);
+        order.setOrderStatus(OrderStatus.ORDER_WAITING);  // 초기 상태
+        Order saveOrder = orderRepository.save(order);
+
+        // OrderDetail 생성
+        for (OrderDetailDTO detail : orderDTO.getOrderDetails()) {
+            Product product = productRepository.findById(detail.getProductId())
+                    .orElseThrow(() -> new IllegalArgumentException("상품 정보를 찾을 수 없습니다."));
+
+            if (detail.getQuantity() > product.getProductStock()) {
+                throw new IllegalArgumentException("상품 [" + product.getProductName() + "]의 재고가 부족합니다. 요청 수량: "
+                        + detail.getQuantity() + ", 재고: " + product.getProductStock());
+            }
+
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setOrder(saveOrder);
+            orderDetail.setProduct(product);
+            orderDetail.setQuantity(detail.getQuantity());
+            orderDetail.setPrice(product.getPrice() * detail.getQuantity());
+            orderDetailRepository.save(orderDetail);
+        }
+
+        return saveOrder.getOrderId();
+    }
+
+    @Transactional
+    public void updateOrder(String purchaserEmail, OrderDTO orderDTO) {
+
+        /*
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("주문 정보를 찾을 수 없습니다."));
+         */
+
+        // 현재 로그인한 사용자(구매자)의 가장 최근 주문을 조회
+        Order order = orderRepository.findTopByPurchaserInfoEmailOrderByOrderDateDesc(purchaserEmail)
+                        .orElseThrow(() -> new IllegalArgumentException("주문 정보를 찾을 수 없습니다."));
 
         order.setPostcode(orderDTO.getPostcode());
         order.setAddress(orderDTO.getAddress());
@@ -99,8 +141,14 @@ public class OrderService {
      * @param orderId
      */
     @Transactional
-    public void decreaseProductStock(Long orderId) {
+    public void decreaseProductStock(String purchaserEmail) {
+        /*
         Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("주문 정보를 찾을 수 없습니다."));
+        */
+
+        // 현재 로그인한 사용자(구매자)의 가장 최근 주문을 조회
+        Order order = orderRepository.findTopByPurchaserInfoEmailOrderByOrderDateDesc(purchaserEmail)
                 .orElseThrow(() -> new IllegalArgumentException("주문 정보를 찾을 수 없습니다."));
 
         for (OrderDetail detail : order.getOrderDetails()) {
