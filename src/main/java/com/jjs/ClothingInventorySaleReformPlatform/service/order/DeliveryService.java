@@ -20,12 +20,18 @@ public class DeliveryService {
 
     /**
      * 배송 초기 상태는 WAITING으로 설정
-     * @param orderId
      */
     @Transactional
-    public void createDelivery(Long orderId) {
+    public void createDelivery(String purchaserEmail) {
+        /*
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("주문 정보를 찾을 수 없습니다."));
+         */
+
+        // 현재 로그인한 사용자(구매자)의 가장 최근 주문을 조회
+        Order order = orderRepository.findTopByPurchaserInfoEmailOrderByOrderDateDesc(purchaserEmail)
+                .orElseThrow(() -> new IllegalArgumentException("주문 정보를 찾을 수 없습니다."));
+
         Delivery delivery = new Delivery();
         delivery.setOrder(order);
         delivery.setDeliveryStatus(DeliveryStatus.WAITING); // 초기 배송 상태 설정
