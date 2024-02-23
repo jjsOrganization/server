@@ -27,7 +27,7 @@ public class Cart {  // 장바구니
     private int count; // 카트에 담긴 상품 개수
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="EMAIL")
+    @JoinColumn(name="PURCHASER_EMAIL")
     PurchaserInfo purchaserInfo;
 
     @OneToMany(fetch = FetchType.EAGER)

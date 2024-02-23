@@ -12,6 +12,7 @@ import lombok.Setter;
 public class PurchaserInfo {
 
     @Id
+//    @Column(name = "PURCHASER_EMAIL", nullable = false)
     private String email;  // User 엔티티의 email과 동일
 
     @Column(name = "ADDRESS", nullable = false)

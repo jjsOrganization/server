@@ -20,6 +20,7 @@ import java.util.Collections;
 @Entity
 @Table(name = "USER")
 public class User implements UserDetails {  // 구매자
+
     @Id
     @Column(name = "EMAIL",nullable = false, unique = true)  // unique = true : 유일값(중복x)
     private String email;  // 이메일

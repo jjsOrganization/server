@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.service.designer;
 
+import com.jjs.ClothingInventorySaleReformPlatform.controller.product.AuthenticationFacade;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.Portfolio;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.User;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.designer.PortfolioDTO;
@@ -25,6 +26,7 @@ public class PortfolioService {
 
     private final PortfolioRepository portfolioRepository;
     private final S3Service s3Service;
+    private final AuthenticationFacade authenticationFacade;
 
     /**
      *
@@ -32,6 +34,7 @@ public class PortfolioService {
      * @param portfolioDTO(포트폴리오 입력 정보)
      * @throws IOException
      */
+    private String imageUploadPath = "PortfolioImages/";
 
     public void savePortfolio(PortfolioDTO portfolioDTO) throws IOException {
         Portfolio portfolio = new Portfolio();
@@ -48,7 +51,7 @@ public class PortfolioService {
             user.setEmail(portfolioDTO.getDesignerEmail());
             portfolio.setDesignerEmail(user);
             portfolio.setExplanation(portfolioDTO.getExplanation());
-            portfolio.setDesignerImage(s3Service.uploadFile(portfolioDTO.getDesignerImage()));
+            portfolio.setDesignerImage(s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath));
             portfolio.setName(portfolioDTO.getDesignerName());
 
             portfolioRepository.save(portfolio);
@@ -58,10 +61,12 @@ public class PortfolioService {
 
     /**
      * Repository에서 포트폴리오 정보 조회 메소드
-     * @param designerEmail -> String으로 입력 받으나, 엔티티 타입으로 선언되어 있기에 User 타입으로 변환하여 사용해야 함.
+     * @param  -> String으로 입력 받으나, 엔티티 타입으로 선언되어 있기에 User 타입으로 변환하여 사용해야 함.
      * @return
      */
-    public Optional<PortfolioInfoDTO> getPortfolio(String designerEmail){
+    public Optional<PortfolioInfoDTO> getPortfolio(){
+
+        String designerEmail = authenticationFacade.getCurrentUsername(); // 로그인되어 있는 유저의 이메일
 
         User user = new User();
         user.setEmail(designerEmail);
@@ -84,7 +89,7 @@ public class PortfolioService {
         ImageUrlMapping imageUrlById = portfolioRepository.findPortfolioById(portfolioDTO.getID()).get();
         s3Service.fileDelete(imageUrlById.getDesignerImage());
 
-        String storedImageUrl = s3Service.uploadFile(portfolioDTO.getDesignerImage());
+        String storedImageUrl = s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath);
 
         // 꼭 모든 정보를 클라이언트에서 제공해야만 가능한가...?
         portfolio.setDesignerEmail(user);

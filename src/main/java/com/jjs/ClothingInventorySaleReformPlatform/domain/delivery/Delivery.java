@@ -27,8 +27,6 @@ public class Delivery {  // 배송
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-
-
     @Enumerated(EnumType.STRING)  // 문자를 넣기 위해 EnumType.String 사용(필수!!!!)
     private DeliveryStatus deliveryStatus;  // 배송 상태 [배송중, 배송완료, 배송시작, 준비중]
 

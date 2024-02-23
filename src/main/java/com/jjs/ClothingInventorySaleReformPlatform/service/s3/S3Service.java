@@ -39,9 +39,9 @@ public class S3Service {
      */
 
     @Transactional
-    public String uploadFile(MultipartFile file) throws IOException {
+    public String uploadFile(MultipartFile file, String filePrePath) throws IOException {
         // 저장될 파일의 경로 설정
-        String storedFileName = "PortfolioImages/" +  generateFileName(file);
+        String storedFileName = filePrePath + generateFileName(file);
 
         try {
             // S3에 파일 업로드
@@ -104,6 +104,7 @@ public class S3Service {
      * @return
      * @throws UnsupportedEncodingException
      */
+
     public String getFileKeyFromUrl(String fileUrl) throws UnsupportedEncodingException {
         // S3 버킷 이름과 리전을 이용해 동적으로 URL 생성
         String s3Url = "https://" + bucket + ".s3." + region + ".amazonaws.com/";
