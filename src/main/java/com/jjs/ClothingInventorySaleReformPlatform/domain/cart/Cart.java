@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +27,11 @@ public class Cart {  // 장바구니
 
     private int count; // 카트에 담긴 상품 개수
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="EMAIL")
     PurchaserInfo purchaserInfo;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<CartProduct> cart_products = new ArrayList<>();
 
     @DateTimeFormat(pattern = "yyyy-mm-dd")
