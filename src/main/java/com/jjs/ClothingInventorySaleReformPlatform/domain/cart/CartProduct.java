@@ -22,11 +22,11 @@ public class CartProduct {
     @Column(name = "cart_product_id")
     private Long id;  // 장바구니 상품 코드 (PK)
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="cart_id")
     private Cart cart;  // 장바구니 id 가져오는 용도
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;  // 상품
 

@@ -31,43 +31,4 @@ public class SellerInfo {  // 판매자
     private User user;  // User 엔티티에 대한 참조
 
 
-
-//    public static SellerInfo toSeller(SellerDTO sellerDTO) {
-//        SellerInfo sellerInfo = new SellerInfo();
-//
-//        sellerInfo.setEmail(sellerDTO.getEmail());
-//        sellerInfo.setPassword(sellerDTO.getPassword());
-//        sellerInfo.setNickName(sellerDTO.getNickName());
-//        sellerInfo.setName(sellerDTO.getName());
-//        sellerInfo.setBusinessNumber(sellerDTO.getBusinessNumber());
-//        sellerInfo.setStoreAddress(sellerDTO.getStoreAddress());
-//        sellerInfo.setPhoneNumber(sellerDTO.getPhoneNumber());
-//
-//        return sellerInfo;
-//    }
-/*
-    @OneToMany(mappedBy = "userEmail")
-    private Set<Completelist> completelists = new LinkedHashSet<>();
-
-    // 김영한 jpa 방식으로 수정 - 4
-    @OneToMany(mappedBy = "clientEmail2")
-    private Set<Estimate> estimates = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "sellerEmail")
-    private Set<Product> products = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "sellerEmail")
-    private Set<Question> questions = new LinkedHashSet<>();
-
-    // 김영한 jpa 방식으로 수정 - 3
-    @OneToMany(mappedBy = "clientEmail2")
-    private Set<Request> requests = new LinkedHashSet<>();
-
-
-    // 김영한 jpa 방식으로 수정 - 2
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sellerEmail", nullable = false)
-    private Revenuetally revenuetally;
-*/
-
 }

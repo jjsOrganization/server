@@ -73,36 +73,5 @@ public class User implements UserDetails {  // 구매자
     }
 
 
-    /*
-    public static Purchaser toPurchaser(PurchaserDTO purchaserDTO) {
-        Purchaser purchaser = new Purchaser();
 
-        purchaser.setEmail(purchaserDTO.getEmail());
-        purchaser.setPassword(purchaserDTO.getPassword());
-        purchaser.setNickname(purchaserDTO.getNickname());
-        purchaser.setName(purchaserDTO.getName());
-        purchaser.setAddress(purchaserDTO.getAddress());
-        purchaser.setPhoneNumber(purchaserDTO.getPhonenumber());
-
-        return purchaser;
-    }
-
-     */
-
-/*
-    @OneToMany(mappedBy = "clientEmail")
-    private Set<Estimate> estimates = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "sellerEmail")
-    private Set<Purchaselist> purchaselists = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "purchaserEmail")
-    private Set<Question> questions = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "clientEmail")
-    private Set<Request> requests = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "purchaserEmail")
-    private Set<Review> reviews = new LinkedHashSet<>();
-*/
 }

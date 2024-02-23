@@ -138,7 +138,7 @@ public class OrderService {
 
     /**
      * 상품을 구매하면 구매한 상품의 개수만큼 상품의 재고를 감소시켜야됨.
-     * @param orderId
+     *
      */
     @Transactional
     public void decreaseProductStock(String purchaserEmail) {
