@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.dto.product;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.product.Category;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.ProductSellStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -27,6 +28,8 @@ public class ProductFormDTO {  // 화면단에서 정보를 가져올 것
     private int productStock;  // 재고수
 
     private ProductSellStatus productSellStatus; // 상품 상태 (품절 or 판매 가능)[SELL, SOLD_OUT]
+
+    private Category categoryId;
 
 
 

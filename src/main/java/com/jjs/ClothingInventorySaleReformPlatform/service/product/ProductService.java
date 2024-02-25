@@ -39,6 +39,7 @@ public class ProductService {
         product.setProductStock(productFormDTO.getProductStock());
         product.setProductDetailText(productFormDTO.getItemDetail());
         product.setProductSellStatus(ProductSellStatus.SELL);  // 초기값은 판매중으로 고정
+        product.setCategory(productFormDTO.getCategoryId());
         productRepository.save(product);
 
         //이미지 등록
@@ -101,6 +102,10 @@ public class ProductService {
         dto.setItemDetail(product.getProductDetailText());
         dto.setProductStock(product.getProductStock());
         dto.setProductSellStatus(product.getProductSellStatus());
+        // 카테고리 이름 설정
+        if (product.getCategory() != null) {
+            dto.setCategoryName(product.getCategory().getCategoryName());
+        }
 
         // 상품 이미지 추가함...
         if (!product.getProductImg().isEmpty()) {
@@ -150,5 +155,15 @@ public class ProductService {
     public Optional<ProductDetailDTO> getProductsFindDetail(Long productId) {
         return productRepository.findById(productId)
                 .map(this::productsFindOne);
+    }
+
+    // 카테고리별 상품 조회
+    public List<ProductListDTO> getProductsByCategory(Long categoryId) {
+        return productRepository.findByCategoryId(categoryId)
+                .stream()
+                // 상품 엔티티를 ProductListDTO로 변환
+                .map(this::productsFindAll)
+                .collect(Collectors.toList());
+
     }
 }

@@ -5,36 +5,36 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "CATEGORY")
 public class Category {  // 카테고리
 
     @Id
-    @Column(name="categoryId")
+    @Column(name="category_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long categoryId;
+    private Long id;
 
-    // 카테고리명, 카테고리별 물 사용량
-    @Column( name="categoryName", nullable=false, length=100 )
+    @Column(name = "category_name", nullable = false)
     private String categoryName;
 
-    @Column(name = "WATER_USAGE_CATEGORY", nullable = false)
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    private List<Product> products = new ArrayList<>();
+
+
+    @Column(name = "water_usage_category")
     private Integer waterUsageCategory;  // 카테고리별 물 사용량
 
-    @Builder
-    public Category(String categoryName) {
-        this.categoryName = categoryName;
+    public Category(String name) {
+        this.categoryName = name;
     }
-/*
-    @OneToMany(mappedBy = "categoryName")
-    private Set<Watersaved> watersaveds = new LinkedHashSet<>();
-*/
+
 }
