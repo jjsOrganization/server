@@ -181,6 +181,14 @@ public class ProductController {
     }
 
 
+    @Operation(summary = "카테고리별 상품 조회", description = "사용자가 선택한 카테고리에 속하는 상품들을 조회할 수 있다.")
+    @GetMapping("/product/category/{categoryId}")
+    public ResponseEntity<List<ProductListDTO>> getProductsByCategory(@PathVariable Long categoryId) {
+        List<ProductListDTO> products = productService.getProductsByCategory(categoryId);
+        return ResponseEntity.ok(products);
+    }
+
+
 
 
 

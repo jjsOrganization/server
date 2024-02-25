@@ -39,6 +39,10 @@ public class Product extends BaseEntity {  // BaseEntity가 등록시간, 수정
     @OrderBy("id asc")
     private List<ProductImg> productImg;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     public void updateProduct(ProductFormDTO productFormDTO) {
         this.productName = productFormDTO.getProductName();
         this.price = productFormDTO.getPrice();
