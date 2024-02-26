@@ -27,6 +27,7 @@ public enum ErrorCode {
     NEED_LOGIN(401, "M004", "need login"),
     AUTHENTICATION_NOT_FOUND(401, "M005", "Security Context에 인증 정보가 없습니다."),
     MEMBER_ALREADY_LOGOUT(400, "M006", "member already logout"),
+    PASSWORD_NOT_MATCH(400, "M007", "비밀번호가 일치하지 않습니다."),
 
     // Auth
     REFRESH_TOKEN_INVALID(400, "A001", "refresh token invalid"),

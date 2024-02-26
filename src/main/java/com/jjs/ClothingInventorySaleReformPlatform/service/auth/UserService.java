@@ -70,6 +70,7 @@ public class UserService {
     public void joinPurchaser(PurchaserDTO purchaserDTO) {
         String email = purchaserDTO.getEmail();
         String password = purchaserDTO.getPassword();
+        String rePassword = purchaserDTO.getRePassword();
         String name = purchaserDTO.getName();
         String phoneNumber = purchaserDTO.getPhoneNumber();
         String address = purchaserDTO.getAddress();
@@ -88,6 +89,12 @@ public class UserService {
                     new ErrorResponse.FieldError("phoneNumber", phoneNumber, "전화번호가 이미 존재합니다.")
             );
             throw new BusinessException(ErrorCode.USER_PHONENUMBER_ALREADY_EXISTS, fieldErrors);
+        }
+        if (!password.equals(rePassword)) {  // 비밀번호 중복 검사
+            List<ErrorResponse.FieldError> fieldErrors = List.of(
+                    new ErrorResponse.FieldError("rePassword", rePassword, "비밀번호가 일치하지 않습니다.")
+            );
+            throw new BusinessException(ErrorCode.PASSWORD_NOT_MATCH, fieldErrors);
         }
 
         // User 엔티티 조회 또는 생성
@@ -116,6 +123,7 @@ public class UserService {
     public AuthResponseDTO joinSeller(SellerDTO sellerDTO) {
         String email = sellerDTO.getEmail();
         String password = sellerDTO.getPassword();
+        String rePassword = sellerDTO.getRePassword();
         String name = sellerDTO.getName();
         String phoneNumber = sellerDTO.getPhoneNumber();
         String storeName = sellerDTO.getStoreName();
@@ -136,6 +144,12 @@ public class UserService {
                     new ErrorResponse.FieldError("phoneNumber", phoneNumber, "전화번호가 이미 존재합니다.")
             );
             throw new BusinessException(ErrorCode.USER_PHONENUMBER_ALREADY_EXISTS, fieldErrors);
+        }
+        if (!password.equals(rePassword)) {  // 비밀번호 중복 검사
+            List<ErrorResponse.FieldError> fieldErrors = List.of(
+                    new ErrorResponse.FieldError("rePassword", rePassword, "비밀번호가 일치하지 않습니다.")
+            );
+            throw new BusinessException(ErrorCode.PASSWORD_NOT_MATCH, fieldErrors);
         }
 
         // User 엔티티 조회 또는 생성
@@ -164,6 +178,7 @@ public class UserService {
     public void joinDesigner(DesignerDTO designerDTO) {
         String email = designerDTO.getEmail();
         String password = designerDTO.getPassword();
+        String rePassword = designerDTO.getRePassword();
         String name = designerDTO.getName();
         String phoneNumber = designerDTO.getPhoneNumber();
         String address = designerDTO.getAddress();
@@ -183,6 +198,12 @@ public class UserService {
                     new ErrorResponse.FieldError("phoneNumber", phoneNumber, "전화번호가 이미 존재합니다.")
             );
             throw new BusinessException(ErrorCode.USER_PHONENUMBER_ALREADY_EXISTS, fieldErrors);
+        }
+        if (!password.equals(rePassword)) {  // 비밀번호 중복 검사
+            List<ErrorResponse.FieldError> fieldErrors = List.of(
+                    new ErrorResponse.FieldError("rePassword", rePassword, "비밀번호가 일치하지 않습니다.")
+            );
+            throw new BusinessException(ErrorCode.PASSWORD_NOT_MATCH, fieldErrors);
         }
 
         // User 엔티티 조회 또는 생성
