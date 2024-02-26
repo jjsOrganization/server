@@ -17,6 +17,8 @@ public class PurchaserDTO {
     @NotBlank(message = "비밀번호를 입력해주세요.")
     @Size(min = 8, max = 20, message = "비밀번호는 8자 이상 20자 이하로 입력해주세요.")
     private String password;
+    @NotBlank(message = "비밀번호를 다시 입력해주세요.")
+    private String rePassword;
 
     @NotBlank(message = "이름을 입력해주세요.")
     private String name;
