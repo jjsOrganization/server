@@ -21,7 +21,6 @@ public class Estimate {  // 견적서
     @Column(name = "ESTIMATE_NUMBER", nullable = false)
     private Integer id;  // 견적서 번호
 
-
     @NotNull
     @Lob
     @Column(name = "ESTIMATE_INFO", nullable = false)

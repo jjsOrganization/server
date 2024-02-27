@@ -4,6 +4,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequestImage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -39,9 +42,9 @@ public class S3Service {
      */
 
     @Transactional
-    public String uploadFile(MultipartFile file) throws IOException {
+    public String uploadFile(MultipartFile file, String filePrePath) throws IOException {
         // 저장될 파일의 경로 설정
-        String storedFileName = "PortfolioImages/" +  generateFileName(file);
+        String storedFileName = filePrePath + generateFileName(file);
 
         try {
             // S3에 파일 업로드
@@ -104,6 +107,7 @@ public class S3Service {
      * @return
      * @throws UnsupportedEncodingException
      */
+
     public String getFileKeyFromUrl(String fileUrl) throws UnsupportedEncodingException {
         // S3 버킷 이름과 리전을 이용해 동적으로 URL 생성
         String s3Url = "https://" + bucket + ".s3." + region + ".amazonaws.com/";

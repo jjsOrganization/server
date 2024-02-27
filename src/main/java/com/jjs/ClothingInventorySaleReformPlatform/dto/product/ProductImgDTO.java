@@ -38,6 +38,5 @@ public class ProductImgDTO {
     public static ProductImgDTO entityToDto(ProductImg productImg) {
         ProductImgDTO productImgDTO = modelMapper.map(productImg, ProductImgDTO.class);
         return productImgDTO;
-
     }
 }

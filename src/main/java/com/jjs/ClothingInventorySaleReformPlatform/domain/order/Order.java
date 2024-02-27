@@ -37,6 +37,7 @@ public class Order {
     private String phoneNumber;  // 휴대폰 번호
     private String deliveryRequest;  // 배송 요청사항
     private int totalPrice;  // 총 주문 금액
+
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;  // 주문 상태
 }

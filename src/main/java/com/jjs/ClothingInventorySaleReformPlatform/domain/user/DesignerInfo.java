@@ -12,6 +12,7 @@ import lombok.Setter;
 public class DesignerInfo {  // 디자이너 부가 정보
 
     @Id
+//    @Column(name = "DESIGNER_EMAIL", nullable = false)
     private String email;  // User 엔티티의 email과 동일
 
     @Column(name = "ADDRESS", nullable = false)

@@ -70,9 +70,8 @@ public class PortfolioController {
     @GetMapping("/portfolio/designer")
     public ResponseEntity<Object> loadPortfolio() throws IOException {
 
-        String designerEmail = authenticationFacade.getCurrentUsername(); // 로그인되어 있는 유저의 이메일
 
-        Optional<PortfolioInfoDTO> portfolioInfo = portfolioService.getPortfolio(designerEmail);
+        Optional<PortfolioInfoDTO> portfolioInfo = portfolioService.getPortfolio();
 
         return portfolioInfo.<ResponseEntity<Object>>map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
