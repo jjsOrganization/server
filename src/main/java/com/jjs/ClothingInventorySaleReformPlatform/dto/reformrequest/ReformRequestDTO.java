@@ -1,7 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Lob;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequest;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -20,7 +19,6 @@ public class ReformRequestDTO {
     @NotEmpty
     private String requestInfo;  // 의뢰 정보(내용)
 
-    @NotNull
     private List<MultipartFile> requestImg;  // 의뢰 사진
 
     private String requestPrice; // 희망 가격

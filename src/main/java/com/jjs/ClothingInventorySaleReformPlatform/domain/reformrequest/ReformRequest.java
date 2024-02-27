@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest;
 
+import com.jjs.ClothingInventorySaleReformPlatform.common.entity.BaseEntity;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.Product;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
@@ -15,7 +16,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "REFORM_REQUEST")
-public class ReformRequest {  // 의뢰서 - 의뢰번호, 의뢰자이메일, 디자이너이메일, 의뢰정보, 의뢰사진, 상태, 상품번호
+public class ReformRequest extends BaseEntity {  // 의뢰서 - 의뢰번호, 의뢰자이메일, 디자이너이메일, 의뢰정보, 의뢰사진, 상태, 상품번호
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "REQUEST_NUMBER", nullable = false)
@@ -34,6 +35,8 @@ public class ReformRequest {  // 의뢰서 - 의뢰번호, 의뢰자이메일, �
     @Column(name = "REQUEST_PRICE", nullable = false)
     private String requestPrice; // 희망 가격
 
+    @Enumerated(EnumType.STRING)
+    private ReformRequestStatus requestStatus;
 
     @OneToMany(mappedBy = "reformRequest", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY) // 리폼 의뢰 첨부 이미지 연결
     private List<ReformRequestImage> reformRequestImageList = new ArrayList<>();
@@ -53,6 +56,7 @@ public class ReformRequest {  // 의뢰서 - 의뢰번호, 의뢰자이메일, �
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "PRODUCT_NUMBER", nullable = false)
     private Product productNumber;  // 상품 번호
+
 /*
 
     @OneToMany(mappedBy = "requestNumber")

@@ -10,6 +10,8 @@ import com.jjs.ClothingInventorySaleReformPlatform.repository.designer.mapping.I
 import com.jjs.ClothingInventorySaleReformPlatform.service.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -36,11 +38,19 @@ public class PortfolioService {
      */
     private String imageUploadPath = "PortfolioImages/";
 
+    private String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            return authentication.getName();
+        }
+        return null;
+    }
+
     public void savePortfolio(PortfolioDTO portfolioDTO) throws IOException {
         Portfolio portfolio = new Portfolio();
         User user = new User();  //이메일은 User타입이기 때문에 엔티티로 변환해주는 과정 필요
 
-        user.setEmail(portfolioDTO.getDesignerEmail());
+        user.setEmail(getCurrentUsername());
         Optional<Portfolio> storedDesignerEmail = portfolioRepository.findByDesignerEmail(user);
 
         // 이메일 이미 존재 할 경우
@@ -48,7 +58,6 @@ public class PortfolioService {
             throw new RuntimeException("이미 존재하는 이메일입니다.");
         }
         else{
-            user.setEmail(portfolioDTO.getDesignerEmail());
             portfolio.setDesignerEmail(user);
             portfolio.setExplanation(portfolioDTO.getExplanation());
             portfolio.setDesignerImage(s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath));

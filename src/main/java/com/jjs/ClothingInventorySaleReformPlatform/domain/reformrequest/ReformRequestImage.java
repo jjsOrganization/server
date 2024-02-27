@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest;
 
+import com.jjs.ClothingInventorySaleReformPlatform.common.entity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import jakarta.persistence.*;
 @Setter
 @Entity
 @Table(name = "REFORM_REQUEST_IMAGE")
-public class ReformRequestImage {
+public class ReformRequestImage extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

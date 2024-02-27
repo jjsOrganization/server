@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.protocol.HTTP;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -34,11 +32,13 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @RequiredArgsConstructor
-@Tag(name = "리폼 의뢰 신청", description = "구매자가 디자이너에게 리폼 신청하는 API 입니다.")
+@Slf4j
+@Tag(name = "리폼 의뢰 신청,수정", description = "구매자가 디자이너에게 리폼 신청및 수정하는 API 입니다.")
 public class ReformRequestController {
     private final ReformRequestService reformRequestService;
     private final Response response;
-    @GetMapping("/reform-request/purchaser/{itemId}")
+
+    @GetMapping("/reform-request/purchaser/creation/{itemId}")
     @Operation(summary = "리폼 의뢰 페이지 이동", description = "리폼 의뢰를 위한 폼을 불러옵니다.")
     public ResponseEntity<?> getReformRequestForm(@Valid @PathVariable Long itemId, BindingResult bindingResult) { 
         ResponseEntity<?> errorResponse = getObjectResponseEntity(bindingResult.hasErrors(),
@@ -54,20 +54,46 @@ public class ReformRequestController {
         }
     }
 
-    @PostMapping("/reform-request/purchaser/{itemId}")
+    @PostMapping("/reform-request/purchaser/creation/{itemId}")
+    @Operation(summary = "리폼 요청 사항 저장", description = "리폼 요청 사항을 저장합니다.")
+
     public ResponseEntity<?> sendReformRequest(@ModelAttribute ReformRequestDTO reformRequestDTO,  BindingResult bindingResult,
                                                @PathVariable Long itemId) throws Exception {
-        reformRequestService.saveReformRequest(reformRequestDTO, itemId);
+        try {
+            reformRequestService.saveReformRequest(reformRequestDTO, itemId);
+            return response.success("의뢰 성공.", HttpStatus.OK);
 
-        return response.success("의뢰 성공.", HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("리폼 요청 사항 저장 에러",e);
+            return response.fail(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    private String getCurrentUsername() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            return authentication.getName();
+    @GetMapping("/reform-request/purchaser/modification/{requestId}")
+    @Operation(summary = "리폼 수정 페이지 이동", description = "리폼 수정 페이지로 이동합니다. ")
+    public ResponseEntity<?> getStoredReformRequestForm(@PathVariable Long requestId) {
+        try {
+            ReformRequestDTO reformRequestForm = reformRequestService.getReformRequestForm(requestId);
+            return response.success(reformRequestForm, "저장된 데이터", HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return response.fail("이미 진행중입니다.", HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            log.error("저장된 리폼 정보 가져오기 에러", e);
+            return response.fail(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return null;
+    }
+
+    @PutMapping("/reform-request/purchaser/modification/{requestId}")
+    @Operation(summary = "리폼 수정 사항 저장", description = "리폼 수정 사항을 저장합니다. ")
+    public ResponseEntity<?> updateReformRequest(@ModelAttribute ReformRequestDTO reformRequestDTO, BindingResult bindingResult,
+                                                 @PathVariable Long requestId) throws Exception {
+        try {
+            reformRequestService.updateReformRequest(reformRequestDTO, requestId);
+            return response.success("의뢰 수정 성공", HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("리폼 의뢰 수정 에러",e);
+            return response.fail(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     private static ResponseEntity<Object> getObjectResponseEntity(boolean bindingResult, BindingResult bindingResult1, ErrorCode invalidBadRequest) {
@@ -84,4 +110,6 @@ public class ReformRequestController {
         }
         return null;
     }
+
+
 }

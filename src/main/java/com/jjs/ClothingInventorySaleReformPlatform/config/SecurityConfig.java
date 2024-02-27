@@ -51,7 +51,7 @@ public class SecurityConfig{
                         .requestMatchers("/admin", "/auth/login-test", "/product/all", "/product/all/{keyword}", "/product/all/{productId}",
                                 "/product/all/detail/{productId}", "/product/category/{categoryId}").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
                         .requestMatchers("/product/seller/register", "/product/seller/register/{productId}", "/product/seller/register").hasRole("SELLER")
-                        .requestMatchers("/cart/purchaser/add/{productId}", "/cart/purchaser/**").hasRole("PURCHASER")
+                        .requestMatchers("/cart/purchaser/add/{productId}", "/cart/purchaser/**", "/reform-request/purchaser/**").hasRole("PURCHASER")
                         .anyRequest().authenticated());
 
         http
