@@ -10,4 +10,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByProductNameContaining(String keyword);
 
     Product findProductById (long id);
+    List<Product> findByCategoryId(Long categoryId);  // 카테고리 ID를 기반으로 상품을 조회
 }

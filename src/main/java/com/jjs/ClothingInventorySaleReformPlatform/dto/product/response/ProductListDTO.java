@@ -21,5 +21,5 @@ public class ProductListDTO {
     private int productStock;  // 재고수
     private ProductSellStatus productSellStatus; // 상품 상태 (품절 or 판매 가능)[SELL, SOLD_OUT]
     private String imgUrl;
-
+    private String categoryName;
 }

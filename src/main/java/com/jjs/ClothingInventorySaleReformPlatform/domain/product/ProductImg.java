@@ -28,7 +28,7 @@ public class ProductImg extends BaseTimeEntity {
     private String repimgYn; //대표 이미지 여부
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
