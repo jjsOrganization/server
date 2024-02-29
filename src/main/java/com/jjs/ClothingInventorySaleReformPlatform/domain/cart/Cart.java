@@ -18,8 +18,6 @@ import java.util.List;
 @Table(name = "CART")
 public class Cart {  // 장바구니
 
-    // id(jpa는 pk 필요한 듯), 구매자 이메일, 상품 번호
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // 기본키 자동 생성 - IDENTITY : 기본키 생성을 db에 위임(원래 회원도 이걸로 권장)
     private Long id;

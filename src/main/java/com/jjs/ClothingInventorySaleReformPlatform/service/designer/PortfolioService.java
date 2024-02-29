@@ -14,7 +14,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.sound.sampled.Port;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,15 +49,14 @@ public class PortfolioService {
         return null;
     }
 
-    public void savePortfolio(PortfolioDTO portfolioDTO) throws IOException {
+    public String savePortfolio(PortfolioDTO portfolioDTO) throws IOException {
         Portfolio portfolio = new Portfolio();
         User user = new User();  //이메일은 User타입이기 때문에 엔티티로 변환해주는 과정 필요
 
         user.setEmail(getCurrentUsername());
-        Optional<Portfolio> storedDesignerEmail = portfolioRepository.findByDesignerEmail(user);
 
         // 이메일 이미 존재 할 경우
-        if (storedDesignerEmail.isPresent()) {
+        if (portfolioRepository.findByDesignerEmail(user).isPresent()) {
             throw new RuntimeException("이미 존재하는 이메일입니다.");
         }
         else{
@@ -64,8 +66,9 @@ public class PortfolioService {
             portfolio.setName(portfolioDTO.getDesignerName());
 
             portfolioRepository.save(portfolio);
-        }
 
+            return user.getEmail();
+        }
     }
 
     /**
@@ -80,11 +83,11 @@ public class PortfolioService {
         User user = new User();
         user.setEmail(designerEmail);
 
-        Optional<Portfolio> portfolioByDesignerEmail = portfolioRepository.findByDesignerEmail(user);
+        Portfolio portfolioByDesignerEmail = (portfolioRepository.findByDesignerEmail(user))
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
 
-        if(portfolioByDesignerEmail.isPresent()){
-            Portfolio portfolio = portfolioByDesignerEmail.get(); //Optional 객체에서 엔티티 조회 값 추출
-            return Optional.of(findAllPortfolio(portfolio));
+        if(portfolioByDesignerEmail != null){
+            return Optional.of(convertToDTO(portfolioByDesignerEmail));
         }else{
             throw new RuntimeException("포트폴리오가 존재하지 않습니다.");
         }
@@ -95,12 +98,13 @@ public class PortfolioService {
         User user = new User();
         user.setEmail(portfolioDTO.getDesignerEmail());
 
-        ImageUrlMapping imageUrlById = portfolioRepository.findPortfolioById(portfolioDTO.getID()).get();
-        s3Service.fileDelete(imageUrlById.getDesignerImage());
+        ImageUrlMapping imageUrlById = portfolioRepository.findPortfolioById(portfolioDTO.getID()) // 저장되어있는 이미지의 URL 반환
+                .orElseThrow(() -> new IllegalArgumentException("이미지가 존재하지 않습니다."));
 
-        String storedImageUrl = s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath);
+        s3Service.fileDelete(imageUrlById.getDesignerImage()); // 저장된 이미지 삭제
 
-        // 꼭 모든 정보를 클라이언트에서 제공해야만 가능한가...?
+        String storedImageUrl = s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath); // s3에 저장한 이미지의 URL 반환
+
         portfolio.setDesignerEmail(user);
         portfolio.setId(portfolioDTO.getID());
         portfolio.setExplanation(portfolioDTO.getExplanation());
@@ -115,7 +119,7 @@ public class PortfolioService {
      * @param portfolio
      * @return
      */
-    private PortfolioInfoDTO findAllPortfolio(Portfolio portfolio) {
+    private PortfolioInfoDTO convertToDTO(Portfolio portfolio) {
         PortfolioInfoDTO portfolioInfoDTO = new PortfolioInfoDTO();
         portfolioInfoDTO.setExplanation(portfolio.getExplanation());
         portfolioInfoDTO.setDesignerName(portfolio.getName());
@@ -131,7 +135,7 @@ public class PortfolioService {
     public List<PortfolioInfoDTO> getAllPortfolio() throws IOException{
         return portfolioRepository.findAll()
                 .stream()
-                .map(this::findAllPortfolio)
+                .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -141,9 +145,12 @@ public class PortfolioService {
      * @return 검색된 디자이너 정보 List
      */
     public List<PortfolioInfoDTO> getPortfolioByName(String keyword) {
-        return portfolioRepository.findByNameContaining(keyword)
+        Optional<List<Portfolio>> optionalPortfolios = portfolioRepository.findByNameContaining(keyword);
+        List<Portfolio> portfolios = optionalPortfolios.orElse(Collections.emptyList());
+
+        return portfolios
                 .stream()
-                .map(this::findAllPortfolio)
+                .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 

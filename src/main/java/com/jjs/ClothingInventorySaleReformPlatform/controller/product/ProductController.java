@@ -17,6 +17,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -42,7 +43,7 @@ public class ProductController {
 
     // 상품 등록
     @Operation(summary = "상품 등록", description = "상품 정보를 등록하는 것으로 이미지는 한 개 이상이 필수입니다.")
-    @PostMapping("/product/seller/register")
+    @PostMapping(value = "/product/seller/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> itemNew(@Valid @ModelAttribute ProductFormDTO productFormDTO,
                                            BindingResult bindingResult,
                                            @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList) {
@@ -140,7 +141,7 @@ public class ProductController {
 
     // 상품 수정
     @Operation(summary = "상품 수정", description = "로그인한 판매자는 자신이 등록한 상품에 대하여 수정이 가능하다.")
-    @PutMapping("/product/seller/register/{productId}")
+    @PutMapping(value = "/product/seller/register/{productId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateProduct(@PathVariable Long productId,
                                            @Valid @ModelAttribute ProductFormDTO productFormDTO,
                                            BindingResult bindingResult,

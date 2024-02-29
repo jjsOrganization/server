@@ -15,5 +15,5 @@ public interface PortfolioRepository extends JpaRepository<Portfolio, Long> {
 
     Optional<ImageUrlMapping> findPortfolioById(Long id); // mapping 인터페이스 사용
 
-    List<Portfolio> findByNameContaining(String keyword); // %LIKE 검색(DB)
+    Optional<List<Portfolio>> findByNameContaining(String keyword); // %LIKE 검색(DB)
 }

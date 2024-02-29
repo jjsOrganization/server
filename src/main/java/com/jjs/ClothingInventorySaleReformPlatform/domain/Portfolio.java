@@ -34,15 +34,5 @@ public class Portfolio extends BaseEntity {  // 포트폴리오 - 디자이너�
     @Column(name = "DESIGNER_IMAGE", nullable = false)
     private String designerImage;  // 디자이너 사진
 
-//    public static Portfolio toPortfolio(PortfolioDTO portfolioDTO) {
-//        Portfolio portfolio = new Portfolio();
-//        portfolio.setId(portfolioDTO.getPortfolioId());
-//        portfolio.setDesingerEmail(portfolioDTO.getDesignerEmail());
-//        portfolio.setExplanation(portfolioDTO.getExplanation());
-//        portfolio.setPreviousResultsImg(portfolioDTO.getPreResultsImageUrl());
-//        portfolio.setPreviousResultsExplanation(portfolioDTO.getPreResultsExplanation());
-//
-//        return portfolio;
-//    }
 
 }
