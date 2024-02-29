@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.service.reformrequest;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.product.Product;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequestImage;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequestStatus;
@@ -9,6 +10,7 @@ import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformProdu
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.auth.DesignerRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.auth.PurchaserRepository;
+import com.jjs.ClothingInventorySaleReformPlatform.repository.product.ProductImgRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.product.ProductRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reformrequest.ReformRequestImgRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reformrequest.ReformRequestRepository;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Scanner;
 
 @Service
 @Slf4j
@@ -35,6 +38,7 @@ public class ReformRequestService {
     private final ProductRepository productRepository;
     private final PurchaserRepository purchaserRepository;
     private final DesignerRepository designerRepository;
+    private final ProductImgRepository productImgRepository;
 
     private String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -46,7 +50,14 @@ public class ReformRequestService {
 
     @Transactional
     public ReformProductInfoDTO getProductInfo(Long itemId) {
-        ReformProductInfoDTO reformProductInfoDTO = new ReformProductInfoDTO(productRepository.findProductById(itemId));
+        ReformProductInfoDTO reformProductInfoDTO = new ReformProductInfoDTO();
+
+        Product productById = productRepository.findProductById(itemId);
+
+        reformProductInfoDTO.setId(itemId);
+        reformProductInfoDTO.setProductName(productById.getProductName());
+        reformProductInfoDTO.setProductImg(productImgRepository.findByProductId(itemId));
+        reformProductInfoDTO.setPrice(productById.getPrice());
 
         return reformProductInfoDTO;
     }
@@ -86,14 +97,13 @@ public class ReformRequestService {
 
         return reformRequestDTO;
     }
-
     @Transactional
     public void updateReformRequest(ReformRequestDTO reformRequestDTO, Long requestId) throws IOException {
 
         ReformRequest reformRequestById = reformRequestRepository.findReformRequestById(requestId)
                 .orElseThrow(() -> new IllegalArgumentException("의뢰서가 존재하지 않습니다."));
 
-        if(reformRequestById.getRequestStatus() != ReformRequestStatus.REQUEST_WAITING){
+        if(reformRequestById.getRequestStatus() != ReformRequestStatus.REQUEST_WAITING){ // 여기서 하는게 맞는지...?
             throw new RuntimeException("이미 진행중인 의뢰입니다.");
         }else{
             // 수정할 리폼 의뢰서 정보 가져옴
