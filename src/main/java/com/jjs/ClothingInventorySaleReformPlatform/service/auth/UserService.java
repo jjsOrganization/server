@@ -4,7 +4,9 @@ import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.SellerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.User;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.response.SellerInfoResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.auth.*;
+import com.jjs.ClothingInventorySaleReformPlatform.repository.product.ProductRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.response.AuthResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.DesignerDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.PurchaserDTO;
@@ -15,11 +17,14 @@ import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.error.exception.BusinessException;
 import com.jjs.ClothingInventorySaleReformPlatform.jwt.dto.TokenDto;
 import com.jjs.ClothingInventorySaleReformPlatform.jwt.provider.JwtTokenProvider;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +41,7 @@ public class UserService {
     private final DesignerRepository designerRepository;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final ProductRepository productRepository;
 
     private final MemberRepository memberRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -226,5 +232,31 @@ public class UserService {
         designerRepository.save(designerInfo);
     }
 
+    // 판매자 정보 조회
+    public SellerInfoResponse getSellerInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("사용자가 로그인되어 있지 않습니다.");
+        }
+
+        String currentUsername = authentication.getName(); // 현재 로그인한 사용자의 이메일(사용자명)을 가져옵니다.
+
+        SellerInfo sellerInfo = sellerRepository.findByEmail(currentUsername)
+                .orElseThrow(() -> new UsernameNotFoundException("판매자 정보를 찾을 수 없습니다: " + currentUsername));
+
+        return SellerInfoResponse.from(sellerInfo);
+    }
+
+    // 상품으로 판매자 이메일 조회
+    public SellerInfoResponse getSellerInfoByProductId(Long productId) {
+        String sellerEmail = productRepository.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 상품을 찾을 수 없습니다."))
+                .getCreateBy();
+
+        SellerInfo sellerInfo = sellerRepository.findByEmail(sellerEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("판매자 정보를 찾을 수 없습니다: " + sellerEmail));
+
+        return SellerInfoResponse.from(sellerInfo);
+    }
 
 }

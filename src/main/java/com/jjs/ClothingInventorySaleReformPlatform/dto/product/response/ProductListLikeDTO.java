@@ -1,17 +1,14 @@
 package com.jjs.ClothingInventorySaleReformPlatform.dto.product.response;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.product.ProductImg;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.ProductSellStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProductListDTO {
+public class ProductListLikeDTO {
 
     // 상품 전체 리스트로 조회 용도
     private Long id;

@@ -3,6 +3,7 @@ package com.jjs.ClothingInventorySaleReformPlatform.service.product;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.Product;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.like.ProductLikeCount;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.product.response.ProductListDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.product.response.ProductListLikeDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.product.ProductLikeCountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -63,23 +64,24 @@ public class ProductLikeCountService {
      * 상품들을 좋아요 개수 순서로 내림차순 정렬하여 목록으로 조회
      * @return
      */
-    public List<ProductListDTO> getProductsOrderByLikeCountDesc() {
+    public List<ProductListLikeDTO> getProductsOrderByLikeCountDesc() {
         List<ProductLikeCount> likeCounts = productLikeCountRepository.findAllByOrderByLikeCountDesc();
         return likeCounts.stream()
-                .map(likeCount -> productsFindAll(likeCount.getProduct()))
+                .map(likeCount -> productsFindAll(likeCount.getProduct(), likeCount.getLikeCount()))
                 .collect(Collectors.toList());
     }
 
 
 
-    private ProductListDTO productsFindAll(Product product) {  // 상품 전체 조회 dto
-        ProductListDTO dto = new ProductListDTO();
+    private ProductListLikeDTO productsFindAll(Product product, Long likeCount) {  // 상품 전체 조회 dto
+        ProductListLikeDTO dto = new ProductListLikeDTO();
         dto.setId(product.getId());
         dto.setProductName(product.getProductName());
         dto.setPrice(product.getPrice());
         dto.setItemDetail(product.getProductDetailText());
         dto.setProductStock(product.getProductStock());
         dto.setProductSellStatus(product.getProductSellStatus());
+        dto.setLikeCount(likeCount);
         // 카테고리 이름 설정
         if (product.getCategory() != null) {
             dto.setCategoryName(product.getCategory().getCategoryName());

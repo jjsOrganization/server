@@ -50,8 +50,9 @@ public class SecurityConfig{
                                 "/designer/portfolio","/swagger-ui/**","/v3/api-docs/**", "/swagger-resources/**","/designer/portfolio/**",
                                 "/product/all/like/desc").permitAll()
                         .requestMatchers("/admin", "/auth/login-test", "/product/all", "/product/all/{keyword}", "/product/all/{productId}",
-                                "/product/all/detail/{productId}", "/product/category/{categoryId}", "/product/all/detail/{productId}/like-count").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
-                        .requestMatchers("/product/seller/register", "/product/seller/register/{productId}", "/product/seller/register").hasRole("SELLER")
+                                "/product/all/detail/{productId}", "/product/category/{categoryId}", "/product/all/detail/{productId}/like-count",
+                                "/product/all/detail/{productId}/seller").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
+                        .requestMatchers("/product/seller/register", "/product/seller/register/{productId}", "/product/seller/register", "/seller/info").hasRole("SELLER")
                         .requestMatchers("/cart/purchaser/add/{productId}", "/cart/purchaser/**", "/reform-request/purchaser/**",
                                 "/product/all/detail/{productId}/like").hasRole("PURCHASER")
                         .anyRequest().authenticated());

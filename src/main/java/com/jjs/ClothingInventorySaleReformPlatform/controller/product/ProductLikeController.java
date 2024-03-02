@@ -1,6 +1,7 @@
 package com.jjs.ClothingInventorySaleReformPlatform.controller.product;
 
 import com.jjs.ClothingInventorySaleReformPlatform.dto.product.response.ProductListDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.product.response.ProductListLikeDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Response;
 import com.jjs.ClothingInventorySaleReformPlatform.service.product.ProductLikeCountService;
 import com.jjs.ClothingInventorySaleReformPlatform.service.product.ProductLikeService;
@@ -67,7 +68,7 @@ public class ProductLikeController {
     @GetMapping("/product/all/like/desc")
     @Operation(summary = "상품 좋아요순 내림차순 조회", description = "상품들에 대하여 좋아요 개수 순서대로 내림차순으로 상품들을 목록으로 조회한다.")
     public ResponseEntity<?> getProductsOrderByLikes() {
-        List<ProductListDTO> products = productLikeCountService.getProductsOrderByLikeCountDesc();
+        List<ProductListLikeDTO> products = productLikeCountService.getProductsOrderByLikeCountDesc();
 
         return response.success(products, "상품 좋아요 내림차순 정렬", HttpStatus.OK);
     }

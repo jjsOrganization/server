@@ -3,10 +3,12 @@ package com.jjs.ClothingInventorySaleReformPlatform.service.product;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.ProductImg;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.Product;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.ProductSellStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.product.like.ProductLikeCount;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.product.ProductFormDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.product.response.ProductDetailDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.product.response.ProductListDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.product.ProductImgRepository;
+import com.jjs.ClothingInventorySaleReformPlatform.repository.product.ProductLikeCountRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.product.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductImgService productImgService;
     private final ProductImgRepository productImgRepository;
+    private final ProductLikeCountRepository productLikeCountRepository;
 
 
 
@@ -88,12 +91,20 @@ public class ProductService {
 
     // 로그인한 판매자가 등록한 전체 상품 조회
     public List<ProductListDTO> getProductsFindAll(String createBy) {
+        List<Product> products = productRepository.findByCreateBy(createBy);
+        return products.stream().map(product -> {
+            Long likeCount = productLikeCountRepository.findByProductId(product.getId())
+                    .map(ProductLikeCount::getLikeCount).orElse(0L); // 상품 ID를 기준으로 좋아요 개수 조회
+            return productsFindAll(product, likeCount); // 상품 정보와 좋아요 개수를 포함하여 DTO 변환
+        }).collect(Collectors.toList());
+        /*
         return productRepository.findByCreateBy(createBy)
                 .stream()
                 .map(this::productsFindAll)
                 .collect(Collectors.toList());
+         */
     }
-    private ProductListDTO productsFindAll(Product product) {  // 상품 전체 조회 dto
+    private ProductListDTO productsFindAll(Product product, Long likeCount) {  // 상품 전체 조회 dto
         ProductListDTO dto = new ProductListDTO();
         dto.setId(product.getId());
         dto.setProductName(product.getProductName());
@@ -101,6 +112,7 @@ public class ProductService {
         dto.setItemDetail(product.getProductDetailText());
         dto.setProductStock(product.getProductStock());
         dto.setProductSellStatus(product.getProductSellStatus());
+        dto.setLikeCount(likeCount);
         // 카테고리 이름 설정
         if (product.getCategory() != null) {
             dto.setCategoryName(product.getCategory().getCategoryName());
@@ -136,18 +148,34 @@ public class ProductService {
 
     // 판매자들이 등록한 상품들 전체 조회(모든 상품)
     public List<ProductListDTO> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return products.stream().map(product -> {
+            Long likeCount = productLikeCountRepository.findByProductId(product.getId())
+                    .map(ProductLikeCount::getLikeCount).orElse(0L); // 없는 경우 0으로 처리
+            return productsFindAll(product, likeCount); // 상품 정보와 좋아요 개수를 DTO로 변환
+        }).collect(Collectors.toList());
+        /*
         return productRepository.findAll()
                 .stream()
                 .map(this::productsFindAll)
                 .collect(Collectors.toList());
+         */
     }
 
     // 특정 검색어가 포함된 상품들 전체 조회
     public List<ProductListDTO> searchProductsByName(String keyword) {
+        List<Product> products = productRepository.findByProductNameContaining(keyword);
+        return products.stream().map(product -> {
+            Long likeCount = productLikeCountRepository.findByProductId(product.getId())
+                    .map(ProductLikeCount::getLikeCount).orElse(0L); // 상품 ID를 기준으로 좋아요 개수 조회, 없으면 0
+            return productsFindAll(product, likeCount); // 상품 정보와 좋아요 개수를 포함하여 DTO 변환
+        }).collect(Collectors.toList());
+        /*
         return productRepository.findByProductNameContaining(keyword)
                 .stream()
                 .map(this::productsFindAll)
                 .collect(Collectors.toList());
+         */
     }
 
     // 상품 상세 조회
@@ -158,11 +186,19 @@ public class ProductService {
 
     // 카테고리별 상품 조회
     public List<ProductListDTO> getProductsByCategory(Long categoryId) {
+        List<Product> products = productRepository.findByCategoryId(categoryId);
+        return products.stream().map(product -> {
+            Long likeCount = productLikeCountRepository.findByProductId(product.getId())
+                    .map(ProductLikeCount::getLikeCount).orElse(0L); // 상품 ID를 기준으로 좋아요 개수 조회
+            return productsFindAll(product, likeCount); // 상품 정보와 좋아요 개수를 포함하여 DTO 변환
+        }).collect(Collectors.toList());
+        /*
         return productRepository.findByCategoryId(categoryId)
                 .stream()
                 // 상품 엔티티를 ProductListDTO로 변환
                 .map(this::productsFindAll)
                 .collect(Collectors.toList());
+         */
 
     }
 }
