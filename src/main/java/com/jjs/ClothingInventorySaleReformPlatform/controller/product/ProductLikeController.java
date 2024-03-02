@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.controller.product;
 
+import com.jjs.ClothingInventorySaleReformPlatform.dto.product.response.ProductListDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Response;
 import com.jjs.ClothingInventorySaleReformPlatform.service.product.ProductLikeCountService;
 import com.jjs.ClothingInventorySaleReformPlatform.service.product.ProductLikeService;
@@ -10,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -58,7 +61,16 @@ public class ProductLikeController {
     @Operation(summary = "상품 좋아요 조회", description = "특정 상품의 좋아요 개수를 조회한다.")
     public ResponseEntity<?> getProductLikeCount(@PathVariable Long productId) {
         Long likeCount = productLikeCountService.getLikeCount(productId);
-        //return ResponseEntity.ok(likeCount);
         return response.success(likeCount, "조회 성공", HttpStatus.OK);
     }
+
+    @GetMapping("/product/all/like/desc")
+    @Operation(summary = "상품 좋아요순 내림차순 조회", description = "상품들에 대하여 좋아요 개수 순서대로 내림차순으로 상품들을 목록으로 조회한다.")
+    public ResponseEntity<?> getProductsOrderByLikes() {
+        List<ProductListDTO> products = productLikeCountService.getProductsOrderByLikeCountDesc();
+
+        return response.success(products, "상품 좋아요 내림차순 정렬", HttpStatus.OK);
+    }
+
+
 }
