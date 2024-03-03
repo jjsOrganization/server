@@ -21,6 +21,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,13 +41,11 @@ public class UserController {
 
     private final UserService userService;
     private final CartService cartService;
-    private final CustomUserDetailsService customUserDetailsService;
-    private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final Response response;
 
 
-    @PostMapping("/auth/login")
+    @PostMapping(value = "/auth/login")
     @Operation(summary = "로그인", description = "구매자/판매자/디자이너 로그인을 합니다.")
     public ResponseEntity<Object> login(@RequestBody UserLoginRequestDto memberLoginRequestDto) {
         try {
@@ -96,7 +95,7 @@ public class UserController {
     }
 
     // 구매자 회원가입
-    @PostMapping("/auth/join-purchaser")
+    @PostMapping(value = "/auth/join-purchaser")
     @Operation(summary = "구매자 회원가입", description = "구매자 회원가입을 합니다.")
     public ResponseEntity<Object> joinPurchaser(@Valid @RequestBody PurchaserDTO purchaserDTO, BindingResult bindingResult) {
 
@@ -125,7 +124,7 @@ public class UserController {
     }
 
     // 판매자 회원가입
-    @PostMapping("/auth/join-seller")
+    @PostMapping(value = "/auth/join-seller")
     @Operation(summary = "판매자 회원가입", description = "판매자 회원가입을 합니다.")
     public ResponseEntity<Object> joinSeller(@Valid @RequestBody SellerDTO sellerDTO, BindingResult bindingResult) {
 
@@ -147,7 +146,7 @@ public class UserController {
     }
 
     // 디자이너 회원가입
-    @PostMapping("/auth/join-designer")
+    @PostMapping(value = "/auth/join-designer")
     @Operation(summary = "디자이너 회원가입", description = "디자이너 회원가입을 합니다.")
     public ResponseEntity<Object> joinDesigner(@Valid @RequestBody DesignerDTO designerDTO, BindingResult bindingResult) {
 

@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,7 +34,7 @@ public class CartController {
     private final CartRepository cartRepository;
 
 
-    @PostMapping("/cart/purchaser/add/{productId}")
+    @PostMapping(value = "/cart/purchaser/add/{productId}")
     @Operation(summary = "장바구니 상품 추가", description = "장바구니에 상품을 추가합니다. 상품 추가 시, 상품의 갯수를 함께 입력합니다.")
     public ResponseEntity<?> addCart(@PathVariable Long productId, @RequestBody CountDto countDto) {
         // 현재 인증된 사용자의 이메일(또는 사용자 이름)을 가져옵니다.

@@ -69,10 +69,10 @@ public class S3Service {
             try {
                 amazonS3Client.deleteObject(bucket, getFileKeyFromUrl(fileUrl));
             } catch (AmazonServiceException e) {
-                System.err.println(e.getErrorMessage());
+                log.error(e.getErrorMessage());
                 System.exit(1);
             }
-            System.out.println(String.format("[%s] deletion complete", fileUrl));
+            log.info(String.format("[%s] deletion complete", fileUrl));
     }
 
     /**

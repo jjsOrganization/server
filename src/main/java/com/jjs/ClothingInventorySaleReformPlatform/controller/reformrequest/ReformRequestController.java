@@ -17,6 +17,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.protocol.HTTP;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,10 +41,7 @@ public class ReformRequestController {
 
     @GetMapping("/reform-request/purchaser/creation/{itemId}")
     @Operation(summary = "리폼 의뢰 페이지 이동", description = "리폼 의뢰를 위한 폼을 불러옵니다.")
-    public ResponseEntity<?> getReformRequestForm(@Valid @PathVariable Long itemId, BindingResult bindingResult) { 
-        ResponseEntity<?> errorResponse = getObjectResponseEntity(bindingResult.hasErrors(),
-                bindingResult, ErrorCode.INVALID_BAD_REQUEST);
-        if (errorResponse != null) return errorResponse;
+    public ResponseEntity<?> getReformRequestForm(@Valid @PathVariable Long itemId) {
 
         try{
             ReformProductInfoDTO reformProductInfoDTO = reformRequestService.getProductInfo(itemId);
@@ -54,7 +52,7 @@ public class ReformRequestController {
         }
     }
 
-    @PostMapping("/reform-request/purchaser/creation/{itemId}")
+    @PostMapping(value = "/reform-request/purchaser/creation/{itemId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "리폼 요청 사항 저장", description = "리폼 요청 사항을 저장합니다.")
 
     public ResponseEntity<?> sendReformRequest(@ModelAttribute ReformRequestDTO reformRequestDTO,  BindingResult bindingResult,
@@ -83,7 +81,7 @@ public class ReformRequestController {
         }
     }
 
-    @PutMapping("/reform-request/purchaser/modification/{requestId}")
+    @PutMapping(value = "/reform-request/purchaser/modification/{requestId}", consumes = MediaType.MULTIPART_MIXED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "리폼 수정 사항 저장", description = "리폼 수정 사항을 저장합니다. ")
     public ResponseEntity<?> updateReformRequest(@ModelAttribute ReformRequestDTO reformRequestDTO, BindingResult bindingResult,
                                                  @PathVariable Long requestId) throws Exception {
