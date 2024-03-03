@@ -173,7 +173,6 @@ public class UserController {
     @Operation(summary = "판매자 정보 조회", description = "판매자 마이페이지 매장 정보 등을 띄우기 위함")
     public ResponseEntity<?> getSellerInfo() {
         SellerInfoResponse sellerInfoResponse = userService.getSellerInfo(); // 변경된 서비스 메소드 호출
-        //return ResponseEntity.ok(sellerInfoResponse);
         return response.success(sellerInfoResponse, "판매자 정보 조회 완료", HttpStatus.OK);
     }
 
@@ -181,7 +180,6 @@ public class UserController {
     @Operation(summary = "상품으로 판매자 정보 조회", description = "상품을 등록한 판매자의 정보 조회")
     public ResponseEntity<?> getSellerInfoByProductId(@PathVariable Long productId) {
         SellerInfoResponse sellerInfoResponse = userService.getSellerInfoByProductId(productId);
-        //return ResponseEntity.ok(sellerInfoResponse);
         return response.success(sellerInfoResponse, "판매자 정보 조회 완료", HttpStatus.OK);
     }
 
