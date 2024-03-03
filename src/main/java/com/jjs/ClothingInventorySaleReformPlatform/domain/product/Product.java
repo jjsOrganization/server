@@ -43,6 +43,10 @@ public class Product extends BaseEntity {  // BaseEntity가 등록시간, 수정
     @JoinColumn(name = "category_id")
     private Category category;
 
+    public Product(Long id) {
+        this.id = id;
+    }
+
     public void updateProduct(ProductFormDTO productFormDTO) {
         this.productName = productFormDTO.getProductName();
         this.price = productFormDTO.getPrice();

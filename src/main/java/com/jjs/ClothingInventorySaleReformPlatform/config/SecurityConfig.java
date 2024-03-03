@@ -47,11 +47,14 @@ public class SecurityConfig{
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/auth/login", "/auth/login-test", "/", "/auth/join-purchaser", "/auth/join-seller", "/auth/join-designer",
-                                "/designer/portfolio","/swagger-ui/**","/v3/api-docs/**", "/swagger-resources/**","/designer/portfolio/**").permitAll()
+                                "/designer/portfolio","/swagger-ui/**","/v3/api-docs/**", "/swagger-resources/**","/designer/portfolio/**",
+                                "/product/all/like/desc").permitAll()
                         .requestMatchers("/admin", "/auth/login-test", "/product/all", "/product/all/{keyword}", "/product/all/{productId}",
-                                "/product/all/detail/{productId}", "/product/category/{categoryId}").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
-                        .requestMatchers("/product/seller/register", "/product/seller/register/{productId}", "/product/seller/register").hasRole("SELLER")
-                        .requestMatchers("/cart/purchaser/add/{productId}", "/cart/purchaser/**", "/reform-request/purchaser/**").hasRole("PURCHASER")
+                                "/product/all/detail/{productId}", "/product/category/{categoryId}", "/product/all/detail/{productId}/like-count",
+                                "/product/all/detail/{productId}/seller").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
+                        .requestMatchers("/product/seller/register", "/product/seller/register/{productId}", "/product/seller/register", "/seller/info").hasRole("SELLER")
+                        .requestMatchers("/cart/purchaser/add/{productId}", "/cart/purchaser/**", "/reform-request/purchaser/**",
+                                "/product/all/detail/{productId}/like").hasRole("PURCHASER")
                         .anyRequest().authenticated());
 
         http

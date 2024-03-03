@@ -5,6 +5,8 @@ import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.DesignerDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.PurchaserDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.SellerDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.UserLoginRequestDto;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.response.SellerInfoResponse;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Response;
 import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorCode;
 import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.jwt.dto.TokenDto;
@@ -40,6 +42,7 @@ public class UserController {
     private final UserService userService;
     private final CartService cartService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final Response response;
 
 
     @PostMapping(value = "/auth/login")
@@ -163,6 +166,20 @@ public class UserController {
         ResultResponse resultResponse = ResultResponse.of(AuthResultCode.REGISTER_SUCCESS, Collections.singletonMap("email", designerDTO.getEmail()));
         return new ResponseEntity<>(resultResponse, HttpStatus.OK);
 
+    }
+
+    @GetMapping("/seller/info")
+    @Operation(summary = "판매자 정보 조회", description = "판매자 마이페이지 매장 정보 등을 띄우기 위함")
+    public ResponseEntity<?> getSellerInfo() {
+        SellerInfoResponse sellerInfoResponse = userService.getSellerInfo(); // 변경된 서비스 메소드 호출
+        return response.success(sellerInfoResponse, "판매자 정보 조회 완료", HttpStatus.OK);
+    }
+
+    @GetMapping("/product/all/detail/{productId}/seller")
+    @Operation(summary = "상품으로 판매자 정보 조회", description = "상품을 등록한 판매자의 정보 조회")
+    public ResponseEntity<?> getSellerInfoByProductId(@PathVariable Long productId) {
+        SellerInfoResponse sellerInfoResponse = userService.getSellerInfoByProductId(productId);
+        return response.success(sellerInfoResponse, "판매자 정보 조회 완료", HttpStatus.OK);
     }
 
 }
