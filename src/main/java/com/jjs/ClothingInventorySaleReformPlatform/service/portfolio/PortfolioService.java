@@ -1,12 +1,12 @@
-package com.jjs.ClothingInventorySaleReformPlatform.service.designer;
+package com.jjs.ClothingInventorySaleReformPlatform.service.portfolio;
 
 import com.jjs.ClothingInventorySaleReformPlatform.controller.product.AuthenticationFacade;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.Portfolio;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.Portfolio;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.User;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.designer.PortfolioDTO;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.designer.PortfolioInfoDTO;
-import com.jjs.ClothingInventorySaleReformPlatform.repository.designer.PortfolioRepository;
-import com.jjs.ClothingInventorySaleReformPlatform.repository.designer.mapping.ImageUrlMapping;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.portfolio.PortfolioDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.portfolio.PortfolioInfoDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.repository.portfolio.PortfolioRepository;
+import com.jjs.ClothingInventorySaleReformPlatform.repository.portfolio.mapping.ImageUrlMapping;
 import com.jjs.ClothingInventorySaleReformPlatform.service.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.sound.sampled.Port;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;

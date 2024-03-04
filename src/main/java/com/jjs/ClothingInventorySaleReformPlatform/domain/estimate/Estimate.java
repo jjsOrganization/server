@@ -1,12 +1,12 @@
-package com.jjs.ClothingInventorySaleReformPlatform.domain;
+package com.jjs.ClothingInventorySaleReformPlatform.domain.estimate;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequest;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -34,30 +34,27 @@ public class Estimate {  // 견적서
     @Column(name = "PRICE", nullable = false)
     private Integer price;  // 가격
 
-
-    /*
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "REQUEST_NUMBER", nullable = false)
-    private Request requestNumber;  // 의뢰 번호
-
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "CLIENT_EMAIL", nullable = false)
-    private Purchaser clientEmail;  // 의뢰자 이메일
+    private PurchaserInfo clientEmail;  // 의뢰자 이메일
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "DESIGNER_EMAIL", nullable = false)
-    private Designer designerEmail;  // 디자이너 이메일
+    private DesignerInfo designerEmail;  // 디자이너 이메일
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "REQUEST_NUMBER", nullable = false)
+    private ReformRequest requestNumber;  // 의뢰 번호
+
+    /*
 
     // 김영한 jpa 방식으로 수정 - 4
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "EMAIL")
     private Seller clientEmail2;
-
-
-
 
 
     @OneToMany(mappedBy = "estimateNumber")

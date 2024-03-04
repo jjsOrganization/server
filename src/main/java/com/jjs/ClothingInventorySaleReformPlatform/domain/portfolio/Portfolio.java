@@ -1,4 +1,4 @@
-package com.jjs.ClothingInventorySaleReformPlatform.domain;
+package com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio;
 
 import com.jjs.ClothingInventorySaleReformPlatform.common.entity.BaseEntity;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.User;
