@@ -65,6 +65,20 @@ public class ProductLikeController {
         return response.success(likeCount, "조회 성공", HttpStatus.OK);
     }
 
+    @GetMapping("/product/all/detail/{productId}/like-status")
+    @Operation(summary = "상품 좋아요 상태 조회", description = "로그인한 사용자가 특정 상품에 대해 좋아요를 눌렀는지 여부를 반환한다.")
+    public ResponseEntity<?> checkLikeStatus(@PathVariable Long productId) {
+        try {
+            boolean isLiked = productLikeService.isLikedByPurchaser(productId);
+            return response.success(isLiked, "좋아요 상태 조회 완료", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return response.fail(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return response.fail("서버 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
     @GetMapping("/product/all/like/desc")
     @Operation(summary = "상품 좋아요순 내림차순 조회", description = "상품들에 대하여 좋아요 개수 순서대로 내림차순으로 상품들을 목록으로 조회한다.")
     public ResponseEntity<?> getProductsOrderByLikes() {
