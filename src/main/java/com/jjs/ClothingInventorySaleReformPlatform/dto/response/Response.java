@@ -2,6 +2,7 @@ package com.jjs.ClothingInventorySaleReformPlatform.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -64,6 +65,7 @@ public class Response {
     public ResponseEntity<?> success(String msg) {
         return success(Collections.emptyList(), msg, HttpStatus.OK);
     }
+
     public ResponseEntity<?> success(String msg, HttpStatus status) {
         Body2 body = Body2.builder()
                 .state(status.value())
@@ -95,6 +97,7 @@ public class Response {
         return success(data, null, HttpStatus.OK);
     }
 
+
     /**
      * <p> 성공 응답만 반환한다. </p>
      * <pre>
@@ -109,9 +112,11 @@ public class Response {
      *
      * @return 응답 객체
      */
+
     public ResponseEntity<?> success() {
         return success(Collections.emptyList(), null, HttpStatus.OK);
     }
+
 
     public ResponseEntity<?> fail(Object data, String msg, HttpStatus status) {
         Body body = Body.builder()

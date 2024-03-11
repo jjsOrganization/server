@@ -136,6 +136,7 @@ public class ReformRequestService {
                 reformRequestImgRepository.save(reformRequestImage);
 
             } catch (IOException e) {
+                log.error(e.getMessage());
                 throw new RuntimeException("이미지가 없습니다.");
             }
         });

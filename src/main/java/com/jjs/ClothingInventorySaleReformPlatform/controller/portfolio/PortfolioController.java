@@ -1,15 +1,14 @@
-package com.jjs.ClothingInventorySaleReformPlatform.controller.designer;
+package com.jjs.ClothingInventorySaleReformPlatform.controller.portfolio;
 
-import com.jjs.ClothingInventorySaleReformPlatform.controller.product.AuthenticationFacade;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.Portfolio;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.designer.PortfolioDTO;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.designer.PortfolioInfoDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.Portfolio;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.portfolio.PortfolioDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.portfolio.PortfolioInfoDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Response;
 import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorCode;
 import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.response.AuthResultCode;
 import com.jjs.ClothingInventorySaleReformPlatform.response.ResultResponse;
-import com.jjs.ClothingInventorySaleReformPlatform.service.designer.PortfolioService;
+import com.jjs.ClothingInventorySaleReformPlatform.service.portfolio.PortfolioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

@@ -1,28 +1,25 @@
-package com.jjs.ClothingInventorySaleReformPlatform.service.designer;
+package com.jjs.ClothingInventorySaleReformPlatform.service.portfolio;
 
 import com.jjs.ClothingInventorySaleReformPlatform.controller.product.AuthenticationFacade;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.Portfolio;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.Portfolio;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.User;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.designer.PortfolioDTO;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.designer.PortfolioInfoDTO;
-import com.jjs.ClothingInventorySaleReformPlatform.repository.designer.PortfolioRepository;
-import com.jjs.ClothingInventorySaleReformPlatform.repository.designer.mapping.ImageUrlMapping;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.portfolio.PortfolioDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.portfolio.PortfolioInfoDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.repository.portfolio.PortfolioRepository;
+import com.jjs.ClothingInventorySaleReformPlatform.repository.portfolio.mapping.ImageUrlMapping;
 import com.jjs.ClothingInventorySaleReformPlatform.service.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.sound.sampled.Port;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static java.util.Arrays.stream;
 
 @Service
 @RequiredArgsConstructor
@@ -124,6 +121,10 @@ public class PortfolioService {
         portfolioInfoDTO.setExplanation(portfolio.getExplanation());
         portfolioInfoDTO.setDesignerName(portfolio.getName());
         portfolioInfoDTO.setDesignerImagePath(portfolio.getDesignerImage());
+
+        User designer = portfolio.getDesignerEmail();
+        portfolioInfoDTO.setDesignerEmail(designer.getEmail());
+
         return portfolioInfoDTO;
     }
 
@@ -132,6 +133,8 @@ public class PortfolioService {
      * @return 디자이너 정보 List
      * @throws IOException
      */
+
+    @Transactional
     public List<PortfolioInfoDTO> getAllPortfolio() throws IOException{
         return portfolioRepository.findAll()
                 .stream()
@@ -144,6 +147,7 @@ public class PortfolioService {
      * @param keyword
      * @return 검색된 디자이너 정보 List
      */
+
     public List<PortfolioInfoDTO> getPortfolioByName(String keyword) {
         Optional<List<Portfolio>> optionalPortfolios = portfolioRepository.findByNameContaining(keyword);
         List<Portfolio> portfolios = optionalPortfolios.orElse(Collections.emptyList());
@@ -157,7 +161,5 @@ public class PortfolioService {
     public Optional<Portfolio> getPortfolioById(Long id) {
         return portfolioRepository.findById(id);
     }
-
-
 
 }
