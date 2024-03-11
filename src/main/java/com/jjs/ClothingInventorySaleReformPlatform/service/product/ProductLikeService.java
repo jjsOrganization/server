@@ -59,4 +59,21 @@ public class ProductLikeService {
 
         productLikeRepository.deleteByPurchaserAndProduct(purchaser, product);
     }
+
+    /**
+     * 상품 상세 페이지를 로딩할 때 현재 로그인한 사용자가 해당 상품에 대해 좋아요를 눌렀는지의 여부를 반환
+     * @param productId
+     * @return
+     */
+    public boolean isLikedByPurchaser(Long productId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+
+        PurchaserInfo purchaser = purchaserRepository.findById(currentUsername)
+                .orElseThrow(() -> new IllegalArgumentException("구매자를 찾을 수 없습니다. -> 로그인 확인"));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
+
+        return productLikeRepository.existsByPurchaserAndProduct(purchaser, product);
+    }
 }

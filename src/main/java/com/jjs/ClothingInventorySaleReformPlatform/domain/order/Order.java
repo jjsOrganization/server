@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.order;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.delivery.Delivery;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -28,6 +29,9 @@ public class Order {
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetails = new ArrayList<>();
+
+    @OneToOne(mappedBy = "order", fetch = FetchType.LAZY)
+    private Delivery delivery;
 
     @CreatedDate
     private LocalDateTime orderDate;  // 주문일
