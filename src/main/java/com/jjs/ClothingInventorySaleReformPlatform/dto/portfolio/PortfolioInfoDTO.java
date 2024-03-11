@@ -22,5 +22,7 @@ public class PortfolioInfoDTO {
     @Schema(description = "디자이너 이미지 경로")
     private String designerImagePath; // 디자이너 이미지 경로
 
+    @Schema(description = "디자이너 이메일")
+    private String designerEmail; // 디자이너 이메일
 
 }
