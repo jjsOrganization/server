@@ -6,6 +6,7 @@ import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.PurchaserDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.SellerDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.UserLoginRequestDto;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.response.SellerInfoResponse;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.response.UserRoleResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Response;
 import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorCode;
 import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorResponse;
@@ -174,6 +175,14 @@ public class UserController {
         SellerInfoResponse sellerInfoResponse = userService.getSellerInfo(); // 변경된 서비스 메소드 호출
         return response.success(sellerInfoResponse, "판매자 정보 조회 완료", HttpStatus.OK);
     }
+
+    @GetMapping("/user/role")
+    @Operation(summary = "회원 구분 조회", description = "회원 role을 반환")
+    public ResponseEntity<?> getUserRole() {
+        UserRoleResponse userRoleResponse = userService.getUserRole();
+        return response.success(userRoleResponse, "회원 구분 조회 완료", HttpStatus.OK);
+    }
+
 
     @GetMapping("/product/all/detail/{productId}/seller")
     @Operation(summary = "상품으로 판매자 정보 조회", description = "상품을 등록한 판매자의 정보 조회")
