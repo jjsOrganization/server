@@ -5,6 +5,7 @@ import com.jjs.ClothingInventorySaleReformPlatform.jwt.provider.JwtTokenProvider
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig{
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final RedisTemplate<String, Object> redisTemplate; // RedisTemplate 주입
 
     //AuthenticationManager Bean 등록
     @Bean
@@ -46,12 +48,12 @@ public class SecurityConfig{
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/auth/login", "/auth/login-test", "/", "/auth/join-purchaser", "/auth/join-seller", "/auth/join-designer",
+                        .requestMatchers("/auth/login", "/auth/login-test", "/auth/reissue", "/", "/auth/join-purchaser", "/auth/join-seller", "/auth/join-designer",
                                 "/designer/portfolio","/swagger-ui/**","/v3/api-docs/**", "/swagger-resources/**","/designer/portfolio/**",
                                 "/product/all/like/desc").permitAll()
                         .requestMatchers("/admin", "/auth/login-test", "/product/all", "/product/all/{keyword}", "/product/all/{productId}",
                                 "/product/all/detail/{productId}", "/product/category/{categoryId}", "/product/all/detail/{productId}/**",
-                                "/product/all/detail/{productId}/seller", "/user/role").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
+                                "/product/all/detail/{productId}/seller", "/user/role", "/auth/logout").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
                         .requestMatchers("/product/seller/register", "/product/seller/register/{productId}", "/product/seller/register", "/seller/info",
                                 "/order/seller-list/**").hasRole("SELLER")
                         .requestMatchers("/cart/purchaser/add/{productId}", "/cart/purchaser/**", "/reform-request/purchaser/**",
@@ -60,7 +62,7 @@ public class SecurityConfig{
 
         http
                 // 기존의 http 설정들...
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate),
                         UsernamePasswordAuthenticationFilter.class);
 
         //세션 설정
