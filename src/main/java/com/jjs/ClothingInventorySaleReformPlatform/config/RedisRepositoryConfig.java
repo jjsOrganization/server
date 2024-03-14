@@ -16,6 +16,16 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @EnableRedisRepositories
 public class RedisRepositoryConfig {
 
+    /**
+     * 맥에서 Redis homebrew로 설치한 경우 서버 실행 방법
+     * 1. 서버 실행 : brew services start redis
+     * 2. cli 접근 : redis-cli
+     * 2-1. 현재 key 전체 조회 : keys *
+     * 2-2. key에 대한 value 조회(예시) : get RT:Test1@test.com -> value(RT)값 조회
+     * Redis 서버 종료
+     * 1. 서버 종료 : brew services stop redis
+     */
+
     private final RedisProperties redisProperties;
 
     @Bean
