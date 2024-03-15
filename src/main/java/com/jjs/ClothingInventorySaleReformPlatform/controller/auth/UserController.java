@@ -9,6 +9,9 @@ import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.request.ReissueDto;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.request.UserLoginRequestDto;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.response.SellerInfoResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.response.UserRoleResponse;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.updateRequest.DesignerUpdateDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.updateRequest.PurchaserUpdateDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.updateRequest.SellerUpdateDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Helper;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Response;
 import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorCode;
@@ -215,6 +218,27 @@ public class UserController {
     public ResponseEntity<?> getSellerInfoByProductId(@PathVariable Long productId) {
         SellerInfoResponse sellerInfoResponse = userService.getSellerInfoByProductId(productId);
         return response.success(sellerInfoResponse, "판매자 정보 조회 완료", HttpStatus.OK);
+    }
+
+    @PutMapping("/auth/edit/purchaser")
+    @Operation(summary = "구매자 회원 정보 수정", description = "구매자 회원 정보 수정 - 비밀번호, 전화번호, 주소")
+    public ResponseEntity<?> updatePurchaser(@RequestBody PurchaserUpdateDTO updateDTO) {
+        userService.updatePurchaser(updateDTO);
+        return response.success("구매자 정보 수정 완료", HttpStatus.OK);
+    }
+
+    @PutMapping("/auth/edit/seller")
+    @Operation(summary = "판매자 회원 정보 수정", description = "판매자 회원 정보 수정 - 비밀번호, 전화번호, 매장명, 매장주소, 사업자번호")
+    public ResponseEntity<?> updateSeller(@RequestBody SellerUpdateDTO updateDTO) {
+        userService.updateSeller(updateDTO);
+        return response.success("판매자 정보 수정 완료", HttpStatus.OK);
+    }
+
+    @PutMapping("/auth/edit/designer")
+    @Operation(summary = "디자이너 회원 정보 수정", description = "디자이너 회원 정보 수정 - 비밀번호, 전화번호, 주소")
+    public ResponseEntity<?> updateDesigner(@RequestBody DesignerUpdateDTO updateDTO) {
+        userService.updateDesigner(updateDTO);
+        return response.success("디자이너 정보 수정 완료", HttpStatus.OK);
     }
 
 }

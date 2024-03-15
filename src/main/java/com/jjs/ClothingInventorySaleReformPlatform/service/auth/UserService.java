@@ -10,6 +10,9 @@ import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.request.ReissueDto;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.request.UserLoginRequestDto;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.response.SellerInfoResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.response.UserRoleResponse;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.updateRequest.DesignerUpdateDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.updateRequest.PurchaserUpdateDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.updateRequest.SellerUpdateDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Response;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.auth.*;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.product.ProductRepository;
@@ -69,13 +72,15 @@ public class UserService {
             return response.fail("해당하는 유저가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
 
-        // 1. Login ID/PW 를 기반으로 Authentication 객체 생성
+        // 1. Login Email/PW 를 기반으로 Authentication 객체 생성
         // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
         UsernamePasswordAuthenticationToken authenticationToken = login.toAuthentication();
+        System.out.println("실제 검증 이전 authenticationToken 객체 : " + authenticationToken);
 
         // 2. 실제 검증 (사용자 비밀번호 체크)이 이루어지는 부분
         // authenticate 매서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드가 실행
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        System.out.println("실제 검증 이후 authentication 객체 : " + authentication);
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         TokenDto tokenDto = jwtTokenProvider.generateToken(authentication);
@@ -380,6 +385,92 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("판매자 정보를 찾을 수 없습니다: " + sellerEmail));
 
         return SellerInfoResponse.from(sellerInfo);
+    }
+
+    // 구매자 정보 수정
+    public void updatePurchaser(PurchaserUpdateDTO updateDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+
+        User user = userRepository.findById(currentUsername)
+                .orElseThrow(() -> new UsernameNotFoundException("구매자 정보를 찾을 수 없습니다: " + currentUsername));
+        PurchaserInfo purchaserInfo = purchaserRepository.findById(currentUsername)
+                .orElseThrow(() -> new EntityNotFoundException("구매자 추가 정보를 찾을 수 없습니다: " + currentUsername));
+
+        String password = updateDTO.getPassword();
+        String rePassword = updateDTO.getRePassword();
+
+        if (!password.equals(rePassword)) {  // 비밀번호 중복 검사
+            List<ErrorResponse.FieldError> fieldErrors = List.of(
+                    new ErrorResponse.FieldError("rePassword", rePassword, "비밀번호가 일치하지 않습니다.")
+            );
+            throw new BusinessException(ErrorCode.PASSWORD_NOT_MATCH, fieldErrors);
+        }
+
+        user.setPassword(bCryptPasswordEncoder.encode(updateDTO.getPassword()));
+        user.setPhoneNumber(updateDTO.getPhoneNumber());
+        purchaserInfo.setAddress(updateDTO.getAddress());
+
+        userRepository.save(user);
+        purchaserRepository.save(purchaserInfo);
+    }
+
+    // 판매자 정보 수정
+    public void updateSeller(SellerUpdateDTO updateDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+
+        User user = userRepository.findById(currentUsername)
+                .orElseThrow(() -> new UsernameNotFoundException("판매자 정보를 찾을 수 없습니다: " + currentUsername));
+        SellerInfo sellerInfo = sellerRepository.findById(currentUsername)
+                .orElseThrow(() -> new EntityNotFoundException("판매자 추가 정보를 찾을 수 없습니다: " + currentUsername));
+
+        String password = updateDTO.getPassword();
+        String rePassword = updateDTO.getRePassword();
+
+        if (!password.equals(rePassword)) {  // 비밀번호 중복 검사
+            List<ErrorResponse.FieldError> fieldErrors = List.of(
+                    new ErrorResponse.FieldError("rePassword", rePassword, "비밀번호가 일치하지 않습니다.")
+            );
+            throw new BusinessException(ErrorCode.PASSWORD_NOT_MATCH, fieldErrors);
+        }
+
+        user.setPassword(bCryptPasswordEncoder.encode(updateDTO.getPassword()));
+        user.setPhoneNumber(updateDTO.getPhoneNumber());
+        sellerInfo.setStoreName(updateDTO.getStoreName());
+        sellerInfo.setStoreAddress(updateDTO.getStoreAddress());
+        sellerInfo.setBusinessNumber(updateDTO.getBusinessNumber());
+
+        userRepository.save(user);
+        sellerRepository.save(sellerInfo);
+    }
+
+    // 디자이너 정보 수정
+    public void updateDesigner(DesignerUpdateDTO updateDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+
+        User user = userRepository.findById(currentUsername)
+                .orElseThrow(() -> new UsernameNotFoundException("디자이너 정보를 찾을 수 없습니다: " + currentUsername));
+        DesignerInfo designerInfo = designerRepository.findById(currentUsername)
+                .orElseThrow(() -> new EntityNotFoundException("디자이너 추가 정보를 찾을 수 없습니다: " + currentUsername));
+
+        String password = updateDTO.getPassword();
+        String rePassword = updateDTO.getRePassword();
+
+        if (!password.equals(rePassword)) {  // 비밀번호 중복 검사
+            List<ErrorResponse.FieldError> fieldErrors = List.of(
+                    new ErrorResponse.FieldError("rePassword", rePassword, "비밀번호가 일치하지 않습니다.")
+            );
+            throw new BusinessException(ErrorCode.PASSWORD_NOT_MATCH, fieldErrors);
+        }
+
+        user.setPassword(bCryptPasswordEncoder.encode(updateDTO.getPassword()));
+        user.setPhoneNumber(updateDTO.getPhoneNumber());
+        designerInfo.setAddress(updateDTO.getAddress());
+
+        userRepository.save(user);
+        designerRepository.save(designerInfo);
     }
 
 }
