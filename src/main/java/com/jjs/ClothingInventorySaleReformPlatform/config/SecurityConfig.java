@@ -48,7 +48,8 @@ public class SecurityConfig{
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/auth/login", "/auth/login-test", "/", "/auth/join-purchaser", "/auth/join-seller", "/auth/join-designer",
                                 "/designer/portfolio","/swagger-ui/**","/v3/api-docs/**", "/swagger-resources/**","/designer/portfolio/**",
-                                "/product/all/like/desc").permitAll()
+                                "/product/all/like/desc",
+                                "/chat/**", "/chat","/ws/chat").permitAll()
                         .requestMatchers("/admin", "/auth/login-test", "/product/all", "/product/all/{keyword}", "/product/all/{productId}",
                                 "/product/all/detail/{productId}", "/product/category/{categoryId}", "/product/all/detail/{productId}/**",
                                 "/product/all/detail/{productId}/seller", "/user/role").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
@@ -76,4 +77,5 @@ public class SecurityConfig{
 
         return new BCryptPasswordEncoder();
     }
+
 }
