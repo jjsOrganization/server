@@ -1,8 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.controller.auth;
 
-import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.updateRequest.patchPurchaser.UpdateAddressDTO;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.updateRequest.patchUser.UpdatePasswordDTO;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.updateRequest.patchUser.UpdatePhoneNumberDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.updateRequest.patchUser.*;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Response;
 import com.jjs.ClothingInventorySaleReformPlatform.jwt.provider.JwtTokenProvider;
 import com.jjs.ClothingInventorySaleReformPlatform.service.auth.UserService;
@@ -61,12 +59,42 @@ public class UserUpdateController {
     }
 
     /**
+     * 판매자
+     */
+    @PatchMapping("/auth/update-seller/storeName")
+    @Operation(summary = "매장 이름 변경", description = "회원 정보 수정 시, 회원의 매장 이름을 변경한다. 판매자만 해당")
+    public ResponseEntity<?> updateSellerStoreName(@RequestBody UpdateStoreNameDTO updateDTO) {
+        userUpdateService.updateSellerStoreName(updateDTO);
+        return response.success("매장 이름 수정 완료", HttpStatus.OK);
+    }
+
+    /**
+     * 판매자
+     */
+    @PatchMapping("/auth/update-seller/storeAddress")
+    @Operation(summary = "매장 주소 변경", description = "회원 정보 수정 시, 회원의 매장 주소를 변경한다. 판매자만 해당")
+    public ResponseEntity<?> updateSellerStoreAddress(@RequestBody UpdateStoreAddressDTO updateDTO) {
+        userUpdateService.updateSellerStoreAddress(updateDTO);
+        return response.success("매장 주소 수정 완료", HttpStatus.OK);
+    }
+
+    /**
+     * 판매자
+     */
+    @PatchMapping("/auth/update-seller/businessNumber")
+    @Operation(summary = "사업자 번호 변경", description = "회원 정보 수정 시, 회원의 사업자 번호를 변경한다. 판매자만 해당")
+    public ResponseEntity<?> updateSellerBusinessNumber(@RequestBody UpdateBusinessNumberDTO updateDTO) {
+        userUpdateService.updateSellerBusinessNumber(updateDTO);
+        return response.success("사업자 번호 수정 완료", HttpStatus.OK);
+    }
+
+    /**
      * 디자이너
      */
     @PatchMapping("/auth/update-designer/address")
     @Operation(summary = "주소 변경", description = "회원 정보 수정 시, 회원의 주소를 변경한다. 디자이너만 해당")
     public ResponseEntity<?> updateDesignerAddress(@RequestBody UpdateAddressDTO updateDTO) {
-        userUpdateService.updateAddress(updateDTO);
+        userUpdateService.updateDesignerAddress(updateDTO);
         return response.success("주소 수정 완료", HttpStatus.OK);
     }
 

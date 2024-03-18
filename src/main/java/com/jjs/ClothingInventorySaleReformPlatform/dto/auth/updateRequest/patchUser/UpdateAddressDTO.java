@@ -1,4 +1,4 @@
-package com.jjs.ClothingInventorySaleReformPlatform.dto.auth.updateRequest.patchPurchaser;
+package com.jjs.ClothingInventorySaleReformPlatform.dto.auth.updateRequest.patchUser;
 
 import lombok.Getter;
 import lombok.Setter;

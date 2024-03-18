@@ -2,11 +2,9 @@ package com.jjs.ClothingInventorySaleReformPlatform.service.auth;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.SellerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.User;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.updateRequest.PurchaserUpdateDTO;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.updateRequest.patchPurchaser.UpdateAddressDTO;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.updateRequest.patchUser.UpdatePasswordDTO;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.updateRequest.patchUser.UpdatePhoneNumberDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.updateRequest.patchUser.*;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Response;
 import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorCode;
 import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorResponse;
@@ -17,7 +15,6 @@ import com.jjs.ClothingInventorySaleReformPlatform.repository.auth.PurchaserRepo
 import com.jjs.ClothingInventorySaleReformPlatform.repository.auth.SellerRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.auth.UserRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.product.ProductRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -93,8 +90,44 @@ public class UserUpdateService {
         purchaserRepository.save(purchaserInfo);
     }
 
+    // 매장명 수정 -> Seller
+    public void updateSellerStoreName(UpdateStoreNameDTO updateDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+
+        SellerInfo sellerInfo = sellerRepository.findById(currentUsername)
+                .orElseThrow(() -> new UsernameNotFoundException("판매자 정보를 찾을 수 없습니다: " + currentUsername));
+
+        sellerInfo.setStoreName(updateDTO.getStoreName());
+        sellerRepository.save(sellerInfo);
+    }
+
+    // 매장주소 수정 -> Seller
+    public void updateSellerStoreAddress(UpdateStoreAddressDTO updateDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+
+        SellerInfo sellerInfo = sellerRepository.findById(currentUsername)
+                .orElseThrow(() -> new UsernameNotFoundException("판매자 정보를 찾을 수 없습니다: " + currentUsername));
+
+        sellerInfo.setStoreAddress(updateDTO.getStoreAddress());
+        sellerRepository.save(sellerInfo);
+    }
+
+    // 사업자 주소 수정 -> Seller
+    public void updateSellerBusinessNumber(UpdateBusinessNumberDTO updateDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+
+        SellerInfo sellerInfo = sellerRepository.findById(currentUsername)
+                .orElseThrow(() -> new UsernameNotFoundException("판매자 정보를 찾을 수 없습니다: " + currentUsername));
+
+        sellerInfo.setBusinessNumber(updateDTO.getBusinessNumber());
+        sellerRepository.save(sellerInfo);
+    }
+
     // 주소 수정 -> Designer
-    public void updateAddress(UpdateAddressDTO updateDTO) {
+    public void updateDesignerAddress(UpdateAddressDTO updateDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
 

@@ -56,7 +56,7 @@ public class SecurityConfig{
                                 "/product/all/detail/{productId}/seller", "/user/role", "/auth/logout", "/auth/edit/**", "/auth/info/**",
                                 "/auth/update/**").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
                         .requestMatchers("/product/seller/register", "/product/seller/register/{productId}", "/product/seller/register", "/seller/info",
-                                "/order/seller-list/**").hasRole("SELLER")
+                                "/order/seller-list/**", "/auth/update-seller/**").hasRole("SELLER")
                         .requestMatchers("/cart/purchaser/add/{productId}", "/cart/purchaser/**", "/reform-request/purchaser/**",
                                 "/product/all/detail/{productId}/like", "/order/purchaser-list", "/auth/update-purchaser/address").hasRole("PURCHASER")
                         .requestMatchers("/auth/update-designer/address").hasRole("DESIGNER")
