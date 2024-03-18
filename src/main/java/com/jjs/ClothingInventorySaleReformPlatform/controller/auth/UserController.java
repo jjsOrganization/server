@@ -7,6 +7,7 @@ import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.SellerDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.request.LogoutDto;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.request.ReissueDto;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.request.UserLoginRequestDto;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.response.PurchaserInfoResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.response.SellerInfoResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.response.UserRoleResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.updateRequest.DesignerUpdateDTO;
@@ -240,5 +241,27 @@ public class UserController {
         userService.updateDesigner(updateDTO);
         return response.success("디자이너 정보 수정 완료", HttpStatus.OK);
     }
+
+    @GetMapping("/auth/info/purchaser")
+    @Operation(summary = "구매자 정보 조회", description = "구매자 회원 정보 수정을 위해 회원 정보를 get 하기 위한 용도")
+    public ResponseEntity<?> getPurchaserInfo() {
+        PurchaserInfoResponse purchaserInfoResponse = userService.getPurchaserInfo();
+        return response.success(purchaserInfoResponse, "구매자 정보 조회 완료", HttpStatus.OK);
+    }
+
+    @GetMapping("/auth/info/seller")
+    @Operation(summary = "판매자 정보 조회", description = "판매자 회원 정보 수정을 위해 회원 정보를 get 하기 위한 용도")
+    public ResponseEntity<?> getSellerInfo2() {
+        SellerInfoResponse sellerInfoResponse = userService.getSellerInfo(); // 변경된 서비스 메소드 호출
+        return response.success(sellerInfoResponse, "판매자 정보 조회 완료", HttpStatus.OK);
+    }
+
+    @GetMapping("/auth/info/designer")
+    @Operation(summary = "디자이너 정보 조회", description = "디자이너 회원 정보 수정을 위해 회원 정보를 get 하기 위한 용도")
+    public ResponseEntity<?> getDesignerInfo() {
+        SellerInfoResponse sellerInfoResponse = userService.getSellerInfo(); // 변경된 서비스 메소드 호출
+        return response.success(sellerInfoResponse, "판매자 정보 조회 완료", HttpStatus.OK);
+    }
+
 
 }

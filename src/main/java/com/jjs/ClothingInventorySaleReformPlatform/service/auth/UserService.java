@@ -8,6 +8,7 @@ import com.jjs.ClothingInventorySaleReformPlatform.domain.user.User;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.request.LogoutDto;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.request.ReissueDto;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.request.UserLoginRequestDto;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.response.PurchaserInfoResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.response.SellerInfoResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.response.UserRoleResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.updateRequest.DesignerUpdateDTO;
@@ -471,6 +472,21 @@ public class UserService {
 
         userRepository.save(user);
         designerRepository.save(designerInfo);
+    }
+
+    // 판매자 정보 조회
+    public PurchaserInfoResponse getPurchaserInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("사용자가 로그인되어 있지 않습니다.");
+        }
+
+        String currentUsername = authentication.getName(); // 현재 로그인한 사용자의 이메일(사용자명)을 가져옵니다.
+
+        PurchaserInfo purchaserInfo = purchaserRepository.findByEmail(currentUsername)
+                .orElseThrow(() -> new UsernameNotFoundException("판매자 정보를 찾을 수 없습니다: " + currentUsername));
+
+        return PurchaserInfoResponse.from(purchaserInfo);
     }
 
 }
