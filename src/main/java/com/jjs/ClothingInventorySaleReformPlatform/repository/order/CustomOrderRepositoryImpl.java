@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.repository.order;
 
+import com.jjs.ClothingInventorySaleReformPlatform.dto.order.response.PurchaserOrderDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.order.response.SellerOrderDTO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -25,6 +26,21 @@ public class CustomOrderRepositoryImpl implements CustomOrderRepository{
 
         return em.createQuery(jpql, SellerOrderDTO.class)
                 .setParameter("sellerEmail", sellerEmail)
+                .getResultList();
+    }
+
+    @Override
+    public List<PurchaserOrderDTO> findOrderByPurchaser(String purchaserEmail) {
+
+        String jpql = "select new com.jjs.ClothingInventorySaleReformPlatform.dto.order.response.PurchaserOrderDTO(o, od, p, d) " +
+                "FROM OrderDetail od " +
+                "join od.product p " +
+                "join od.order o " +
+                "join Delivery d on o.id = d.order.id " +
+                "where o.purchaserInfo.email = :purchaserEmail AND o.orderStatus = com.jjs.ClothingInventorySaleReformPlatform.domain.order.OrderStatus.ORDER_COMPLETE";
+
+        return em.createQuery(jpql, PurchaserOrderDTO.class)
+                .setParameter("purchaserEmail", purchaserEmail)
                 .getResultList();
     }
 }

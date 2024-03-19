@@ -4,17 +4,20 @@ import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.DesignerDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.PurchaserDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.SellerDTO;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.UserLoginRequestDto;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.response.SellerInfoResponse;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.response.UserRoleResponse;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.request.LogoutDto;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.request.ReissueDto;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.request.UserLoginRequestDto;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.response.*;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.updateRequest.DesignerUpdateDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.updateRequest.PurchaserUpdateDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.auth.updateRequest.SellerUpdateDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Helper;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Response;
 import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorCode;
 import com.jjs.ClothingInventorySaleReformPlatform.error.ErrorResponse;
-import com.jjs.ClothingInventorySaleReformPlatform.jwt.dto.TokenDto;
 import com.jjs.ClothingInventorySaleReformPlatform.jwt.provider.JwtTokenProvider;
 import com.jjs.ClothingInventorySaleReformPlatform.response.AuthResultCode;
 import com.jjs.ClothingInventorySaleReformPlatform.response.ResultResponse;
-import com.jjs.ClothingInventorySaleReformPlatform.service.auth.CustomUserDetailsService;
 import com.jjs.ClothingInventorySaleReformPlatform.service.auth.UserService;
 import com.jjs.ClothingInventorySaleReformPlatform.service.cart.CartService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,11 +25,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -48,6 +50,13 @@ public class UserController {
 
     @PostMapping(value = "/auth/login")
     @Operation(summary = "로그인", description = "구매자/판매자/디자이너 로그인을 합니다.")
+    public ResponseEntity<?> login(@Validated @RequestBody  UserLoginRequestDto login, Errors errors) {
+        if (errors.hasErrors()) {
+            return response.invalidFields(Helper.refineErrors(errors));
+        }
+        return userService.login(login);
+    }
+    /*
     public ResponseEntity<Object> login(@RequestBody UserLoginRequestDto memberLoginRequestDto) {
         try {
             String memberId = memberLoginRequestDto.getMemberId();
@@ -66,6 +75,25 @@ public class UserController {
             );
             return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
         }
+    }
+     */
+
+    @PostMapping("/auth/reissue")
+    @Operation(summary = "Token 재발급", description = "Access Token 만료 시, Refresh Token으로 Access Token 재발급")
+    public ResponseEntity<?> reissue(@Validated @RequestBody ReissueDto reissue, Errors errors) {
+        if (errors.hasErrors()) {
+            return response.invalidFields(Helper.refineErrors(errors));
+        }
+        return userService.reissue(reissue);
+    }
+
+    @PostMapping("/auth/logout")
+    @Operation(summary = "로그아웃", description = "Refresh Token 차단")
+    public ResponseEntity<?> logout(@Validated @RequestBody LogoutDto logout, Errors errors) {
+        if (errors.hasErrors()) {
+            return response.invalidFields(Helper.refineErrors(errors));
+        }
+        return userService.logout(logout);
     }
 
     /**
@@ -190,5 +218,48 @@ public class UserController {
         SellerInfoResponse sellerInfoResponse = userService.getSellerInfoByProductId(productId);
         return response.success(sellerInfoResponse, "판매자 정보 조회 완료", HttpStatus.OK);
     }
+
+    @PutMapping("/auth/edit/purchaser")
+    @Operation(summary = "구매자 회원 정보 수정", description = "구매자 회원 정보 수정 - 비밀번호, 전화번호, 주소")
+    public ResponseEntity<?> updatePurchaser(@RequestBody PurchaserUpdateDTO updateDTO) {
+        userService.updatePurchaser(updateDTO);
+        return response.success("구매자 정보 수정 완료", HttpStatus.OK);
+    }
+
+    @PutMapping("/auth/edit/seller")
+    @Operation(summary = "판매자 회원 정보 수정", description = "판매자 회원 정보 수정 - 비밀번호, 전화번호, 매장명, 매장주소, 사업자번호")
+    public ResponseEntity<?> updateSeller(@RequestBody SellerUpdateDTO updateDTO) {
+        userService.updateSeller(updateDTO);
+        return response.success("판매자 정보 수정 완료", HttpStatus.OK);
+    }
+
+    @PutMapping("/auth/edit/designer")
+    @Operation(summary = "디자이너 회원 정보 수정", description = "디자이너 회원 정보 수정 - 비밀번호, 전화번호, 주소")
+    public ResponseEntity<?> updateDesigner(@RequestBody DesignerUpdateDTO updateDTO) {
+        userService.updateDesigner(updateDTO);
+        return response.success("디자이너 정보 수정 완료", HttpStatus.OK);
+    }
+
+    @GetMapping("/auth/info/purchaser")
+    @Operation(summary = "구매자 정보 조회", description = "구매자 회원 정보 수정을 위해 회원 정보를 get 하기 위한 용도")
+    public ResponseEntity<?> getPurchaserInfo() {
+        PurchaserInfoResponse purchaserInfoResponse = userService.getPurchaserInfo();
+        return response.success(purchaserInfoResponse, "구매자 정보 조회 완료", HttpStatus.OK);
+    }
+
+    @GetMapping("/auth/info/seller")
+    @Operation(summary = "판매자 정보 조회", description = "판매자 회원 정보 수정을 위해 회원 정보를 get 하기 위한 용도")
+    public ResponseEntity<?> getSellerInfo2() {
+        SellerInfoResponse2 sellerInfoResponse = userService.getSellerInfo2(); // 변경된 서비스 메소드 호출
+        return response.success(sellerInfoResponse, "판매자 정보 조회 완료", HttpStatus.OK);
+    }
+
+    @GetMapping("/auth/info/designer")
+    @Operation(summary = "디자이너 정보 조회", description = "디자이너 회원 정보 수정을 위해 회원 정보를 get 하기 위한 용도")
+    public ResponseEntity<?> getDesignerInfo() {
+        DesignerInfoResponse designerInfoResponse = userService.getDesignerInfo(); // 변경된 서비스 메소드 호출
+        return response.success(designerInfoResponse, "판매자 정보 조회 완료", HttpStatus.OK);
+    }
+
 
 }
