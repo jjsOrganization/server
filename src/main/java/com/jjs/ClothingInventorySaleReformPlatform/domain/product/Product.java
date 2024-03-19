@@ -72,17 +72,4 @@ public class Product extends BaseEntity {  // BaseEntity가 등록시간, 수정
         this.productDetailText = productFormDTO.getItemDetail();
         this.productSellStatus = productFormDTO.getProductSellStatus();
     }
-
-
-/*
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "categoryId")
-    private Category category;  // 카테고리 (상품 검색의 카테고리 선택을 위해 클래스 파일로 분류)
-    */
-    /*
-    @OneToOne
-    @JoinColumn(name = "colorId")
-    private ColorEntity color;  // 상품 컬러 (보류)
-     */
-
 }
