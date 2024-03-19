@@ -1,10 +1,14 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.product;
 
 import com.jjs.ClothingInventorySaleReformPlatform.common.entity.BaseEntity;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.cart.CartProduct;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.product.like.ProductLike;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.product.like.ProductLikeCount;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.product.ProductFormDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -39,6 +43,20 @@ public class Product extends BaseEntity {  // BaseEntity가 등록시간, 수정
     @OrderBy("id asc")
     private List<ProductImg> productImg;
 
+    /**
+     * 상품 삭제 시 장바구니에 담긴 상품들도 삭제 - 근데 이렇게 하는 것보다 상품의 상태를 "판매중", "삭제됨" 이런식으로 설정하는게 더 낫다고 함
+     * mappedBy = "product" : CartProduct 엔티티 내에 Product 엔티티를 참조하는 필드 이름
+     * cascade = CascadeType.ALL : Product 엔티티에 대한 모든 변경(생성, 수정, 삭제 등)이 관련된 CartProduct 엔티티에도 적용
+     **/
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<CartProduct> cartProducts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<ProductLike> likes;
+
+    @OneToOne(mappedBy = "product", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private ProductLikeCount likeCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
@@ -54,17 +72,4 @@ public class Product extends BaseEntity {  // BaseEntity가 등록시간, 수정
         this.productDetailText = productFormDTO.getItemDetail();
         this.productSellStatus = productFormDTO.getProductSellStatus();
     }
-
-
-/*
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "categoryId")
-    private Category category;  // 카테고리 (상품 검색의 카테고리 선택을 위해 클래스 파일로 분류)
-    */
-    /*
-    @OneToOne
-    @JoinColumn(name = "colorId")
-    private ColorEntity color;  // 상품 컬러 (보류)
-     */
-
 }
