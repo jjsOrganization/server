@@ -12,5 +12,6 @@ import java.util.Optional;
 public interface ReformRequestRepository extends JpaRepository<ReformRequest, Object> {
     Optional<ReformRequest> findReformRequestById(Long id);
     Optional<List<ReformRequest>> findReformRequestsByDesignerEmail(DesignerInfo designerEmail);
-    Optional<List<ReformRequest>> findReformRequestsByClientEmail(PurchaserInfo purchaserEmail);
+    //Optional<List<ReformRequest>> findReformRequestsByClientEmail(PurchaserInfo purchaserEmail);
+    List<ReformRequest> findByClientEmail_Email(String email);
 }

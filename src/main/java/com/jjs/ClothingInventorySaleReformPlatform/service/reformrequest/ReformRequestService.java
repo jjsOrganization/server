@@ -1,21 +1,27 @@
 package com.jjs.ClothingInventorySaleReformPlatform.service.reformrequest;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.Portfolio;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.Product;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequestImage;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequestStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.User;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.product.response.ProductListDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformProductInfoDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformRequestCheckDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformRequestCheckPurchaserDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.auth.DesignerRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.auth.PurchaserRepository;
+import com.jjs.ClothingInventorySaleReformPlatform.repository.portfolio.PortfolioRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.product.ProductImgRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.product.ProductRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reformrequest.ReformRequestImgRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reformrequest.ReformRequestRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.service.s3.S3Service;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -41,6 +47,7 @@ public class ReformRequestService {
     private final PurchaserRepository purchaserRepository;
     private final DesignerRepository designerRepository;
     private final ProductImgRepository productImgRepository;
+    private final PortfolioRepository portfolioRepository;
 
     private String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -143,7 +150,7 @@ public class ReformRequestService {
             }
         });
     }
-
+/*
     public List<ReformRequestCheckDTO> getAllRequestList() {
         PurchaserInfo purchaserInfo = new PurchaserInfo();
         purchaserInfo.setEmail(getCurrentUsername());
@@ -157,6 +164,29 @@ public class ReformRequestService {
 
         return reformRequestCheckDTOList;
     }
+
+ */
+    public List<ReformRequestCheckPurchaserDTO> getAllRequestList() {
+        String currentUsername = getCurrentUsername();
+        /*
+        PurchaserInfo purchaserInfo = new PurchaserInfo();
+        purchaserInfo.setEmail(getCurrentUsername());
+        User user = new User();
+        user.setEmail(getCurrentUsername());
+
+         */
+
+        List<ReformRequest> reformRequestsByPurchaserEmail = reformRequestRepository.findByClientEmail_Email(currentUsername);
+                //.orElseThrow(() -> new IllegalArgumentException("요청받은 의뢰가 없습니다."));
+
+        return reformRequestsByPurchaserEmail.stream().map(request -> {
+            Portfolio portfolio = portfolioRepository.findByDesignerEmail_Email(request.getDesignerEmail().getEmail()).orElseThrow(() -> new EntityNotFoundException("Portfolio not found"));
+            return ReformRequestCheckPurchaserDTO.convertToDTO(request, portfolio);
+        }).collect(Collectors.toList());
+
+
+    }
+
 
 
 }
