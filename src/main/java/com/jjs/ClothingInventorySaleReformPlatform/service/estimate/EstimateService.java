@@ -75,8 +75,6 @@ public class EstimateService {
                 .orElseThrow(() -> new IllegalArgumentException("의뢰서가 존재하지 않습니다."));
         ReformRequestStatus requestStatus = reformRequestById.getRequestStatus();
         try{
-
-        }catch (Exception e){
             if(requestStatus.equals(ReformRequestStatus.REQUEST_WAITING)){
                 if(clientResponse.equals("수락")){
                     reformRequestById.setId(requestNumber);
@@ -90,7 +88,7 @@ public class EstimateService {
             }else{
                 throw new Exception("대기 상태가 아닙니다.");
             }
-
+        }catch (Exception e){
             throw new Exception("상태 변경에 실패하였습니다.",e);
         }
 
