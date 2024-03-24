@@ -53,6 +53,7 @@ public class SellerOrderDTO {
         orderDetailDTO.setProductName(product.getProductName());
         orderDetailDTO.setQuantity(orderDetail.getQuantity());
         orderDetailDTO.setPrice(orderDetail.getPrice());
+        orderDetailDTO.setImgUrl(product.getProductImg().get(0).getImgUrl());
         this.orderDetails.add(orderDetailDTO);
     }
 
@@ -64,5 +65,6 @@ public class SellerOrderDTO {
         private String productName;  // 상품 이름
         private int quantity;  // 상품 개수
         private int price;  // 상품 가격
+        private String imgUrl;  // 해당 상품 이미지
     }
 }
