@@ -89,6 +89,7 @@ public class EstimateService {
                 throw new Exception("대기 상태가 아닙니다.");
             }
         }catch (Exception e){
+
             throw new Exception("상태 변경에 실패하였습니다.",e);
         }
 

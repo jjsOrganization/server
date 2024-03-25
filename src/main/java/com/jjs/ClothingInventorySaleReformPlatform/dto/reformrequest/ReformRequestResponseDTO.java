@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
+/**
+ * 리폼 내역 리스트 불러올 때 사용하는 DTO
+ */
 @Getter
 @Setter
 public class ReformRequestResponseDTO {
