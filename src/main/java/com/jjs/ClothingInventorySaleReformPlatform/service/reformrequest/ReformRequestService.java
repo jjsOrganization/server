@@ -7,10 +7,7 @@ import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRe
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequestStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.user.User;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.product.response.ProductListDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformProductInfoDTO;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformRequestCheckDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformRequestCheckPurchaserDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.auth.DesignerRepository;
@@ -31,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 @Service
@@ -150,43 +146,15 @@ public class ReformRequestService {
             }
         });
     }
-/*
-    public List<ReformRequestCheckDTO> getAllRequestList() {
-        PurchaserInfo purchaserInfo = new PurchaserInfo();
-        purchaserInfo.setEmail(getCurrentUsername());
 
-        List<ReformRequest> reformRequestsByPurchaserEmail = reformRequestRepository.findReformRequestsByClientEmail(purchaserInfo)
-                .orElseThrow(() -> new IllegalArgumentException("요청받은 의뢰가 없습니다."));
-
-        List<ReformRequestCheckDTO> reformRequestCheckDTOList = reformRequestsByPurchaserEmail.stream() // 의뢰서 엔티티 -> DTO로 변경 후 반환
-                .map(ReformRequestCheckDTO::convertToDTO) // 2차원 배열 형태로 의뢰서 데이터가 들어옴. 각 배열에 대해 convert 적용
-                .collect(Collectors.toList());
-
-        return reformRequestCheckDTOList;
-    }
-
- */
     public List<ReformRequestCheckPurchaserDTO> getAllRequestList() {
         String currentUsername = getCurrentUsername();
-        /*
-        PurchaserInfo purchaserInfo = new PurchaserInfo();
-        purchaserInfo.setEmail(getCurrentUsername());
-        User user = new User();
-        user.setEmail(getCurrentUsername());
-
-         */
 
         List<ReformRequest> reformRequestsByPurchaserEmail = reformRequestRepository.findByClientEmail_Email(currentUsername);
-                //.orElseThrow(() -> new IllegalArgumentException("요청받은 의뢰가 없습니다."));
 
         return reformRequestsByPurchaserEmail.stream().map(request -> {
             Portfolio portfolio = portfolioRepository.findByDesignerEmail_Email(request.getDesignerEmail().getEmail()).orElseThrow(() -> new EntityNotFoundException("Portfolio not found"));
             return ReformRequestCheckPurchaserDTO.convertToDTO(request, portfolio);
         }).collect(Collectors.toList());
-
-
     }
-
-
-
 }
