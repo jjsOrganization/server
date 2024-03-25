@@ -148,7 +148,8 @@ public class ReformRequestService {
         });
     }
 
-
+    // 구매자가 요청한 의뢰 내역 전체 조회
+    @Transactional
     public List<ReformRequestCheckPurchaserDTO> getAllRequestList() {
         String currentUsername = getCurrentUsername();
 
