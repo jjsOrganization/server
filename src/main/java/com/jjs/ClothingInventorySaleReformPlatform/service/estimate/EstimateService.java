@@ -5,7 +5,7 @@ import com.jjs.ClothingInventorySaleReformPlatform.controller.product.Authentica
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequestStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformRequestCheckDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformRequestResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.estimate.EstimateRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reformrequest.ReformRequestRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,18 +29,18 @@ public class EstimateService {
      * @return
      */
     @Transactional
-    public List<ReformRequestCheckDTO> getAllRequestList(){
+    public List<ReformRequestResponseDTO> getAllRequestList(){
         DesignerInfo designerInfo = new DesignerInfo();
         designerInfo.setEmail(authenticationFacade.getCurrentUsername());
 
         List<ReformRequest> reformRequestsByDesignerEmail = requestRepository.findReformRequestsByDesignerEmail(designerInfo) // 의뢰서 조회
                 .orElseThrow(() -> new IllegalArgumentException("요청받은 의뢰가 없습니다."));
 
-        List<ReformRequestCheckDTO> reformRequestCheckDTOList = reformRequestsByDesignerEmail.stream() // 의뢰서 엔티티 -> DTO로 변경 후 반환
-                .map(ReformRequestCheckDTO::convertToDTO) // 2차원 배열 형태로 의뢰서 데이터가 들어옴. 각 배열에 대해 convert 적용
+        List<ReformRequestResponseDTO> reformRequestResponseDTOList = reformRequestsByDesignerEmail.stream() // 의뢰서 엔티티 -> DTO로 변경 후 반환
+                .map(ReformRequestResponseDTO::convertToDTO) // 2차원 배열 형태로 의뢰서 데이터가 들어옴. 각 배열에 대해 convert 적용
                 .collect(Collectors.toList());
 
-        return reformRequestCheckDTOList;
+        return reformRequestResponseDTOList;
         }
 
     /**
@@ -49,15 +49,15 @@ public class EstimateService {
      * @return
      */
     @Transactional
-    public List<ReformRequestCheckDTO> getRequestListByNumber(Long requestNumber) {
+    public List<ReformRequestResponseDTO> getRequestListByNumber(Long requestNumber) {
         Optional<ReformRequest> reformRequestById = requestRepository.findReformRequestById(requestNumber);
 
-        List<ReformRequestCheckDTO> reformRequestCheckDTOList = reformRequestById
+        List<ReformRequestResponseDTO> reformRequestResponseDTOList = reformRequestById
                 .stream()
-                .map(ReformRequestCheckDTO::convertToDTO)
+                .map(ReformRequestResponseDTO::convertToDTO)
                 .collect(Collectors.toList());
 
-        return reformRequestCheckDTOList;
+        return reformRequestResponseDTOList;
     }
 
 
@@ -89,6 +89,7 @@ public class EstimateService {
                 throw new Exception("대기 상태가 아닙니다.");
             }
         }catch (Exception e){
+
             throw new Exception("상태 변경에 실패하였습니다.",e);
         }
 
