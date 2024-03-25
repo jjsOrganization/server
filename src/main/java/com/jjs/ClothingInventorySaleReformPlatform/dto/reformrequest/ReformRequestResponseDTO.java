@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public class ReformRequestCheckDTO {
+public class ReformRequestResponseDTO {
 
     @NotEmpty
     private String requestPart; // 리폼 의뢰 부위
@@ -34,22 +34,22 @@ public class ReformRequestCheckDTO {
      * reformRequestCheckDTO = 의뢰서 DTO
      * reformRequestImgDTOList = 의뢰서에 포함된 이미지 리스트 엔티티 -> DTO로 변환한 변수
      */
-    public static ReformRequestCheckDTO convertToDTO(ReformRequest reformRequests) {
+    public static ReformRequestResponseDTO convertToDTO(ReformRequest reformRequests) {
 
-            ReformRequestCheckDTO reformRequestCheckDTO = new ReformRequestCheckDTO();
+            ReformRequestResponseDTO reformRequestResponseDTO = new ReformRequestResponseDTO();
 
-            reformRequestCheckDTO.setDesignerEmail(reformRequests.getDesignerEmail().getEmail());
-            reformRequestCheckDTO.setRequestInfo(reformRequests.getRequestInfo());
-            reformRequestCheckDTO.setRequestPart(reformRequests.getRequestPart());
-            reformRequestCheckDTO.setRequestPrice(reformRequests.getRequestPrice());
-            reformRequestCheckDTO.setRequestStatus(reformRequests.getRequestStatus());
+            reformRequestResponseDTO.setDesignerEmail(reformRequests.getDesignerEmail().getEmail());
+            reformRequestResponseDTO.setRequestInfo(reformRequests.getRequestInfo());
+            reformRequestResponseDTO.setRequestPart(reformRequests.getRequestPart());
+            reformRequestResponseDTO.setRequestPrice(reformRequests.getRequestPrice());
+            reformRequestResponseDTO.setRequestStatus(reformRequests.getRequestStatus());
 
         List<ReformRequestImgDTO> reformRequestImgDTOList = reformRequests.getReformRequestImageList().stream() // 의뢰서에 포함된 이미지 엔티티 리스트 -> DTO 리스트 형태로 변경한 변수
                 .map(ReformRequestImgDTO::toReformRequestImgDTO) // toReformRequestImgDTO -> 이미지 엔티티 리스트를 DTO 리스트로 변경
                 .collect(Collectors.toList());
 
-            reformRequestCheckDTO.setRequestImg(reformRequestImgDTOList);
+            reformRequestResponseDTO.setRequestImg(reformRequestImgDTOList);
 
-            return reformRequestCheckDTO;
+            return reformRequestResponseDTO;
     }
 }
