@@ -1,7 +1,7 @@
 package com.jjs.ClothingInventorySaleReformPlatform.controller.estimate;
 
 import com.jjs.ClothingInventorySaleReformPlatform.dto.estimate.ClientResponse;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformRequestCheckDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformRequestResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Response;
 import com.jjs.ClothingInventorySaleReformPlatform.service.estimate.EstimateService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -27,15 +26,15 @@ public class EstimateController {
     @GetMapping("/estimate/designer/requestForm")
     @Operation(summary = "디자이너 요청받은 의뢰 조회", description = "디자이너가 요청받은 모든 의뢰를 조회합니다.")
     public ResponseEntity<?> getAllRequestForm() {
-        List<ReformRequestCheckDTO> reformRequestCheckDTOList = estimateService.getAllRequestList();
+        List<ReformRequestResponseDTO> reformRequestResponseDTOList = estimateService.getAllRequestList();
 
-        return response.success(reformRequestCheckDTOList);
+        return response.success(reformRequestResponseDTOList);
     }
 
     @GetMapping("/estimate/designer/requestForm/{requestNumber}")
     @Operation(summary = "요청받은 의뢰 상세 페이지 이동", description = "요청받은 의뢰의 상세 내역을 조회합니다.")
     public ResponseEntity<?> getRequestFormByNumber(@PathVariable Long requestNumber){
-        List<ReformRequestCheckDTO> requestListByNumber = estimateService.getRequestListByNumber(requestNumber);
+        List<ReformRequestResponseDTO> requestListByNumber = estimateService.getRequestListByNumber(requestNumber);
 
         return response.success(requestListByNumber);
     }

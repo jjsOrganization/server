@@ -1,16 +1,15 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.chat;
 
 import com.jjs.ClothingInventorySaleReformPlatform.common.entity.BaseEntity;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @Table(name = "ChatRoom")
 public class Chat extends BaseEntity {
 
@@ -18,9 +17,17 @@ public class Chat extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String purchaserEmail;
+    @ManyToOne(fetch = FetchType.LAZY , optional = false)
+    @JoinColumn(name = "PURCHASER_EMAIL" )
+    private PurchaserInfo purchaserEmail;
 
-    private String designerEmail;
-
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "DESIGNER_EMAIL")
+    private DesignerInfo designerEmail;  // 디자이너 이메일
+    //
+//
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "PRODUCT_ID")
+//    private Product product;
 
 }

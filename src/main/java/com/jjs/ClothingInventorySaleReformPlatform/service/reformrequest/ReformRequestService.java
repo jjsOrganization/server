@@ -7,7 +7,7 @@ import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRe
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformProductInfoDTO;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformRequestCheckDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformRequestResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.auth.DesignerRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.auth.PurchaserRepository;
@@ -84,7 +84,6 @@ public class ReformRequestService {
 
         // 첨부 이미지 등록
         saveImageList(reformRequestDTO,reformRequest);
-
     }
 
     @Transactional
@@ -144,15 +143,15 @@ public class ReformRequestService {
         });
     }
 
-    public List<ReformRequestCheckDTO> getAllRequestList() {
+    public List<ReformRequestResponseDTO> getAllRequestList() {
         PurchaserInfo purchaserInfo = new PurchaserInfo();
         purchaserInfo.setEmail(getCurrentUsername());
 
         List<ReformRequest> reformRequestsByPurchaserEmail = reformRequestRepository.findReformRequestsByClientEmail(purchaserInfo)
                 .orElseThrow(() -> new IllegalArgumentException("요청받은 의뢰가 없습니다."));
 
-        List<ReformRequestCheckDTO> reformRequestCheckDTOList = reformRequestsByPurchaserEmail.stream() // 의뢰서 엔티티 -> DTO로 변경 후 반환
-                .map(ReformRequestCheckDTO::convertToDTO) // 2차원 배열 형태로 의뢰서 데이터가 들어옴. 각 배열에 대해 convert 적용
+        List<ReformRequestResponseDTO> reformRequestCheckDTOList = reformRequestsByPurchaserEmail.stream() // 의뢰서 엔티티 -> DTO로 변경 후 반환
+                .map(ReformRequestResponseDTO::convertToDTO) // 2차원 배열 형태로 의뢰서 데이터가 들어옴. 각 배열에 대해 convert 적용
                 .collect(Collectors.toList());
 
         return reformRequestCheckDTOList;

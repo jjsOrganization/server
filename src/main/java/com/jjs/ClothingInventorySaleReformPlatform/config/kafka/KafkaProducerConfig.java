@@ -1,7 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.config.kafka;
 
 import com.jjs.ClothingInventorySaleReformPlatform.dto.chat.ChatMessageDTO;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.chat.ChatRoomDTO;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,17 +18,25 @@ import java.util.Map;
 @EnableKafka
 @Configuration
 public class KafkaProducerConfig {
+    @Value("${spring.kafka.bootstrap-servers}")
+    private String bootstrapAddress;
+
     @Bean
-    public ProducerFactory<String, String> producerFactory() {
-        Map<String, Object> configProps = new HashMap<>();
-        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        return new DefaultKafkaProducerFactory<>(configProps);
+    public ProducerFactory<String, ChatMessageDTO> producerFactory() {
+        return new DefaultKafkaProducerFactory<>(producerConfigurations());
     }
 
     @Bean
-    public KafkaTemplate<String, String> kafkaTemplate() {
+    public Map<String, Object> producerConfigurations(){
+        Map<String, Object> configurations = new HashMap<>();
+        configurations.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
+        configurations.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        configurations.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        return configurations;
+    }
+
+    @Bean
+    public KafkaTemplate<String, ChatMessageDTO> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 }
