@@ -92,7 +92,6 @@ public class ReformRequestController {
     @GetMapping("/reform/purchaser/requests/all")
     @Operation(summary = "구매자가 요청한 의뢰 내역 전체 조회", description = "구매자가 리폼 요청을 한 내역들을 조회한다.")
     public ResponseEntity<?> getAllRequests() {
-        //List<ReformRequestCheckDTO> reformRequestCheckDTOList = reformRequestService.getAllRequestList();
         List<ReformRequestCheckPurchaserDTO> reformRequestCheckDTOList = reformRequestService.getAllRequestList();
 
         return response.success(reformRequestCheckDTOList, "구매자 요청 의뢰 내역 조회 완료", HttpStatus.OK);
