@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.service.reformrequest;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.Portfolio;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.Product;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequestImage;
@@ -7,15 +8,17 @@ import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRe
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformProductInfoDTO;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformRequestResponseDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformRequestCheckPurchaserDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.auth.DesignerRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.auth.PurchaserRepository;
+import com.jjs.ClothingInventorySaleReformPlatform.repository.portfolio.PortfolioRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.product.ProductImgRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.product.ProductRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reformrequest.ReformRequestImgRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reformrequest.ReformRequestRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.service.s3.S3Service;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -41,6 +44,7 @@ public class ReformRequestService {
     private final PurchaserRepository purchaserRepository;
     private final DesignerRepository designerRepository;
     private final ProductImgRepository productImgRepository;
+    private final PortfolioRepository portfolioRepository;
 
     private String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -84,6 +88,7 @@ public class ReformRequestService {
 
         // 첨부 이미지 등록
         saveImageList(reformRequestDTO,reformRequest);
+
     }
 
     @Transactional
@@ -143,18 +148,17 @@ public class ReformRequestService {
         });
     }
 
-    public List<ReformRequestResponseDTO> getAllRequestList() {
-        PurchaserInfo purchaserInfo = new PurchaserInfo();
-        purchaserInfo.setEmail(getCurrentUsername());
+    // 구매자가 요청한 의뢰 내역 전체 조회
+    @Transactional
+    public List<ReformRequestCheckPurchaserDTO> getAllRequestList() {
+        String currentUsername = getCurrentUsername();
 
-        List<ReformRequest> reformRequestsByPurchaserEmail = reformRequestRepository.findReformRequestsByClientEmail(purchaserInfo)
-                .orElseThrow(() -> new IllegalArgumentException("요청받은 의뢰가 없습니다."));
+        List<ReformRequest> reformRequestsByPurchaserEmail = reformRequestRepository.findByClientEmail_Email(currentUsername);
 
-        List<ReformRequestResponseDTO> reformRequestCheckDTOList = reformRequestsByPurchaserEmail.stream() // 의뢰서 엔티티 -> DTO로 변경 후 반환
-                .map(ReformRequestResponseDTO::convertToDTO) // 2차원 배열 형태로 의뢰서 데이터가 들어옴. 각 배열에 대해 convert 적용
-                .collect(Collectors.toList());
-
-        return reformRequestCheckDTOList;
+        return reformRequestsByPurchaserEmail.stream().map(request -> {
+            Portfolio portfolio = portfolioRepository.findByDesignerEmail_Email(request.getDesignerEmail().getEmail()).orElseThrow(() -> new EntityNotFoundException("Portfolio not found"));
+            return ReformRequestCheckPurchaserDTO.convertToDTO(request, portfolio);
+        }).collect(Collectors.toList());
     }
 
 
