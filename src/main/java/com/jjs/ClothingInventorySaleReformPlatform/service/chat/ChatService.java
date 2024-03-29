@@ -40,7 +40,7 @@ public class ChatService {
 //    }
 
     @Transactional
-    public void createChatRoomDTO(ChatRoomDTO roomDTO){
+    public ChatRoomDTO createChatRoomDTO(ChatRoomDTO roomDTO){
         Chat chat = new Chat();
         DesignerInfo designerInfo = new DesignerInfo();
         designerInfo.setEmail(roomDTO.getDesignerEmail());
@@ -51,7 +51,16 @@ public class ChatService {
         chat.setDesignerEmail(designerInfo);
         chat.setPurchaserEmail(purchaserInfo);
 
-        chatRepository.save(chat);
+        Chat createdChatRoom = chatRepository.save(chat);
+
+        // 저장된 채팅방 객체 반환
+        ChatRoomDTO chatRoomDTO = new ChatRoomDTO();
+
+        chatRoomDTO.setRoomId(createdChatRoom.getId());
+        chatRoomDTO.setPurchaserEmail(String.valueOf(createdChatRoom.getPurchaserEmail()));
+        chatRoomDTO.setDesignerEmail(String.valueOf(createdChatRoom.getDesignerEmail()));
+
+        return chatRoomDTO;
     }
 
     @Transactional

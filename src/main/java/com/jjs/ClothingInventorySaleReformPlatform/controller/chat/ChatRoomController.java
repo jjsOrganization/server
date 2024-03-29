@@ -8,6 +8,7 @@ import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Response;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.chat.ChatMessageRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.service.chat.ChatService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "채팅 API", description = "채팅방 생성, 조회, 채팅 내역 조회 API 입니다.")
 public class ChatRoomController {
     private final ChatService chatService;
     private final AuthenticationFacade authenticationFacade;
@@ -45,15 +47,15 @@ public class ChatRoomController {
         if (bindingResult.hasErrors()) {
             return response.fail("오류",HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        chatService.createChatRoomDTO(chatRoomDTO);
+        ChatRoomDTO createRoomId = chatService.createChatRoomDTO(chatRoomDTO);
 
-        return response.success(chatRoomDTO);
+        return response.success(createRoomId);
     }
 
-    @PostMapping("/chatroom/{chatroomNo}")
+    @PostMapping("/chatroom/{roomNo}")
     @Operation(description = "채팅방 접속 종료 API")
-    public ResponseEntity<?> disconnectChat(@PathVariable Long chatroomNo, @RequestParam("email") String email) throws IllegalAccessException {
-        chatService.disconnectChatRoom(chatroomNo, email);
+    public ResponseEntity<?> disconnectChat(@PathVariable Long roomNo, @RequestParam("email") String email) throws IllegalAccessException {
+        chatService.disconnectChatRoom(roomNo, email);
         return response.success("채팅방 삭제 성공");
     }
 

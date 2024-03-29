@@ -50,7 +50,7 @@ public class SecurityConfig{
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/auth/login", "/auth/login-test", "/auth/reissue", "/", "/auth/join-purchaser", "/auth/join-seller", "/auth/join-designer",
                                 "/designer/portfolio","/swagger-ui/**","/v3/api-docs/**", "/swagger-resources/**",
-                                "/product/all/like/desc").permitAll()
+                                "/product/all/like/desc","/ws/chat/**").permitAll()
                         .requestMatchers("/admin", "/auth/login-test", "/product/all", "/product/all/{keyword}", "/product/all/{productId}",
                                 "/product/all/detail/{productId}", "/product/category/{categoryId}", "/product/all/detail/{productId}/**",
                                 "/product/all/detail/{productId}/seller", "/user/role", "/auth/logout", "/auth/edit/**", "/auth/info/**",
@@ -60,9 +60,9 @@ public class SecurityConfig{
                         .requestMatchers("/cart/purchaser/add/{productId}", "/cart/purchaser/**", "/reform-request/purchaser/**",
                                 "/product/all/detail/{productId}/like", "/order/purchaser-list", "/auth/update-purchaser/address",
                                 "/reform/purchaser/requests/**",
-                                "/chat/**", "/chat","/ws/chat/**","/chatroom").hasRole("PURCHASER")
+                                "/chat/**", "/chat","/chatroom").hasRole("PURCHASER")
                         .requestMatchers("/auth/update-designer/address","/designer/portfolio/**",
-                                "/chat/**", "/chat","/ws/chat/**","/chatroom").hasRole("DESIGNER")
+                                "/chat/**", "/chat","/chatroom").hasRole("DESIGNER")
                         .anyRequest().authenticated());
 
         http
