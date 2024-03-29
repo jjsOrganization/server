@@ -18,15 +18,6 @@ public class MessageController {
     private final ProducerService producerService;
     private final NewTopic topic;
 
-    //Client가 SEND할 수 있는 경로
-    //stompConfig에서 설정한 applicationDestinationPrefixes와 @MessageMapping 경로가 병합됨
-    //"/pub/chat/enter"
-//    @MessageMapping(value = "/chat/enter")
-//    public void enter(ChatMessageDTO message) {
-//        message.setMessage(message.getWriter() + "님이 채팅방에 참여하였습니다.");
-//        template.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
-//    }
-
     @MessageMapping("/chat/message")
     public void receiveMessage(@Payload ChatMessageDTO message) { // @Payload는 메시지의 본문을 메소드의 매개변수로 직접 매핑하는데 사용됨.
         log.info(topic.name());
