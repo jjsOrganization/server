@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ChatRepository extends JpaRepository<Chat , Long> {
-    List<ChatRoomDTO> findByPurchaserEmail(PurchaserInfo purchaserEmail);
+    List<Chat> findByPurchaserEmail(PurchaserInfo purchaserEmail);
 //    List<ChatRoomDTO> findByDesignerEmail(DesignerInfo designerEmail);
 
 //    Optional<Chat> findByIdAndDesignerEmailAndPurchaserEmail(Long id, PurchaserInfo purchaserEmail);

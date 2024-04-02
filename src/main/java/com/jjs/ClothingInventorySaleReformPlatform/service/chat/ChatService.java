@@ -30,14 +30,15 @@ public class ChatService {
     public List<ChatRoomDTO> findAllRooms(String userEmail){
         PurchaserInfo purchaserInfo = new PurchaserInfo();
         purchaserInfo.setEmail(userEmail);
+
         //채팅방 생성 순서 최근 순으로 반환
-        List<ChatRoomDTO> byPurchaserEmail = chatRepository.findByPurchaserEmail(purchaserInfo);
+        List<ChatRoomDTO> byPurchaserEmail = chatRepository.findByPurchaserEmail(purchaserInfo)
+                .stream()
+                .map(ChatRoomDTO::convertToDTO)
+                .collect(Collectors.toList());
+
         return byPurchaserEmail;
     }
-
-//    public ChatRoomDTO findRoomById(Long id){
-//        return chatRoomDTOMap.get(id);
-//    }
 
     @Transactional
     public ChatRoomDTO createChatRoomDTO(ChatRoomDTO roomDTO){
@@ -81,6 +82,7 @@ public class ChatService {
      * @throws IllegalAccessException
      * 디자이너 이메일, 구매자 이메일 모두 파라미터로 받아서 확인할 지 논의 필요
      */
+
     public void disconnectChatRoom(Long chatroomNo, String email) throws IllegalAccessException {
         Chat chatRoom = chatRepository.findById(chatroomNo).orElseThrow(IllegalAccessException::new);
         chatRepository.delete(chatRoom);
