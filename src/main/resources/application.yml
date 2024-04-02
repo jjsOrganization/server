@@ -1,0 +1,63 @@
+#spring:
+#  profiles:
+#    active: local
+#  devtools:
+#    restart:
+#      enabled: true
+#  thymeleaf:
+#    prefix: classpath:/templates/
+#    suffix: .html
+#  datasource:
+#    url: ${DB_URL}
+#    username: ${DB_USERNAME}
+#    password: ${DB_PASSWORD}
+#    driver-class-name: ${DB_DRIVER}
+#  jpa:
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      hibernate:
+#        format_sql: true
+#  kafka:
+#    bootstrap-servers: "${KAFKA_SERVER}"
+#    template:
+#      default-topic: "${KAFKA_TOPIC}"
+#    producer:
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+#    consumer:
+#      group-id: "${KAFKA_CONSUMER_GROUP}"
+#      enable-auto-commit: true
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      auto-offset-reset: earliest
+#  data:
+#    redis:
+#      host: "${REDIS_HOST}"
+#      port: "${REDIS_PORT}"
+#
+#  logging:
+#    level:
+#      org:
+#        springframework:
+#          security: DEBUG
+#          springframework: DEBUG
+#          # Uncomment the following line if needed
+#          # web: DEBUG
+#
+#  jwt:
+#    token:
+#      secret: "${JWT_SECRET}"
+#
+#  cloud:
+#    aws:
+#      credentials:
+#        accessKey: "${CLOUD_AWS_CREDENTIALS_ACCESSKEY}"
+#        secretKey: "${CLOUD_AWS_CREDENTIALS_SECRETKEY}"
+#      s3:
+#        bucket: "${S3_BUCKET}"
+#      region:
+#        static: ap-northeast-2
+#      stack:
+#        auto-: false
