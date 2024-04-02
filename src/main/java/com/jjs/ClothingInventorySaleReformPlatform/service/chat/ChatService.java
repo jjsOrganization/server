@@ -36,7 +36,6 @@ public class ChatService {
                 .stream()
                 .map(ChatRoomDTO::convertToDTO)
                 .collect(Collectors.toList());
-
         return byPurchaserEmail;
     }
 
