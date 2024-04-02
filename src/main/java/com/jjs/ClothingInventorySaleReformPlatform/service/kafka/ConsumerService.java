@@ -15,6 +15,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -34,11 +37,16 @@ public class ConsumerService {
         try{
             ChatMessage chatMessage = new ChatMessage();
             Chat chat = new Chat();
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm:ss");
+            String formattedTime = now.format(formatter);
+
             chat.setId(message.getRoomId());
 
             chatMessage.setChat(chat);
             chatMessage.setMessage(message.getMessage());
             chatMessage.setSender(message.getSender()); // 로그인한 유저 명으로 변경해야함
+            chatMessage.setSentAt(formattedTime);
 
             chatMessageRepository.save(chatMessage);
 
