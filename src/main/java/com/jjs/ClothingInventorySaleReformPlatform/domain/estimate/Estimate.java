@@ -22,8 +22,7 @@ public class Estimate {  // 견적서
     private Integer id;  // 견적서 번호
 
     @NotNull
-    @Lob
-    @Column(name = "ESTIMATE_INFO", nullable = false)
+    @Column(name = "ESTIMATE_INFO", nullable = false, length = 1000)
     private String estimateInfo;  // 견적서 정보
 
     @NotNull

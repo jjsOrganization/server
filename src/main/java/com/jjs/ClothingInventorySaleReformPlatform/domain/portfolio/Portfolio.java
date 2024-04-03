@@ -26,8 +26,7 @@ public class Portfolio extends BaseEntity {  // 포트폴리오 - 디자이너�
     private String name;
 
     @NotNull
-    @Lob
-    @Column(name = "EXPLANATION", nullable = false)
+    @Column(name = "EXPLANATION", nullable = false, length = 1000)  // @Lob는 매우 큰 데이터(Mb 단위)를 저장할 때 사용한다고 하여 varchar(1000)으로 수정함
     private String explanation;  // 설명
 
     @NotNull
