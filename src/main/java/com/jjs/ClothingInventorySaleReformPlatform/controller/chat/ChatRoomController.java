@@ -2,11 +2,14 @@ package com.jjs.ClothingInventorySaleReformPlatform.controller.chat;
 
 import com.jjs.ClothingInventorySaleReformPlatform.controller.product.AuthenticationFacade;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.chat.ChatMessage;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.chat.ChatMessageDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.chat.ChatRoomDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.chat.response.ChatEmailDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Response;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.chat.ChatMessageRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.service.chat.ChatService;
+import com.jjs.ClothingInventorySaleReformPlatform.service.reformrequest.ReformRequestService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -64,6 +67,14 @@ public class ChatRoomController {
     public ResponseEntity<?> chattingList(@PathVariable("roomNo") Long roomNo) {
         List<ChatMessageDTO> chatList = chatService.getChatList(roomNo);
         return response.success(chatList);
+    }
+
+    @GetMapping("/chatroom/{requestNo}/email")
+    @Operation(summary = "요청서로 디자이너 이메일과 구매자 이메일 조회 메서드", description = "이메일 조회")
+    public ResponseEntity<?> chattingEmail(@PathVariable("requestNo") Long requestNo) {
+        ChatEmailDTO chatEmail = chatService.getEmailByRequests(requestNo);
+        //ReformRequest emails = chatService.getEmailByRequests(requestNo);
+        return response.success(chatEmail, "디자이너, 구매자 이메일 조회 완료", HttpStatus.OK);
     }
 
 }

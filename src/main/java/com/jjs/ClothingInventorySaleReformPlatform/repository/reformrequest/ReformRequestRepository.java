@@ -3,7 +3,6 @@ package com.jjs.ClothingInventorySaleReformPlatform.repository.reformrequest;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -14,4 +13,6 @@ public interface ReformRequestRepository extends JpaRepository<ReformRequest, Ob
     Optional<List<ReformRequest>> findReformRequestsByDesignerEmail(DesignerInfo designerEmail);
     //Optional<List<ReformRequest>> findReformRequestsByClientEmail(PurchaserInfo purchaserEmail);
     List<ReformRequest> findByClientEmail_Email(String email);
+    //Optional<ReformRequest> findClientAndDesignerEmailsById(Long id);
+    ReformRequest findAllById(Long id);
 }
