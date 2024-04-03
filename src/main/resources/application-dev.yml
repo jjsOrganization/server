@@ -1,6 +1,7 @@
 spring:
-  profiles:
-    active: local
+  config:
+    activate:
+      on-profile: dev
   devtools:
     restart:
       enabled: true
@@ -15,7 +16,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
@@ -24,28 +25,14 @@ spring:
     bootstrap-servers: ${KAFKA_SERVER}
     template:
       default-topic: ${KAFKA_TOPIC}
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
     consumer:
       group-id: ${KAFKA_CONSUMER_GROUP}
       enable-auto-commit: true
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       auto-offset-reset: earliest
   data:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
-
-logging:
-  level:
-    org:
-      springframework: DEBUG
-      security: DEBUG
-          # Uncomment the following line if needed
-          # web: DEBUG
-
 jwt:
   secret: ${JWT_SECRET}
 
@@ -54,14 +41,7 @@ cloud:
     credentials:
       accessKey: ${CLOUD_AWS_CREDENTIALS_ACCESSKEY}
       secretKey: ${CLOUD_AWS_CREDENTIALS_SECRETKEY}
-    s3:
-      bucket: ${S3_BUCKET}
     region:
       static: ap-northeast-2
     stack:
       auto-: false
-
-springdoc:
-  swagger-ui:
-    tags-sorter: alpha            # alpha: 알파벳 순 태그 정렬, method: HTTP Method 순 정렬
-    operations-sorter: alpha
