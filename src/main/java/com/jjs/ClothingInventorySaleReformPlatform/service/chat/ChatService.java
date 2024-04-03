@@ -2,16 +2,17 @@ package com.jjs.ClothingInventorySaleReformPlatform.service.chat;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.chat.Chat;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.chat.ChatMessage;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.chat.ChatMessageDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.chat.ChatRoomDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.chat.response.ChatEmailDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.chat.ChatMessageRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.chat.ChatRepository;
-import jakarta.annotation.PostConstruct;
+import com.jjs.ClothingInventorySaleReformPlatform.repository.reformrequest.ReformRequestRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ public class ChatService {
 
     private final ChatRepository chatRepository;
     private final ChatMessageRepository chatMessageRepository;
+    private final ReformRequestRepository reformRequestRepository;
 
     public List<ChatRoomDTO> findAllRooms(String userEmail){
         PurchaserInfo purchaserInfo = new PurchaserInfo();
@@ -85,5 +87,13 @@ public class ChatService {
     public void disconnectChatRoom(Long chatroomNo, String email) throws IllegalAccessException {
         Chat chatRoom = chatRepository.findById(chatroomNo).orElseThrow(IllegalAccessException::new);
         chatRepository.delete(chatRoom);
+    }
+
+    public ChatEmailDTO getEmailByRequests(Long requestNumber) {
+        ReformRequest reformRequest = reformRequestRepository.findAllById(requestNumber);
+        ChatEmailDTO chatEmailDTO = new ChatEmailDTO();
+        chatEmailDTO.setPurchaserEmail(reformRequest.getClientEmail().getEmail());
+        chatEmailDTO.setDesignerEmail(reformRequest.getDesignerEmail().getEmail());
+        return chatEmailDTO;
     }
 }
