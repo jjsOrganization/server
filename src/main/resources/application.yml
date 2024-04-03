@@ -15,7 +15,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
@@ -43,8 +43,8 @@ logging:
     org:
       springframework: DEBUG
       security: DEBUG
-          # Uncomment the following line if needed
-          # web: DEBUG
+        # Uncomment the following line if needed
+      # web: DEBUG
 
 jwt:
   secret: ${JWT_SECRET}
