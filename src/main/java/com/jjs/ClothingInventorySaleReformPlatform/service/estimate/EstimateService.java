@@ -8,8 +8,8 @@ import com.jjs.ClothingInventorySaleReformPlatform.domain.estimate.EstimateStatu
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequestStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.estimate.request.EstimateRequestDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.estimate.response.EstimateResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformRequestResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.estimate.EstimateImgRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.estimate.EstimateRepository;
@@ -138,6 +138,22 @@ public class EstimateService {
                 throw new RuntimeException("이미지가 없습니다.");
             }
         });
+    }
+
+    @Transactional
+    public EstimateResponseDTO getEstimate(Long estimateNumber) {
+        Estimate estimateById = estimateRepository.findEstimateById(estimateNumber);
+        EstimateResponseDTO estimateResponseDTO = new EstimateResponseDTO();
+        estimateResponseDTO.setId(estimateById.getId());
+        estimateResponseDTO.setClientEmail(estimateById.getClientEmail().getEmail());
+        estimateResponseDTO.setDesignerEmail(estimateById.getDesignerEmail().getEmail());
+        estimateResponseDTO.setEstimateInfo(estimateById.getEstimateInfo());
+        estimateResponseDTO.setPrice(estimateById.getPrice());
+        estimateResponseDTO.setEstimateImg(estimateById.getEstimateImg().get(0).getImgUrl());
+        estimateResponseDTO.setRequestNumber(estimateById.getRequestNumber().getId());
+        estimateResponseDTO.setEstimateStatus(estimateById.getEstimateStatus().name());
+
+        return estimateResponseDTO;
     }
 }
 

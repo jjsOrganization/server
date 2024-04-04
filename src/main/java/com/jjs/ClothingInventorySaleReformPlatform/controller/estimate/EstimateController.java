@@ -2,6 +2,7 @@ package com.jjs.ClothingInventorySaleReformPlatform.controller.estimate;
 
 import com.jjs.ClothingInventorySaleReformPlatform.dto.estimate.ClientResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.estimate.request.EstimateRequestDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.estimate.response.EstimateResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformRequestResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Response;
 import com.jjs.ClothingInventorySaleReformPlatform.service.estimate.EstimateService;
@@ -64,6 +65,13 @@ public class EstimateController {
             log.error("리폼 요청 사항 저장 에러",e);
             return response.fail(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping(value = "/estimate/designer/estimateForm/{estimateNumber}")
+    @Operation(summary = "디자이너의 견적서 조회", description = "디자이너가 견적서를 수정할 때, 기존의 정보를 불러오는 용도로 사용한다.")
+    public ResponseEntity<?> getEstimateDetails(@PathVariable Long estimateNumber) {
+        EstimateResponseDTO estimateResponseDTO = estimateService.getEstimate(estimateNumber);
+        return response.success(estimateResponseDTO, "견적서 조회 성공", HttpStatus.OK);
     }
 
 
