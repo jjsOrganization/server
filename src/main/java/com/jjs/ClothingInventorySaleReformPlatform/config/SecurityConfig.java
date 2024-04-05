@@ -62,7 +62,7 @@ public class SecurityConfig{
                                 "/reform/purchaser/requests/**",
                                 "/chat/**", "/chat","/chatroom").hasRole("PURCHASER")
                         .requestMatchers("/auth/update-designer/address","/designer/portfolio/**",
-                                "/chat/**", "/chat","/chatroom").hasRole("DESIGNER")
+                                "/chat/**", "/chat","/chatroom", "/estimate/designer/estimateForm/**").hasRole("DESIGNER")
                         .anyRequest().authenticated());
 
         http

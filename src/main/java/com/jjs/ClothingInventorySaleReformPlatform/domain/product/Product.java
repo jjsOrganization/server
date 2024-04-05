@@ -32,7 +32,7 @@ public class Product extends BaseEntity {  // BaseEntity가 등록시간, 수정
     @Column(nullable = false)
     private int productStock;  // 재고수
 
-    @Column
+    @Column(length = 1000)
     private String productDetailText;  // 상품 설명(보류)
 
     @Enumerated(EnumType.STRING)

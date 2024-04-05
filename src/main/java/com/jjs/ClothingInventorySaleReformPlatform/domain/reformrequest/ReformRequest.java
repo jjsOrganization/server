@@ -23,8 +23,7 @@ public class ReformRequest extends BaseEntity {  // 의뢰서 - 의뢰번호, �
     private Long id;  // 의뢰 번호
 
     @NotNull
-    @Lob
-    @Column(name = "REQUEST_INFO", nullable = false)
+    @Column(name = "REQUEST_INFO", nullable = false, length = 1000)
     private String requestInfo;  // 의뢰 정보
 
     @NotNull

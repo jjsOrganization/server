@@ -2,26 +2,38 @@ package com.jjs.ClothingInventorySaleReformPlatform.service.estimate;
 
 
 import com.jjs.ClothingInventorySaleReformPlatform.controller.product.AuthenticationFacade;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.estimate.Estimate;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.estimate.EstimateImage;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.estimate.EstimateStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequestStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.estimate.request.EstimateRequestDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.estimate.response.EstimateResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformRequestResponseDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.repository.estimate.EstimateImgRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.estimate.EstimateRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reformrequest.ReformRequestRepository;
+import com.jjs.ClothingInventorySaleReformPlatform.service.s3.S3Service;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EstimateService {
     private final AuthenticationFacade authenticationFacade;
+    private final S3Service s3Service;
 
     private final EstimateRepository estimateRepository;
+    private final EstimateImgRepository estimateImgRepository;
     private final ReformRequestRepository requestRepository;
 
     /**
@@ -93,6 +105,102 @@ public class EstimateService {
             throw new Exception("상태 변경에 실패하였습니다.",e);
         }
 
+    }
+
+    /**
+     * 견적서 작성 후 저장
+     * @param estimateRequestDTO
+     * @param requestNumber
+     */
+    @Transactional
+    public void saveEstimate(EstimateRequestDTO estimateRequestDTO, Long requestNumber) {
+
+        ReformRequest reformRequest = requestRepository.findAllById(requestNumber);
+
+        Estimate estimate = new Estimate();
+        estimate.setClientEmail(reformRequest.getClientEmail());
+        estimate.setDesignerEmail(reformRequest.getDesignerEmail());
+        estimate.setRequestNumber(reformRequest);
+        estimate.setEstimateStatus(EstimateStatus.REQUEST_WAITING);
+
+        estimate.setEstimateInfo(estimateRequestDTO.getEstimateInfo());
+        estimate.setPrice(estimateRequestDTO.getPrice());
+        estimateRepository.save(estimate);
+
+        saveImageList(estimateRequestDTO, estimate);
+    }
+
+    /**
+     * 견적서 작성 및 수정 시 사진이 저장되는 메서드
+     * @param estimateRequestDTO
+     * @param estimate
+     */
+    @Transactional
+    public void saveImageList(EstimateRequestDTO estimateRequestDTO, Estimate estimate) {
+        estimateRequestDTO.getEstimateImg().forEach(image -> {
+            try {
+                EstimateImage estimateImage = new EstimateImage();
+                estimateImage.setImgUrl(s3Service.uploadFile(image, "EstimateImage/"));
+                estimateImage.setEstimate(estimate);
+                estimateImgRepository.save(estimateImage);
+            } catch (IOException e) {
+                log.error(e.getMessage());
+                throw new RuntimeException("이미지가 없습니다.");
+            }
+        });
+    }
+
+    /**
+     * 견적서 조회
+     * @param estimateNumber
+     * @return
+     */
+    @Transactional
+    public EstimateResponseDTO getEstimate(Long estimateNumber) {
+        Estimate estimateById = estimateRepository.findEstimateById(estimateNumber)
+                .orElseThrow(() -> new IllegalStateException("견적서가 존재하지 않습니다."));
+        EstimateResponseDTO estimateResponseDTO = new EstimateResponseDTO();
+        estimateResponseDTO.setId(estimateById.getId());
+        estimateResponseDTO.setClientEmail(estimateById.getClientEmail().getEmail());
+        estimateResponseDTO.setDesignerEmail(estimateById.getDesignerEmail().getEmail());
+        estimateResponseDTO.setEstimateInfo(estimateById.getEstimateInfo());
+        estimateResponseDTO.setPrice(estimateById.getPrice());
+        estimateResponseDTO.setEstimateImg(estimateById.getEstimateImg().get(0).getImgUrl());
+        estimateResponseDTO.setRequestNumber(estimateById.getRequestNumber().getId());
+        estimateResponseDTO.setEstimateStatus(estimateById.getEstimateStatus().name());
+
+        return estimateResponseDTO;
+    }
+
+    /**
+     * 견적서 수정
+     * @param estimateRequestDTO
+     * @param estimateNumber
+     * @throws IOException
+     */
+    @Transactional
+    public void updateEstimate(EstimateRequestDTO estimateRequestDTO, Long estimateNumber) throws IOException {
+
+        Estimate estimate = estimateRepository.findEstimateById(estimateNumber)
+                .orElseThrow(() -> new IllegalArgumentException("견적서가 존재하지 않습니다."));
+
+        if (estimate.getEstimateStatus() != EstimateStatus.REQUEST_WAITING) {
+            throw new RuntimeException("이미 진행 중인 의뢰로 수정이 불가합니다.");
+        } else {
+            List<EstimateImage> imageList = estimateImgRepository.findAllByEstimateId(estimateNumber);
+            estimate.setEstimateInfo(estimateRequestDTO.getEstimateInfo());
+            estimate.setPrice(estimateRequestDTO.getPrice());
+            estimateRepository.save(estimate);
+
+            for (EstimateImage estimateImage : imageList) {
+                if (!estimateImage.getImgUrl().isEmpty() && estimateImage.getImgUrl() != null) {
+                    s3Service.fileDelete(estimateImage.getImgUrl());
+                    estimateImgRepository.deleteByEstimateId(estimateImage.getEstimate().getId());
+                }
+            }
+            saveImageList(estimateRequestDTO, estimate);
+
+        }
     }
 }
 
