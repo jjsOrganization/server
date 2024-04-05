@@ -1,6 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequestImage;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequestImage;
 import lombok.Getter;
 import lombok.Setter;
 

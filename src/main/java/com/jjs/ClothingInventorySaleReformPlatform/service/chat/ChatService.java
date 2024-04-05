@@ -2,7 +2,7 @@ package com.jjs.ClothingInventorySaleReformPlatform.service.chat;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.chat.Chat;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.chat.ChatMessage;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequest;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.chat.ChatMessageDTO;

@@ -1,7 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.repository.reformrequest;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequestImage;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformProductInfoDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequestImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

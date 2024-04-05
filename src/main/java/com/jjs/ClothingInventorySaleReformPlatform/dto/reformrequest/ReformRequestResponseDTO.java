@@ -1,7 +1,7 @@
 package com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequest;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequestStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequest;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequestStatus;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;

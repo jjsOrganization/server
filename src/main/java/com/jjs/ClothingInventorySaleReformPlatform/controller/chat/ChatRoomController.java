@@ -1,15 +1,12 @@
 package com.jjs.ClothingInventorySaleReformPlatform.controller.chat;
 
 import com.jjs.ClothingInventorySaleReformPlatform.controller.product.AuthenticationFacade;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.chat.ChatMessage;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.chat.ChatMessageDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.chat.ChatRoomDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.chat.response.ChatEmailDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Response;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.chat.ChatMessageRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.service.chat.ChatService;
-import com.jjs.ClothingInventorySaleReformPlatform.service.reformrequest.ReformRequestService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -17,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 

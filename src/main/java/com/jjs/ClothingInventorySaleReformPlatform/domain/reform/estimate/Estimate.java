@@ -1,8 +1,6 @@
-package com.jjs.ClothingInventorySaleReformPlatform.domain.estimate;
+package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequest;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequestImage;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequestStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
 import jakarta.persistence.*;

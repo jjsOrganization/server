@@ -1,6 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.controller.estimate;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.estimate.EstimateStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate.EstimateStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.estimate.ClientResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.estimate.request.EstimateRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.estimate.response.EstimateResponseDTO;
