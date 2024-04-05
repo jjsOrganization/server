@@ -1,7 +1,7 @@
 package com.jjs.ClothingInventorySaleReformPlatform.repository.reformrequest;
 
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequest;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 

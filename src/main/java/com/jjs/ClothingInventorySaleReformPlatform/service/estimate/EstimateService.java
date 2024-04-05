@@ -2,11 +2,11 @@ package com.jjs.ClothingInventorySaleReformPlatform.service.estimate;
 
 
 import com.jjs.ClothingInventorySaleReformPlatform.controller.product.AuthenticationFacade;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.estimate.Estimate;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.estimate.EstimateImage;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.estimate.EstimateStatus;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequest;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequestStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate.Estimate;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate.EstimateImage;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate.EstimateStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequest;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequestStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.estimate.request.EstimateRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.estimate.response.EstimateResponseDTO;

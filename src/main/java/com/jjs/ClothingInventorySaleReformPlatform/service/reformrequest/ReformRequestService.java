@@ -2,9 +2,9 @@ package com.jjs.ClothingInventorySaleReformPlatform.service.reformrequest;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.Portfolio;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.Product;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequest;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequestImage;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest.ReformRequestStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequest;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequestImage;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequestStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformProductInfoDTO;
@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 @Service

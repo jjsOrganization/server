@@ -1,4 +1,4 @@
-package com.jjs.ClothingInventorySaleReformPlatform.domain.reformrequest;
+package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest;
 
 import com.jjs.ClothingInventorySaleReformPlatform.common.entity.BaseEntity;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.Product;
