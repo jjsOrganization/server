@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.controller.estimate;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.estimate.EstimateStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.estimate.ClientResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.estimate.request.EstimateRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.estimate.response.EstimateResponseDTO;
@@ -95,6 +96,21 @@ public class EstimateController {
         } catch (Exception e) {
             log.error(e.getMessage());
             return response.fail("의뢰 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PatchMapping(value = "/estimate/purchaser/{estimateNumber}/{status}")
+    @Operation(summary = "구매자의 견적서 수락 및 거절", description = "구매자는 견적서를 확인하고 수락 및 거절한다.")
+    public ResponseEntity<?> selectEstimateStatus(@PathVariable Long estimateNumber, @PathVariable EstimateStatus status) {
+        try {
+            estimateService.selEstimateStatus(estimateNumber, status);
+            return response.success(status, "견적서 상태 수정 완료", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return response.fail("견적서 상태 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return response.fail("견적서 상태 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
