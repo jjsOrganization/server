@@ -2,6 +2,8 @@ package com.jjs.ClothingInventorySaleReformPlatform.service.estimate;
 
 
 import com.jjs.ClothingInventorySaleReformPlatform.controller.product.AuthenticationFacade;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.ProgressStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.Progressmanagement;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate.Estimate;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate.EstimateImage;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate.EstimateStatus;
@@ -11,6 +13,7 @@ import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.estimate.request.EstimateRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.estimate.response.EstimateResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformRequestResponseDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.repository.ProgressRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.estimate.EstimateImgRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.estimate.EstimateRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reformrequest.ReformRequestRepository;
@@ -35,6 +38,7 @@ public class EstimateService {
     private final EstimateRepository estimateRepository;
     private final EstimateImgRepository estimateImgRepository;
     private final ReformRequestRepository requestRepository;
+    private final ProgressRepository progressRepository;
 
     /**
      * 로그인한 디자이너의 요청받은 모든 의뢰 리스트를 불러오는 메소드
@@ -215,5 +219,7 @@ public class EstimateService {
             estimateRepository.save(estimate);
         }
     }
+
+
 }
 
