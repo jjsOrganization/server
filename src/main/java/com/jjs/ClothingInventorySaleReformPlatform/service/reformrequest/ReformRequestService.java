@@ -80,7 +80,7 @@ public class ReformRequestService {
         reformRequest.setRequestPrice(reformRequestDTO.getRequestPrice());
         reformRequest.setRequestStatus(ReformRequestStatus.REQUEST_WAITING);
 
-        reformRequest.setClientEmail(purchaserInfo);
+        reformRequest.setPurchaserEmail(purchaserInfo);
         reformRequest.setDesignerEmail(designerInfo);
         reformRequest.setProductNumber(productRepository.findProductById(itemId));
         reformRequestRepository.save(reformRequest);
@@ -150,9 +150,10 @@ public class ReformRequestService {
     // 구매자가 요청한 의뢰 내역 전체 조회
     @Transactional
     public List<ReformRequestCheckPurchaserDTO> getAllRequestList() {
-        String currentUsername = getCurrentUsername();
+        PurchaserInfo purchaserEmail = new PurchaserInfo();
+        purchaserEmail.setEmail(getCurrentUsername());
 
-        List<ReformRequest> reformRequestsByPurchaserEmail = reformRequestRepository.findByClientEmail_Email(currentUsername);
+        List<ReformRequest> reformRequestsByPurchaserEmail = reformRequestRepository.findReformRequestsByPurchaserEmail(purchaserEmail);
 
         return reformRequestsByPurchaserEmail.stream().map(request -> {
             Portfolio portfolio = portfolioRepository.findByDesignerEmail_Email(request.getDesignerEmail().getEmail()).orElseThrow(() -> new EntityNotFoundException("Portfolio not found"));
