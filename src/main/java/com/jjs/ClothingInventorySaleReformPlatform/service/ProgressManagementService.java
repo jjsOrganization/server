@@ -50,7 +50,7 @@ public class ProgressManagementService {
         } else {
             progressmanagement.setProgressStatus(ProgressStatus.REFORM_START);
             progressmanagement.setProductImgUrl(reformRequest.getProductNumber().getProductImg().get(0).getImgUrl());
-            progressmanagement.setClientEmail(estimate.getClientEmail().getEmail());
+            progressmanagement.setClientEmail(estimate.getPurchaserEmail().getEmail());
             progressmanagement.setDesignerEmail(estimate.getDesignerEmail().getEmail());
             progressmanagement.setRequestNumber(reformRequest);
             progressmanagement.setEstimateNumber(estimate);
@@ -75,6 +75,16 @@ public class ProgressManagementService {
                 .orElseThrow(() -> new IllegalArgumentException("해당되는 형상관리 정보가 없습니다."));
 
         progressmanagement.setSecondImgUrl(s3Service.uploadFile(imgRequestDTO.getImgUrl(), imageUploadPath));
+        progressRepository.save(progressmanagement);
+    }
+
+    @Transactional
+    public void saveCompleteImg(ProgressImgRequestDTO imgRequestDTO) throws IOException {
+        Progressmanagement progressmanagement = progressRepository.findByEstimateNumber_Id(imgRequestDTO.getEstimateId())
+                .orElseThrow(() -> new IllegalArgumentException("해당되는 형상관리 정보가 없습니다."));
+
+        progressmanagement.setCompleteImgUrl(s3Service.uploadFile(imgRequestDTO.getImgUrl(), imageUploadPath));
+        progressmanagement.setProgressStatus(ProgressStatus.REFORM_COMPLETE);
         progressRepository.save(progressmanagement);
     }
 }

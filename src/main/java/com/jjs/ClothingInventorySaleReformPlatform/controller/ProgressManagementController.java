@@ -53,4 +53,18 @@ public class ProgressManagementController {
         }
     }
 
+    @PatchMapping("/progress/designer/setImg/complete")
+    @Operation(summary = "형상관리 완료된 이미지 등록", description = "형상관리 시, 리폼 완료된 이미지를 등록하는 API 입니다.")
+    public ResponseEntity<?> setCompleteImg(ProgressImgRequestDTO imgRequestDTO) {
+        try {
+            progressManagementService.saveCompleteImg(imgRequestDTO);
+            return response.success(imgRequestDTO.getEstimateId(), "해당 견적서와 매칭되는 형상관리에 리폼 완료된 사진 등록 완료", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return response.fail("이미지 등록 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return response.fail("이미지 등록 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

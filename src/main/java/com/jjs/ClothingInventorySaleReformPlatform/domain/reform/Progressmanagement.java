@@ -47,6 +47,7 @@ public class Progressmanagement {
      * 디자이너가 completeImgUrl 등록 시, REFORM_COMPLETE으로 변경
      */
     @Enumerated(EnumType.STRING)
+    @Column(length = 20)
     private ProgressStatus progressStatus;  // 리폼 상태
 }
 
