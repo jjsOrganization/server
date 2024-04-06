@@ -106,7 +106,9 @@ public class EstimateController {
     public ResponseEntity<?> selectEstimateStatus(@PathVariable Long estimateNumber, @PathVariable EstimateStatus status) {
         try {
             estimateService.selEstimateStatus(estimateNumber, status);
-            progressManagementService.setProgressStart(estimateNumber);
+            if (status == EstimateStatus.REQUEST_ACCEPTED) {
+                progressManagementService.setProgressStart(estimateNumber);
+            }
             return response.success(status, "견적서 상태 수정 완료", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());

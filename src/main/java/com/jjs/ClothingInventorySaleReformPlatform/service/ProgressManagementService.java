@@ -5,7 +5,7 @@ import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.Progressmanagem
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate.Estimate;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate.EstimateStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequest;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.request.ProgressFirstImgRequestDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.request.ProgressImgRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.ProgressRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.estimate.EstimateRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reformrequest.ReformRequestRepository;
@@ -27,6 +27,8 @@ public class ProgressManagementService {
     private final EstimateRepository estimateRepository;
     private final ProgressRepository progressRepository;
     private final ReformRequestRepository requestRepository;
+
+    private String imageUploadPath = "ProgressManagement/";
 
 
     /**
@@ -58,12 +60,21 @@ public class ProgressManagementService {
     }
 
     @Transactional
-    public void saveFirstImg(ProgressFirstImgRequestDTO imgRequestDTO) throws IOException {
+    public void saveFirstImg(ProgressImgRequestDTO imgRequestDTO) throws IOException {
         Progressmanagement progressmanagement = progressRepository.findByEstimateNumber_Id(imgRequestDTO.getEstimateId())
                 .orElseThrow(() -> new IllegalArgumentException("해당되는 형상관리 정보가 없습니다."));
 
-        progressmanagement.setFirstImgUrl(s3Service.uploadFile(imgRequestDTO.getImgUrl(), "ProgressManagement/"));
+        progressmanagement.setFirstImgUrl(s3Service.uploadFile(imgRequestDTO.getImgUrl(), imageUploadPath));
         progressmanagement.setProgressStatus(ProgressStatus.REFORMING);
+        progressRepository.save(progressmanagement);
+    }
+
+    @Transactional
+    public void saveSecondImg(ProgressImgRequestDTO imgRequestDTO) throws IOException {
+        Progressmanagement progressmanagement = progressRepository.findByEstimateNumber_Id(imgRequestDTO.getEstimateId())
+                .orElseThrow(() -> new IllegalArgumentException("해당되는 형상관리 정보가 없습니다."));
+
+        progressmanagement.setSecondImgUrl(s3Service.uploadFile(imgRequestDTO.getImgUrl(), imageUploadPath));
         progressRepository.save(progressmanagement);
     }
 }

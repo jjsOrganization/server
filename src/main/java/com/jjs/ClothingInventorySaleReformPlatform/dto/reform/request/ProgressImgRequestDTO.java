@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
-public class ProgressFirstImgRequestDTO {
+public class ProgressImgRequestDTO {
 
     private Long estimateId;
     private MultipartFile imgUrl;
