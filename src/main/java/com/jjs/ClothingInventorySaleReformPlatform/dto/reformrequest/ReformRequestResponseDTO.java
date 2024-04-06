@@ -34,6 +34,8 @@ public class ReformRequestResponseDTO {
 
     private String designerEmail; // 요청할 디자이너 이메일
 
+    private Long productNumber; // 리폼 요청받은 상품의 아이디
+
     private ReformRequestStatus requestStatus; // 의뢰서 요청 상태( 대기, 수락, 거절)
 
     /**
@@ -47,6 +49,7 @@ public class ReformRequestResponseDTO {
             ReformRequestResponseDTO reformRequestResponseDTO = new ReformRequestResponseDTO();
 
             reformRequestResponseDTO.setRequestNumber(reformRequests.getId());
+            reformRequestResponseDTO.setProductNumber(reformRequests.getProductNumber().getId());
 
             reformRequestResponseDTO.setPurchaserEmail(reformRequests.getPurchaserEmail().getEmail());
             reformRequestResponseDTO.setDesignerEmail(reformRequests.getDesignerEmail().getEmail());
