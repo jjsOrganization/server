@@ -118,7 +118,7 @@ public class EstimateService {
         ReformRequest reformRequest = requestRepository.findAllById(requestNumber);
 
         Estimate estimate = new Estimate();
-        estimate.setClientEmail(reformRequest.getClientEmail());
+        estimate.setPurchaserEmail(reformRequest.getPurchaserEmail());
         estimate.setDesignerEmail(reformRequest.getDesignerEmail());
         estimate.setRequestNumber(reformRequest);
         estimate.setEstimateStatus(EstimateStatus.REQUEST_WAITING);
@@ -161,7 +161,7 @@ public class EstimateService {
                 .orElseThrow(() -> new IllegalStateException("견적서가 존재하지 않습니다."));
         EstimateResponseDTO estimateResponseDTO = new EstimateResponseDTO();
         estimateResponseDTO.setId(estimateById.getId());
-        estimateResponseDTO.setClientEmail(estimateById.getClientEmail().getEmail());
+        estimateResponseDTO.setClientEmail(estimateById.getPurchaserEmail().getEmail());
         estimateResponseDTO.setDesignerEmail(estimateById.getDesignerEmail().getEmail());
         estimateResponseDTO.setEstimateInfo(estimateById.getEstimateInfo());
         estimateResponseDTO.setPrice(estimateById.getPrice());
