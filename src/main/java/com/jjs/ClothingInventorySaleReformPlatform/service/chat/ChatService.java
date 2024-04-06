@@ -92,7 +92,7 @@ public class ChatService {
     public ChatEmailDTO getEmailByRequests(Long requestNumber) {
         ReformRequest reformRequest = reformRequestRepository.findAllById(requestNumber);
         ChatEmailDTO chatEmailDTO = new ChatEmailDTO();
-        chatEmailDTO.setPurchaserEmail(reformRequest.getClientEmail().getEmail());
+        chatEmailDTO.setPurchaserEmail(reformRequest.getPurchaserEmail().getEmail());
         chatEmailDTO.setDesignerEmail(reformRequest.getDesignerEmail().getEmail());
         return chatEmailDTO;
     }

@@ -35,8 +35,8 @@ public class Estimate {  // 견적서
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "CLIENT_EMAIL", nullable = false)
-    private PurchaserInfo clientEmail;  // 의뢰자 이메일
+    @JoinColumn(name = "PURCHASER_EMAIL", nullable = false)
+    private PurchaserInfo purchaserEmail;  // 의뢰자 이메일
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

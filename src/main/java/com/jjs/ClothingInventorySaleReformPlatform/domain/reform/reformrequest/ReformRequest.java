@@ -43,7 +43,7 @@ public class ReformRequest extends BaseEntity {  // 의뢰서 - 의뢰번호, �
     //
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "PURCHASER_EMAIL", nullable = false)
-    private PurchaserInfo clientEmail;  // 의뢰자(고객) 이메일
+    private PurchaserInfo purchaserEmail;  // 의뢰자(고객) 이메일
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
