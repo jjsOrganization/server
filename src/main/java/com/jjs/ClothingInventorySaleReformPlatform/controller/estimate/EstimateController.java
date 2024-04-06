@@ -6,6 +6,7 @@ import com.jjs.ClothingInventorySaleReformPlatform.dto.estimate.request.Estimate
 import com.jjs.ClothingInventorySaleReformPlatform.dto.estimate.response.EstimateResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reformrequest.ReformRequestResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Response;
+import com.jjs.ClothingInventorySaleReformPlatform.service.ProgressManagementService;
 import com.jjs.ClothingInventorySaleReformPlatform.service.estimate.EstimateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,6 +27,7 @@ public class EstimateController {
 
     private final Response response;
     private final EstimateService estimateService;
+    private final ProgressManagementService progressManagementService;
 
     @GetMapping("/estimate/designer/requestForm")
     @Operation(summary = "디자이너 요청받은 의뢰 조회", description = "디자이너가 요청받은 모든 의뢰를 조회합니다.")
@@ -104,13 +106,16 @@ public class EstimateController {
     public ResponseEntity<?> selectEstimateStatus(@PathVariable Long estimateNumber, @PathVariable EstimateStatus status) {
         try {
             estimateService.selEstimateStatus(estimateNumber, status);
+            if (status == EstimateStatus.REQUEST_ACCEPTED) {
+                progressManagementService.setProgressStart(estimateNumber);
+            }
             return response.success(status, "견적서 상태 수정 완료", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
-            return response.fail("견적서 상태 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+            return response.fail("견적서 상태 수정 실패1", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
             log.error(e.getMessage());
-            return response.fail("견적서 상태 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+            return response.fail("견적서 상태 수정 실패2", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
