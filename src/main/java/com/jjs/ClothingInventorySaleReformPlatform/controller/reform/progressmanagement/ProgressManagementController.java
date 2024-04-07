@@ -1,6 +1,7 @@
 package com.jjs.ClothingInventorySaleReformPlatform.controller.reform.progressmanagement;
 
-import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.request.ProgressImgRequestDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.progressmanagement.ProgressImgRequestDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.progressmanagement.ProgressImgResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Response;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reform.progressmanagement.ProgressRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.service.reform.progressmanagement.ProgressManagementService;
@@ -10,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -65,6 +68,21 @@ public class ProgressManagementController {
         } catch (Exception e) {
             log.error(e.getMessage());
             return response.fail("이미지 등록 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/progress/purchaser/img/{estimateNumber}")
+    @Operation(summary = "형상관리 이미지 조회", description = "디자이너가 등록한 형상관리 이미지들을 구매자가 조회한다.")
+    public ResponseEntity<?> getProcessImg(@PathVariable Long estimateNumber) {
+        try {
+            ProgressImgResponseDTO progressImgResponseDTO = progressManagementService.getProgressResponse(estimateNumber);
+            return response.success(progressImgResponseDTO, "형상관리 조회 성공", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return response.fail("형상관리 조회 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return response.fail("형상관리 조회 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

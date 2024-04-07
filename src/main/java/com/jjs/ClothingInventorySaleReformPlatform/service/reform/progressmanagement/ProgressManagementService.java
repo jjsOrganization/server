@@ -5,7 +5,8 @@ import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.progressmanagem
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate.Estimate;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate.EstimateStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequest;
-import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.request.ProgressImgRequestDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.progressmanagement.ProgressImgRequestDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.progressmanagement.ProgressImgResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reform.progressmanagement.ProgressRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reform.estimate.EstimateRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reform.reformrequest.ReformRequestRepository;
@@ -86,5 +87,21 @@ public class ProgressManagementService {
         progressmanagement.setCompleteImgUrl(s3Service.uploadFile(imgRequestDTO.getImgUrl(), imageUploadPath));
         progressmanagement.setProgressStatus(ProgressStatus.REFORM_COMPLETE);
         progressRepository.save(progressmanagement);
+    }
+
+    @Transactional
+    public ProgressImgResponseDTO getProgressResponse(Long progressNumber) {
+        Progressmanagement progressmanagement = progressRepository.findByEstimateNumber_Id(progressNumber)
+                .orElseThrow(() -> new IllegalArgumentException("해당되는 형상관리 정보가 없습니다."));
+        ProgressImgResponseDTO responseDTO = new ProgressImgResponseDTO();
+        responseDTO.setProgressId(progressmanagement.getId());
+        responseDTO.setRequestId(progressmanagement.getRequestNumber().getId());
+        responseDTO.setEstimateId(progressmanagement.getEstimateNumber().getId());
+        responseDTO.setProductImgUrl(progressmanagement.getProductImgUrl());
+        responseDTO.setFirstImgUrl(progressmanagement.getFirstImgUrl());
+        responseDTO.setSecondImgUrl(progressmanagement.getSecondImgUrl());
+        responseDTO.setCompleteImgUrl(progressmanagement.getCompleteImgUrl());
+
+        return responseDTO;
     }
 }

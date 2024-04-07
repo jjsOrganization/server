@@ -1,4 +1,4 @@
-package com.jjs.ClothingInventorySaleReformPlatform.dto.reform.request;
+package com.jjs.ClothingInventorySaleReformPlatform.dto.reform.progressmanagement;
 
 import lombok.Getter;
 import lombok.Setter;
