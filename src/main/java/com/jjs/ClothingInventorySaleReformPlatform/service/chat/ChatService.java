@@ -10,7 +10,7 @@ import com.jjs.ClothingInventorySaleReformPlatform.dto.chat.ChatRoomDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.chat.response.ChatEmailDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.chat.ChatMessageRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.chat.ChatRepository;
-import com.jjs.ClothingInventorySaleReformPlatform.repository.reformrequest.ReformRequestRepository;
+import com.jjs.ClothingInventorySaleReformPlatform.repository.reform.reformrequest.ReformRequestRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
