@@ -60,9 +60,10 @@ public class SecurityConfig{
                         .requestMatchers("/cart/purchaser/add/{productId}", "/cart/purchaser/**", "/reform-request/purchaser/**",
                                 "/product/all/detail/{productId}/like", "/order/purchaser-list", "/auth/update-purchaser/address",
                                 "/reform/purchaser/requests/**",
-                                "/chat/**", "/chat","/chatroom", "/estimate/purchaser/**").hasRole("PURCHASER")
+                                "/chat/**", "/chat","/chatroom", "/estimate/purchaser/**", "/progress/purchaser/img/**").hasRole("PURCHASER")
                         .requestMatchers("/auth/update-designer/address","/designer/portfolio/**",
-                                "/chat/**", "/chat","/chatroom", "/estimate/designer/estimateForm/**").hasRole("DESIGNER")
+                                "/chat/**", "/chat","/chatroom", "/estimate/designer/estimateForm/**",
+                                "/progress/designer/setImg/**").hasRole("DESIGNER")
                         .anyRequest().authenticated());
 
         http
