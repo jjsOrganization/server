@@ -2,6 +2,7 @@ package com.jjs.ClothingInventorySaleReformPlatform.service.chat;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.chat.Chat;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.chat.ChatMessage;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.product.Product;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
@@ -50,8 +51,12 @@ public class ChatService {
         PurchaserInfo purchaserInfo = new PurchaserInfo();
         purchaserInfo.setEmail(roomDTO.getPurchaserEmail());
 
+        Product product = new Product();
+        product.setId(roomDTO.getProductCode());
+
         chat.setDesignerEmail(designerInfo);
         chat.setPurchaserEmail(purchaserInfo);
+        chat.setProduct(product);
 
         Chat createdChatRoom = chatRepository.save(chat);
 
@@ -59,8 +64,9 @@ public class ChatService {
         ChatRoomDTO chatRoomDTO = new ChatRoomDTO();
 
         chatRoomDTO.setRoomId(createdChatRoom.getId());
-        chatRoomDTO.setPurchaserEmail(String.valueOf(createdChatRoom.getPurchaserEmail()));
-        chatRoomDTO.setDesignerEmail(String.valueOf(createdChatRoom.getDesignerEmail()));
+        chatRoomDTO.setPurchaserEmail((createdChatRoom.getPurchaserEmail().getEmail()));
+        chatRoomDTO.setDesignerEmail((createdChatRoom.getDesignerEmail().getEmail()));
+        chatRoomDTO.setProductCode((createdChatRoom.getProduct().getId()));
 
         return chatRoomDTO;
     }
