@@ -1,3 +1,18 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Java CI with Gradle
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+
 jobs:
   build:
     runs-on: ubuntu-latest # 이 작업을 실행할 가상 환경의 OS를 지정합니다. 여기서는 최신 버전의 Ubuntu를 사용합니다.
