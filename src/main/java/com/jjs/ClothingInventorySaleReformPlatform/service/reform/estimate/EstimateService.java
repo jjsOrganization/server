@@ -14,6 +14,7 @@ import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.request.EstimateRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.request.ReformOrderRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.response.EstimateResponseDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.response.ReformOrderResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.reformrequest.ReformRequestResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reform.order.ReformOrderRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reform.progressmanagement.ProgressRepository;
@@ -261,6 +262,18 @@ public class EstimateService {
 
     }
 
+    @Transactional
+    public ReformOrderResponseDTO getAcceptOrderingPrice(Long estimateNumber) {
 
+        Estimate estimate = estimateRepository.findEstimateById(estimateNumber)
+                .orElseThrow(() -> new IllegalArgumentException("견적서가 존재하지 않습니다."));
+
+        ReformOrderResponseDTO reformOrderResponseDTO = new ReformOrderResponseDTO();
+        reformOrderResponseDTO.setProductPrice(estimate.getRequestNumber().getProductNumber().getPrice());  // 상품 가격
+        reformOrderResponseDTO.setReformPrice(estimate.getReformPrice());  // 리폼 가격
+        reformOrderResponseDTO.setTotalPrice(estimate.getReformPrice());  // 총 가격
+
+        return reformOrderResponseDTO;
+    }
 }
 

@@ -5,6 +5,7 @@ import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.ClientRes
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.request.EstimateRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.request.ReformOrderRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.response.EstimateResponseDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.response.ReformOrderResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.reformrequest.ReformRequestResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Response;
 import com.jjs.ClothingInventorySaleReformPlatform.service.reform.progressmanagement.ProgressManagementService;
@@ -110,10 +111,10 @@ public class EstimateController {
             return response.success("견적서 수락 및 주문 중 : 1", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
-            return response.fail("견적서 상태 수정 실패1", HttpStatus.INTERNAL_SERVER_ERROR);
+            return response.fail("견적서 수락 실패1", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
             log.error(e.getMessage());
-            return response.fail("견적서 상태 수정 실패2", HttpStatus.INTERNAL_SERVER_ERROR);
+            return response.fail("견적서 수락 실패2", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -125,10 +126,10 @@ public class EstimateController {
             return response.success("견적서 거절 완료", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
-            return response.fail("견적서 상태 수정 실패1", HttpStatus.INTERNAL_SERVER_ERROR);
+            return response.fail("견적서 거절 실패1", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
             log.error(e.getMessage());
-            return response.fail("견적서 상태 수정 실패2", HttpStatus.INTERNAL_SERVER_ERROR);
+            return response.fail("견적서 거절 실패2", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -140,10 +141,25 @@ public class EstimateController {
             return response.success("정보 입력 완료", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
-            return response.fail("견적서 상태 수정 실패1", HttpStatus.INTERNAL_SERVER_ERROR);
+            return response.fail("정보 입력 실패1", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
             log.error(e.getMessage());
-            return response.fail("견적서 상태 수정 실패2", HttpStatus.INTERNAL_SERVER_ERROR);
+            return response.fail("정보 입력 실패2", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/estimate/purchaser/acceptReformOrder/{estimateNumber}")
+    @Operation(summary = "구매자가 리폼 주문 비용(리폼 비용, 상품 가격, 총 가격) 조회", description = "구매자가 견적서의 개인 정보 입력 후 다음 페이지에서 총 리폼 주문 비용을 확인한다.")
+    public ResponseEntity<?> getEstimatePrice(@PathVariable Long estimateNumber) {
+        try {
+            ReformOrderResponseDTO reformOrderResponseDTO = estimateService.getAcceptOrderingPrice(estimateNumber);
+            return response.success(reformOrderResponseDTO, "리폼 비용 조회 성공", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return response.fail("리폼 비용 조회 실패1", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return response.fail("리폼 비용 조회 실패2", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
