@@ -72,7 +72,7 @@ jobs:
       - name: Docker build
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/springjjs ./build/libs/
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/springjjs .
           docker push ${{ secrets.DOCKER_USERNAME }}/springjjs
         # Docker 이미지를 빌드하고, Docker Hub에 로그인한 후 이미지를 푸시합니다.
 
