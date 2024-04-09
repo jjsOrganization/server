@@ -33,12 +33,12 @@ jobs:
           java-version: '17'
           distribution: 'temurin' # JDK 17을 설치하여 Java 애플리케이션을 빌드할 수 있는 환경을 설정합니다.
 
-      - name: make application-dev.yml
-        run: |
-          cd ./src/main/resources
-          touch ./application-dev.yml
-          echo "${{ secrets.APPLICATION_DEV }}" > ./application-dev.yml
-        shell: bash
+#      - name: make application-dev.yml
+#        run: |
+#          cd ./src/main/resources
+#          touch ./application-dev.yml
+#          echo "${{ secrets.APPLICATION_DEV }}" > ./application-dev.yml
+#        shell: bash
         # .gitignore에 의해 버전 관리에서 제외된 application-dev.yml 파일을 생성하고, GitHub Secrets에서 가져온 내용을 파일에 작성합니다.
 
       - name: Setup Gradle

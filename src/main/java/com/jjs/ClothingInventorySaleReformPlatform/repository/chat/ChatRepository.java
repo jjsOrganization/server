@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface ChatRepository extends JpaRepository<Chat , Long> {
     List<Chat> findByPurchaserEmail(PurchaserInfo purchaserEmail);
-//    List<ChatRoomDTO> findByDesignerEmail(DesignerInfo designerEmail);
+    List<Chat> findByDesignerEmail(DesignerInfo designerEmail);
 
 //    Optional<Chat> findByIdAndDesignerEmailAndPurchaserEmail(Long id, PurchaserInfo purchaserEmail);
 }
