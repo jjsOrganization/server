@@ -73,9 +73,13 @@ public class ChatService {
         Product product = new Product();
         product.setId(roomDTO.getProductCode());
 
+        ReformRequest reformRequest = new ReformRequest();
+        reformRequest.setId(roomDTO.getRequestId());
+
         chat.setDesignerEmail(designerInfo);
         chat.setPurchaserEmail(purchaserInfo);
         chat.setProduct(product);
+        chat.setReformRequest(reformRequest);
 
         Chat createdChatRoom = chatRepository.save(chat);
 
@@ -86,6 +90,7 @@ public class ChatService {
         chatRoomDTO.setPurchaserEmail((createdChatRoom.getPurchaserEmail().getEmail()));
         chatRoomDTO.setDesignerEmail((createdChatRoom.getDesignerEmail().getEmail()));
         chatRoomDTO.setProductCode((createdChatRoom.getProduct().getId()));
+        chatRoomDTO.setRequestId(createdChatRoom.getReformRequest().getId());
 
         return chatRoomDTO;
     }

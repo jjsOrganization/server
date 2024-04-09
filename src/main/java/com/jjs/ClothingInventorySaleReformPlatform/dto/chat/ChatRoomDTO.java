@@ -17,6 +17,7 @@ public class ChatRoomDTO {
     private String purchaserEmail;
     private String designerEmail;
     private Long productCode;
+    private Long requestId;
 
 
     public static ChatRoomDTO convertToDTO(Chat chat) {
@@ -26,6 +27,8 @@ public class ChatRoomDTO {
         chatRoomDTO.setPurchaserEmail(chat.getPurchaserEmail().getEmail());
         chatRoomDTO.setDesignerEmail(chat.getDesignerEmail().getEmail());
         chatRoomDTO.setProductCode(chat.getProduct().getId());
+        chatRoomDTO.setRoomId(chat.getReformRequest().getId());
+        chatRoomDTO.setRequestId(chat.getReformRequest().getId());
 
         return chatRoomDTO;
     }
