@@ -103,10 +103,25 @@ public class EstimateController {
 
     @PostMapping(value = "/estimate/purchaser/{estimateNumber}/accept")
     @Operation(summary = "구매자의 견적서 수락 시작", description = "구매자는 견적서를 확인하고 수락하고 다음 배송정보 입력 창으로 넘어간다.")
-    public ResponseEntity<?> selectEstimateStatus(@PathVariable Long estimateNumber) {
+    public ResponseEntity<?> selectEstimateAccept(@PathVariable Long estimateNumber) {
         try {
             estimateService.selEstimateAccept(estimateNumber);  // 수락 누르면 리품 주문 테이블 생성되고 상태가 주문중이 들어감
             return response.success("견적서 수락 및 주문 중 : 1", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return response.fail("견적서 상태 수정 실패1", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return response.fail("견적서 상태 수정 실패2", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PatchMapping(value = "/estimate/purchaser/{estimateNumber}/reject")
+    @Operation(summary = "구매자의 견적서 거절 완료", description = "구매자는 견적서를 확인하고 원치 않은 경우 거절한다.")
+    public ResponseEntity<?> selectEstimateReject(@PathVariable Long estimateNumber) {
+        try {
+            estimateService.selEstimateReject(estimateNumber);  // 거절 버튼을 누르면 견적서 상태가 거절됨이 됨
+            return response.success("견적서 거절 완료", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
             return response.fail("견적서 상태 수정 실패1", HttpStatus.INTERNAL_SERVER_ERROR);

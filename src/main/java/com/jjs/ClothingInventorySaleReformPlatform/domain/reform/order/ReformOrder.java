@@ -21,7 +21,8 @@ public class ReformOrder {
     @Column(name = "order_id")
     private Long orderId;  // 주문 번호
 
-    @OneToOne(mappedBy = "ESTIMATE_NUMBER", fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ESTIMATE_NUMBER", nullable = false)
     private Estimate estimate;
 
     @CreatedDate

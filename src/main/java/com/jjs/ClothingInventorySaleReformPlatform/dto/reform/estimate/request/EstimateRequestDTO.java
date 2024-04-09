@@ -14,6 +14,6 @@ public class EstimateRequestDTO {
 
     private List<MultipartFile> estimateImg;  // 견적서 사진
 
-    private String reformPrice; // 희망 가격
+    private int reformPrice; // 희망 가격
 
 }

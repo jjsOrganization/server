@@ -131,8 +131,8 @@ public class EstimateService {
         estimate.setEstimateInfo(estimateRequestDTO.getEstimateInfo());
         estimate.setReformPrice(estimateRequestDTO.getReformPrice());  // 리폼 비용
 
-        int totalPrice = Integer.parseInt(reformRequest.getProductNumber().getPrice() + estimateRequestDTO.getReformPrice());
-        estimate.setPrice(String.valueOf(totalPrice));
+        int totalPrice = (reformRequest.getProductNumber().getPrice() + estimateRequestDTO.getReformPrice());
+        estimate.setPrice(totalPrice);
         estimateRepository.save(estimate);
 
         saveImageList(estimateRequestDTO, estimate);
@@ -222,8 +222,22 @@ public class EstimateService {
         } else {
             ReformOrder reformOrder = new ReformOrder();
             reformOrder.setOrderStatus(ReformOrderStatus.ORDERING);  // 주문 상태 : 주문 중
-            reformOrder.setTotalPrice(Integer.parseInt(estimate.getPrice()));  // 상품 총 가격
+            reformOrder.setTotalPrice(estimate.getPrice());  // 상품 총 가격
+            reformOrder.setEstimate(estimate);
             reformOrderRepository.save(reformOrder);
+        }
+    }
+
+    @Transactional
+    public void selEstimateReject(Long estimateNumber) {
+        Estimate estimate = estimateRepository.findEstimateById(estimateNumber)
+                .orElseThrow(() -> new IllegalArgumentException("견적서가 존재하지 않습니다."));
+
+        if (estimate.getEstimateStatus() != EstimateStatus.REQUEST_WAITING) {
+            throw new RuntimeException("이미 진행 중인 의뢰로 수정이 불가합니다.");
+        } else {
+            estimate.setEstimateStatus(EstimateStatus.REQUEST_REJECTED);
+            estimateRepository.save(estimate);
         }
     }
 
