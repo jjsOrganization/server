@@ -90,4 +90,5 @@ jobs:
             cd docker
             docker compose down
             docker compose up -d
-            docker rm $(docker ps --filter 'status=exited' -a -q)
+            # 사용하지 않는 Docker 이미지 삭제
+            docker images -q | xargs docker rmi -f
