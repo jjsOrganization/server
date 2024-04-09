@@ -78,22 +78,16 @@ jobs:
         # Docker 이미지를 빌드하고, Docker Hub에 로그인한 후 이미지를 푸시합니다.
 
       - name: Deploy to EC2 instance
-        env:
-          EC2_SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          EC2_HOST: ${{ secrets.CLOUD_AWS_HOST }}
-          EC2_USER: ${{ secrets.CLOUD_AWS_USERNAME }}
-        run: |
-          SSH_KEY_FILE=$(mktemp)
-          echo "${EC2_SSH_PRIVATE_KEY}" > ${SSH_KEY_FILE}
-          chmod 600 ${SSH_KEY_FILE}
-          
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY_FILE} ${CLOUD_AWS_USERNAME}@${CLOUD_AWS_HOST} << 'EOF'
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker pull ${{ secrets.DOCKER_USERNAME }}/springjjs:latest
-          cd docker
-          docker-compose down
-          docker-compose up -d
-          docker rm $(docker ps --filter 'status=exited' -a -q)
-          EOF # EC2 인스턴스에 SSH로 접속하여 Docker 컨테이너를 재시작하는 명령을 실행합니다. 
-          
-          rm -f ${SSH_KEY_FILE} # 사용이 끝난 임시 SSH 키 파일을 삭제합니다.
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.CLOUD_AWS_HOST }}
+          username: ${{ secrets.CLOUD_AWS_USERNAME }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            docker pull ${{ secrets.DOCKER_USERNAME }}/springjjs:latest
+            cd docker
+            docker compose down
+            docker compose up -d
+            docker rm $(docker ps --filter 'status=exited' -a -q)
