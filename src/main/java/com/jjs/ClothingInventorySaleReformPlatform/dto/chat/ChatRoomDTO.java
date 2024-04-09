@@ -30,6 +30,7 @@ public class ChatRoomDTO {
         chatRoomDTO.setRoomId(chat.getReformRequest().getId());
         chatRoomDTO.setRequestId(chat.getReformRequest().getId());
 
+
         return chatRoomDTO;
     }
 }
