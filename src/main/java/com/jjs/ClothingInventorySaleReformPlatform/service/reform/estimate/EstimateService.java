@@ -10,7 +10,9 @@ import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.order.ReformOrd
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequestStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.request.EstimateRequestDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.request.ReformOrderRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.response.EstimateResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.reformrequest.ReformRequestResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reform.order.ReformOrderRepository;
@@ -21,6 +23,8 @@ import com.jjs.ClothingInventorySaleReformPlatform.repository.reform.reformreque
 import com.jjs.ClothingInventorySaleReformPlatform.service.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -239,6 +243,22 @@ public class EstimateService {
             estimate.setEstimateStatus(EstimateStatus.REQUEST_REJECTED);
             estimateRepository.save(estimate);
         }
+    }
+
+    @Transactional
+    public void acceptOrdering(ReformOrderRequestDTO reformOrderRequestDTO, Long estimateNumber) {
+
+        ReformOrder reformOrder = reformOrderRepository.findReformOrderByEstimateId(estimateNumber)
+                .orElseThrow(() -> new IllegalArgumentException("견적서가 존재하지 않습니다."));
+
+        reformOrder.setPhoneNumber(reformOrderRequestDTO.getPhoneNumber());
+        reformOrder.setDeliveryRequest(reformOrderRequestDTO.getDeliveryRequest());
+        reformOrder.setPostcode(reformOrderRequestDTO.getPostcode());
+        reformOrder.setAddress(reformOrderRequestDTO.getAddress());
+        reformOrder.setDetailAddress(reformOrderRequestDTO.getDetailAddress());
+
+        reformOrderRepository.save(reformOrder);
+
     }
 
 

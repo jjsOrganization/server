@@ -3,6 +3,7 @@ package com.jjs.ClothingInventorySaleReformPlatform.controller.reform.estimate;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate.EstimateStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.ClientResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.request.EstimateRequestDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.request.ReformOrderRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.response.EstimateResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.reformrequest.ReformRequestResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Response;
@@ -122,6 +123,21 @@ public class EstimateController {
         try {
             estimateService.selEstimateReject(estimateNumber);  // 거절 버튼을 누르면 견적서 상태가 거절됨이 됨
             return response.success("견적서 거절 완료", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return response.fail("견적서 상태 수정 실패1", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return response.fail("견적서 상태 수정 실패2", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PatchMapping(value = "/estimate/purchaser/acceptReformOrder/{estimateNumber}")
+    @Operation(summary = "구매자의 견적서 수락 후 개인정보 입력", description = "구매자가 견적서 수락했을 때, 구매자는 배송 정보 및 개인 정보를 입력한다.")
+    public ResponseEntity<?> estimateAcceptOrdering(@RequestBody ReformOrderRequestDTO reformOrderRequestDTO, @PathVariable Long estimateNumber) {
+        try {
+            estimateService.acceptOrdering(reformOrderRequestDTO, estimateNumber);
+            return response.success("정보 입력 완료", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
             return response.fail("견적서 상태 수정 실패1", HttpStatus.INTERNAL_SERVER_ERROR);
