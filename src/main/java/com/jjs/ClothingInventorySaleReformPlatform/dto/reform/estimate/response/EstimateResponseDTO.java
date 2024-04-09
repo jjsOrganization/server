@@ -11,7 +11,8 @@ public class EstimateResponseDTO {
     private String clientEmail;  // 의뢰자 이메일
     private String designerEmail;  // 디자이너 이메일
     private String estimateInfo;  // 의뢰 정보(내용)
-    private String price; // 희망 가격
+    private String price; // 리폼 가격
+    private String totalPrice;  // 리폼 + 상품 가격
     private String estimateImg;  // 의뢰 사진
     private Long requestNumber;  // 의뢰서 번호
 

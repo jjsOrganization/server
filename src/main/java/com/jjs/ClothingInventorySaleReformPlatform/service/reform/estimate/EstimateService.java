@@ -5,12 +5,15 @@ import com.jjs.ClothingInventorySaleReformPlatform.controller.product.Authentica
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate.Estimate;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate.EstimateImage;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate.EstimateStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.order.ReformOrder;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.order.ReformOrderStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequestStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.request.EstimateRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.response.EstimateResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.reformrequest.ReformRequestResponseDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.repository.reform.order.ReformOrderRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reform.progressmanagement.ProgressRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reform.estimate.EstimateImgRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reform.estimate.EstimateRepository;
@@ -36,7 +39,7 @@ public class EstimateService {
     private final EstimateRepository estimateRepository;
     private final EstimateImgRepository estimateImgRepository;
     private final ReformRequestRepository requestRepository;
-    private final ProgressRepository progressRepository;
+    private final ReformOrderRepository reformOrderRepository;
 
     /**
      * 로그인한 디자이너의 요청받은 모든 의뢰 리스트를 불러오는 메소드
@@ -126,7 +129,10 @@ public class EstimateService {
         estimate.setEstimateStatus(EstimateStatus.REQUEST_WAITING);
 
         estimate.setEstimateInfo(estimateRequestDTO.getEstimateInfo());
-        estimate.setPrice(estimateRequestDTO.getPrice());
+        estimate.setReformPrice(estimateRequestDTO.getReformPrice());  // 리폼 비용
+
+        int totalPrice = Integer.parseInt(reformRequest.getProductNumber().getPrice() + estimateRequestDTO.getReformPrice());
+        estimate.setPrice(String.valueOf(totalPrice));
         estimateRepository.save(estimate);
 
         saveImageList(estimateRequestDTO, estimate);
@@ -166,7 +172,8 @@ public class EstimateService {
         estimateResponseDTO.setClientEmail(estimateById.getPurchaserEmail().getEmail());
         estimateResponseDTO.setDesignerEmail(estimateById.getDesignerEmail().getEmail());
         estimateResponseDTO.setEstimateInfo(estimateById.getEstimateInfo());
-        estimateResponseDTO.setPrice(estimateById.getPrice());
+        estimateResponseDTO.setTotalPrice(estimateById.getPrice());  // 총 가격
+        estimateResponseDTO.setPrice(estimateById.getReformPrice());  // 리폼 가격
         estimateResponseDTO.setEstimateImg(estimateById.getEstimateImg().get(0).getImgUrl());
         estimateResponseDTO.setRequestNumber(estimateById.getRequestNumber().getId());
         estimateResponseDTO.setEstimateStatus(estimateById.getEstimateStatus().name());
@@ -191,7 +198,7 @@ public class EstimateService {
         } else {
             List<EstimateImage> imageList = estimateImgRepository.findAllByEstimateId(estimateNumber);
             estimate.setEstimateInfo(estimateRequestDTO.getEstimateInfo());
-            estimate.setPrice(estimateRequestDTO.getPrice());
+            estimate.setReformPrice(estimateRequestDTO.getReformPrice());  // 리폼 비용
             estimateRepository.save(estimate);
 
             for (EstimateImage estimateImage : imageList) {
@@ -206,15 +213,17 @@ public class EstimateService {
     }
 
     @Transactional
-    public void selEstimateStatus(Long estimateNumber, EstimateStatus status) {
+    public void selEstimateAccept(Long estimateNumber) {
         Estimate estimate = estimateRepository.findEstimateById(estimateNumber)
                 .orElseThrow(() -> new IllegalArgumentException("견적서가 존재하지 않습니다."));
 
         if (estimate.getEstimateStatus() != EstimateStatus.REQUEST_WAITING) {
             throw new RuntimeException("이미 진행 중인 의뢰로 수정이 불가합니다.");
         } else {
-            estimate.setEstimateStatus(status);
-            estimateRepository.save(estimate);
+            ReformOrder reformOrder = new ReformOrder();
+            reformOrder.setOrderStatus(ReformOrderStatus.ORDERING);  // 주문 상태 : 주문 중
+            reformOrder.setTotalPrice(Integer.parseInt(estimate.getPrice()));  // 상품 총 가격
+            reformOrderRepository.save(reformOrder);
         }
     }
 

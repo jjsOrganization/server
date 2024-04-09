@@ -101,15 +101,12 @@ public class EstimateController {
         }
     }
 
-    @PatchMapping(value = "/estimate/purchaser/{estimateNumber}/{status}")
-    @Operation(summary = "구매자의 견적서 수락 및 거절", description = "구매자는 견적서를 확인하고 수락 및 거절한다.")
-    public ResponseEntity<?> selectEstimateStatus(@PathVariable Long estimateNumber, @PathVariable EstimateStatus status) {
+    @PostMapping(value = "/estimate/purchaser/{estimateNumber}/accept")
+    @Operation(summary = "구매자의 견적서 수락 시작", description = "구매자는 견적서를 확인하고 수락하고 다음 배송정보 입력 창으로 넘어간다.")
+    public ResponseEntity<?> selectEstimateStatus(@PathVariable Long estimateNumber) {
         try {
-            estimateService.selEstimateStatus(estimateNumber, status);
-            if (status == EstimateStatus.REQUEST_ACCEPTED) {
-                progressManagementService.setProgressStart(estimateNumber);
-            }
-            return response.success(status, "견적서 상태 수정 완료", HttpStatus.OK);
+            estimateService.selEstimateAccept(estimateNumber);  // 수락 누르면 리품 주문 테이블 생성되고 상태가 주문중이 들어감
+            return response.success("견적서 수락 및 주문 중 : 1", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
             return response.fail("견적서 상태 수정 실패1", HttpStatus.INTERNAL_SERVER_ERROR);

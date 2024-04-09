@@ -31,7 +31,10 @@ public class Estimate {  // 견적서
     private List<EstimateImage> estimateImg = new ArrayList<>();
 
     @Column(name = "PRICE", nullable = false)
-    private String price;  // 가격
+    private String price;  // 총 가격
+
+    @Column(name = "REFORM_PRICE", nullable = false)
+    private String reformPrice;  // 리폼 비용
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

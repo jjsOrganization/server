@@ -10,10 +10,10 @@ import java.util.List;
 @Setter
 public class EstimateRequestDTO {
 
-    private String estimateInfo;  // 의뢰 정보(내용)
+    private String estimateInfo;  // 견적서 정보(내용)
 
-    private List<MultipartFile> estimateImg;  // 의뢰 사진
+    private List<MultipartFile> estimateImg;  // 견적서 사진
 
-    private String price; // 희망 가격
+    private String reformPrice; // 희망 가격
 
 }
