@@ -63,6 +63,13 @@ jobs:
         run: echo "CurrentTime=$"
         shell: bash # 앞서 가져온 현재 시간을 출력합니다. 이는 로깅 및 디버깅 목적으로 유용할 수 있습니다.
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.CLOUD_AWS_CREDENTIALS_ACCESSKEY }}
+          aws-secret-access-key: ${{ secrets.CLOUD_AWS_CREDENTIALS_SECRETKEY }}
+          aws-region: ap-northeast-2
+          
       - name: Docker build
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
