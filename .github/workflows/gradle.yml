@@ -90,5 +90,6 @@ jobs:
             cd docker
             docker compose down
             docker compose up -d
-            # 사용하지 않는 Docker 이미지 삭제
-            docker images -q | xargs docker rmi -f
+            
+            # 태그가 <none>인 이미지 삭제
+            docker images | grep '<none>' | awk '{ print $3 }' | xargs -r docker rmi
