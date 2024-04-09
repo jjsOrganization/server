@@ -63,10 +63,16 @@ jobs:
         run: echo "CurrentTime=$"
         shell: bash # 앞서 가져온 현재 시간을 출력합니다. 이는 로깅 및 디버깅 목적으로 유용할 수 있습니다.
 
+      - name: make Dockerfile # .gitignore에 의해 푸시되지 않은 Dockerfile 생성
+        run: |
+          touch ./Dockerfile
+          echo "${{ secrets.DOCKER_FILE }}" > ./Dockerfile
+        shell: bash
+
       - name: Docker build
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/springjjs ./
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/springjjs .
           docker push ${{ secrets.DOCKER_USERNAME }}/springjjs
         # Docker 이미지를 빌드하고, Docker Hub에 로그인한 후 이미지를 푸시합니다.
 
