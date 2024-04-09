@@ -16,4 +16,14 @@ public class AuthenticationFacadeImpl implements AuthenticationFacade {
         }
         return ((UserDetails) authentication.getPrincipal()).getUsername();
     }
+
+    @Override
+    public String getCurrentUserType() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
+        return ((UserDetails) authentication.getPrincipal()).getAuthorities().toString();
+
+    }
 }

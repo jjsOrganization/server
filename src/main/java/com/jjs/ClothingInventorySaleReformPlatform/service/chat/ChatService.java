@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.service.chat;
 
+import com.jjs.ClothingInventorySaleReformPlatform.controller.product.AuthenticationFacade;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.chat.Chat;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.chat.ChatMessage;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.Product;
@@ -25,21 +26,39 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 
 public class ChatService {
-
+    private final AuthenticationFacade authenticationFacade;
     private final ChatRepository chatRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final ReformRequestRepository reformRequestRepository;
 
     public List<ChatRoomDTO> findAllRooms(String userEmail){
-        PurchaserInfo purchaserInfo = new PurchaserInfo();
-        purchaserInfo.setEmail(userEmail);
+        String currentUserType = authenticationFacade.getCurrentUserType();
+        log.info("currentUserType = {}", currentUserType);
 
-        //채팅방 생성 순서 최근 순으로 반환
-        List<ChatRoomDTO> byPurchaserEmail = chatRepository.findByPurchaserEmail(purchaserInfo)
+        if(currentUserType.equals("[ROLE_PURCHASER]")){
+            PurchaserInfo purchaserInfo = new PurchaserInfo();
+            purchaserInfo.setEmail(userEmail);
+
+            //채팅방 생성 순서 최근 순으로 반환
+            return getChatRoomDTO(chatRepository.findByPurchaserEmail(purchaserInfo));
+
+        } else if (currentUserType.equals("[ROLE_DESIGNER]")) {
+            DesignerInfo designerInfo = new DesignerInfo();
+            designerInfo.setEmail(userEmail);
+
+            //채팅방 생성 순서 최근 순으로 반환
+            return getChatRoomDTO(chatRepository.findByDesignerEmail(designerInfo));
+        } else{
+            throw new IllegalArgumentException("판매자는 채팅 목록을 조회할 수 없습니다.");
+        }
+    }
+
+    private List<ChatRoomDTO> getChatRoomDTO(List<Chat> chatRepository) {
+        List<ChatRoomDTO> byUserEmail = chatRepository
                 .stream()
                 .map(ChatRoomDTO::convertToDTO)
                 .collect(Collectors.toList());
-        return byPurchaserEmail;
+        return byUserEmail;
     }
 
     @Transactional
@@ -54,9 +73,13 @@ public class ChatService {
         Product product = new Product();
         product.setId(roomDTO.getProductCode());
 
+        ReformRequest reformRequest = new ReformRequest();
+        reformRequest.setId(roomDTO.getRequestId());
+
         chat.setDesignerEmail(designerInfo);
         chat.setPurchaserEmail(purchaserInfo);
         chat.setProduct(product);
+        chat.setReformRequest(reformRequest);
 
         Chat createdChatRoom = chatRepository.save(chat);
 
@@ -67,6 +90,7 @@ public class ChatService {
         chatRoomDTO.setPurchaserEmail((createdChatRoom.getPurchaserEmail().getEmail()));
         chatRoomDTO.setDesignerEmail((createdChatRoom.getDesignerEmail().getEmail()));
         chatRoomDTO.setProductCode((createdChatRoom.getProduct().getId()));
+        chatRoomDTO.setRequestId(createdChatRoom.getReformRequest().getId());
 
         return chatRoomDTO;
     }

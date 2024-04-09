@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest # 이 작업을 실행할 가상 환경의 OS를 지정합니다. 여기서는 최신 버전의 Ubuntu를 사용합니다.
 
     # PR이 develop 브랜치로 병합될 때만 작업을 실행하도록 조건을 설정합니다.
-    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'develop'
+    # if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'develop'
 
     permissions:
       contents: read # 이 작업이 리포지토리의 콘텐츠를 읽을 수 있는 권한을 가지게 합니다.
@@ -33,12 +33,12 @@ jobs:
           java-version: '17'
           distribution: 'temurin' # JDK 17을 설치하여 Java 애플리케이션을 빌드할 수 있는 환경을 설정합니다.
 
-      - name: make application-dev.yml
-        run: |
-          cd ./src/main/resources
-          touch ./application-dev.yml
-          echo "${{ secrets.APPLICATION_DEV }}" > ./application-dev.yml
-        shell: bash
+#      - name: make application-dev.yml
+#        run: |
+#          cd ./src/main/resources
+#          touch ./application-dev.yml
+#          echo "${{ secrets.APPLICATION_DEV }}" > ./application-dev.yml
+#        shell: bash
         # .gitignore에 의해 버전 관리에서 제외된 application-dev.yml 파일을 생성하고, GitHub Secrets에서 가져온 내용을 파일에 작성합니다.
 
       - name: Setup Gradle
@@ -63,32 +63,33 @@ jobs:
         run: echo "CurrentTime=$"
         shell: bash # 앞서 가져온 현재 시간을 출력합니다. 이는 로깅 및 디버깅 목적으로 유용할 수 있습니다.
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.CLOUD_AWS_CREDENTIALS_ACCESSKEY }}
+          aws-secret-access-key: ${{ secrets.CLOUD_AWS_CREDENTIALS_SECRETKEY }}
+          aws-region: ap-northeast-2
+          
       - name: Docker build
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/springjjs ./
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/springjjs .
           docker push ${{ secrets.DOCKER_USERNAME }}/springjjs
         # Docker 이미지를 빌드하고, Docker Hub에 로그인한 후 이미지를 푸시합니다.
 
       - name: Deploy to EC2 instance
-        env:
-          EC2_SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          EC2_HOST: ${{ secrets.CLOUD_AWS_HOST }}
-          EC2_USER: ${{ secrets.CLOUD_AWS_USERNAME }}
-        run: |
-          SSH_KEY_FILE=$(mktemp)
-          echo "${EC2_SSH_PRIVATE_KEY}" > ${SSH_KEY_FILE}
-          chmod 600 ${SSH_KEY_FILE}
-          
-          ssh -o StrictHostKeyChecking=no -i ${SSH_KEY_FILE} ${CLOUD_AWS_USERNAME}@${CLOUD_AWS_HOST} << EOF
-          
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.CLOUD_AWS_HOST }}
+          username: ${{ secrets.CLOUD_AWS_USERNAME }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             docker pull ${{ secrets.DOCKER_USERNAME }}/springjjs:latest
             cd docker
             docker compose down
             docker compose up -d
-            docker rm $(docker ps --filter 'status=exited' -a -q)
-          
-          EOF # EC2 인스턴스에 SSH로 접속하여 Docker 컨테이너를 재시작하는 명령을 실행합니다. 
-          
-          rm -f ${SSH_KEY_FILE} # 사용이 끝난 임시 SSH 키 파일을 삭제합니다.
+            
+            # 태그가 <none>인 이미지 삭제
+            docker images | grep '<none>' | awk '{ print $3 }' | xargs -r docker rmi
