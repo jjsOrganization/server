@@ -3,7 +3,9 @@ package com.jjs.ClothingInventorySaleReformPlatform.controller.reform.estimate;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate.EstimateStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.ClientResponse;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.request.EstimateRequestDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.request.ReformOrderRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.response.EstimateResponseDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.response.ReformOrderResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.reformrequest.ReformRequestResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.response.Response;
 import com.jjs.ClothingInventorySaleReformPlatform.service.reform.progressmanagement.ProgressManagementService;
@@ -101,23 +103,90 @@ public class EstimateController {
         }
     }
 
-    @PatchMapping(value = "/estimate/purchaser/{estimateNumber}/{status}")
-    @Operation(summary = "구매자의 견적서 수락 및 거절", description = "구매자는 견적서를 확인하고 수락 및 거절한다.")
-    public ResponseEntity<?> selectEstimateStatus(@PathVariable Long estimateNumber, @PathVariable EstimateStatus status) {
+    @PostMapping(value = "/estimate/purchaser/{estimateNumber}/accept")
+    @Operation(summary = "구매자의 견적서 수락 시작", description = "구매자는 견적서를 확인하고 수락하고 다음 배송정보 입력 창으로 넘어간다.")
+    public ResponseEntity<?> selectEstimateAccept(@PathVariable Long estimateNumber) {
         try {
-            estimateService.selEstimateStatus(estimateNumber, status);
-            if (status == EstimateStatus.REQUEST_ACCEPTED) {
-                progressManagementService.setProgressStart(estimateNumber);
-            }
-            return response.success(status, "견적서 상태 수정 완료", HttpStatus.OK);
+            estimateService.selEstimateAccept(estimateNumber);  // 수락 누르면 리품 주문 테이블 생성되고 상태가 주문중이 들어감
+            return response.success("견적서 수락 및 주문 중 : 1", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
-            return response.fail("견적서 상태 수정 실패1", HttpStatus.INTERNAL_SERVER_ERROR);
+            return response.fail("견적서 수락 실패1", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
             log.error(e.getMessage());
-            return response.fail("견적서 상태 수정 실패2", HttpStatus.INTERNAL_SERVER_ERROR);
+            return response.fail("견적서 수락 실패2", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PatchMapping(value = "/estimate/purchaser/{estimateNumber}/reject")
+    @Operation(summary = "구매자의 견적서 거절 완료", description = "구매자는 견적서를 확인하고 원치 않은 경우 거절한다.")
+    public ResponseEntity<?> selectEstimateReject(@PathVariable Long estimateNumber) {
+        try {
+            estimateService.selEstimateReject(estimateNumber);  // 거절 버튼을 누르면 견적서 상태가 거절됨이 됨
+            return response.success("견적서 거절 완료", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return response.fail("견적서 거절 실패1", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return response.fail("견적서 거절 실패2", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PatchMapping(value = "/estimate/purchaser/acceptReformOrder/{estimateNumber}")
+    @Operation(summary = "구매자의 견적서 수락 후 개인정보 입력", description = "구매자가 견적서 수락했을 때, 구매자는 배송 정보 및 개인 정보를 입력한다.")
+    public ResponseEntity<?> estimateAcceptOrdering(@RequestBody ReformOrderRequestDTO reformOrderRequestDTO, @PathVariable Long estimateNumber) {
+        try {
+            estimateService.acceptOrdering(reformOrderRequestDTO, estimateNumber);
+            return response.success("정보 입력 완료", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return response.fail("정보 입력 실패1", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return response.fail("정보 입력 실패2", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/estimate/purchaser/acceptReformOrder/{estimateNumber}")
+    @Operation(summary = "구매자가 리폼 주문 비용(리폼 비용, 상품 가격, 총 가격) 조회", description = "구매자가 견적서의 개인 정보 입력 후 다음 페이지에서 총 리폼 주문 비용을 확인한다.")
+    public ResponseEntity<?> getEstimatePrice(@PathVariable Long estimateNumber) {
+        try {
+            ReformOrderResponseDTO reformOrderResponseDTO = estimateService.getAcceptOrderingPrice(estimateNumber);
+            return response.success(reformOrderResponseDTO, "리폼 비용 조회 성공", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return response.fail("리폼 비용 조회 실패1", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return response.fail("리폼 비용 조회 실패2", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * 실행 전 -> estimate:REQUEST_WAITING, reformorders:ORDERING, progress_management:현재 생성X
+     * 실행 후 -> estimate:REQUEST_ACCEPTED, reformorders:ORDER_COMPLETE, progress_management:REFORM_START
+     * @param estimateNumber
+     * @return
+     */
+    @PatchMapping(value = "/estimate/purchaser/acceptReformOrder/{estimateNumber}/complete")
+    @Operation(summary = "견적서에 대한 리폼 및 상품을 최종적으로 결제 및 수락", description = "구매자는 리폼 주문 비용 확인 후 결제 및 수락 버튼(해당 API)으로 해당 견적서를 최종적으로 수락한다. 수락 시 형상관리 테이블에 초기 이미지가 저장된다.")
+    public ResponseEntity<?> setEstimateAccept(@PathVariable Long estimateNumber) {
+        try {
+            estimateService.setAcceptComplete(estimateNumber);
+            return response.success("리폼 결제 및 수락 완료", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return response.fail("리폼 결제 및 수락 실패1 (견적서 조회)", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (RuntimeException e) {
+            log.error(e.getMessage());
+            return response.fail("리폼 결제 및 수락 실패2 (수락된 의뢰가 아님)", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return response.fail("리폼 결제 및 수락 실패3", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 }
 

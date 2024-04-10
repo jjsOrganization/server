@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.order.ReformOrder;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
@@ -31,7 +32,10 @@ public class Estimate {  // 견적서
     private List<EstimateImage> estimateImg = new ArrayList<>();
 
     @Column(name = "PRICE", nullable = false)
-    private String price;  // 가격
+    private int price;  // 총 가격
+
+    @Column(name = "REFORM_PRICE", nullable = false)
+    private int reformPrice;  // 리폼 비용
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -47,6 +51,11 @@ public class Estimate {  // 견적서
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "REQUEST_NUMBER", nullable = false)
     private ReformRequest requestNumber;  // 의뢰 번호
+
+
+    @OneToOne(mappedBy = "estimate", fetch = FetchType.LAZY)
+    private ReformOrder reformOrder;
+
 
     @Enumerated(EnumType.STRING)
     private EstimateStatus estimateStatus;  // 견적서 상태 REQUEST_WAITING, REQUEST_REJECTED, REQUEST_ACCEPTED

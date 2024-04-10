@@ -5,12 +5,20 @@ import com.jjs.ClothingInventorySaleReformPlatform.controller.product.Authentica
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate.Estimate;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate.EstimateImage;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate.EstimateStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.order.ReformOrder;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.order.ReformOrderStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.progressmanagement.ProgressStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.progressmanagement.Progressmanagement;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequestStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.PurchaserInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.request.EstimateRequestDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.request.ReformOrderRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.response.EstimateResponseDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.estimate.response.ReformOrderResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.dto.reform.reformrequest.ReformRequestResponseDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.repository.reform.order.ReformOrderRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reform.progressmanagement.ProgressRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reform.estimate.EstimateImgRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.repository.reform.estimate.EstimateRepository;
@@ -18,6 +26,8 @@ import com.jjs.ClothingInventorySaleReformPlatform.repository.reform.reformreque
 import com.jjs.ClothingInventorySaleReformPlatform.service.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +46,7 @@ public class EstimateService {
     private final EstimateRepository estimateRepository;
     private final EstimateImgRepository estimateImgRepository;
     private final ReformRequestRepository requestRepository;
+    private final ReformOrderRepository reformOrderRepository;
     private final ProgressRepository progressRepository;
 
     /**
@@ -126,7 +137,10 @@ public class EstimateService {
         estimate.setEstimateStatus(EstimateStatus.REQUEST_WAITING);
 
         estimate.setEstimateInfo(estimateRequestDTO.getEstimateInfo());
-        estimate.setPrice(estimateRequestDTO.getPrice());
+        estimate.setReformPrice(estimateRequestDTO.getReformPrice());  // 리폼 비용
+
+        int totalPrice = (reformRequest.getProductNumber().getPrice() + estimateRequestDTO.getReformPrice());
+        estimate.setPrice(totalPrice);
         estimateRepository.save(estimate);
 
         saveImageList(estimateRequestDTO, estimate);
@@ -166,7 +180,8 @@ public class EstimateService {
         estimateResponseDTO.setClientEmail(estimateById.getPurchaserEmail().getEmail());
         estimateResponseDTO.setDesignerEmail(estimateById.getDesignerEmail().getEmail());
         estimateResponseDTO.setEstimateInfo(estimateById.getEstimateInfo());
-        estimateResponseDTO.setPrice(estimateById.getPrice());
+        estimateResponseDTO.setTotalPrice(estimateById.getPrice());  // 총 가격
+        estimateResponseDTO.setPrice(estimateById.getReformPrice());  // 리폼 가격
         estimateResponseDTO.setEstimateImg(estimateById.getEstimateImg().get(0).getImgUrl());
         estimateResponseDTO.setRequestNumber(estimateById.getRequestNumber().getId());
         estimateResponseDTO.setEstimateStatus(estimateById.getEstimateStatus().name());
@@ -191,7 +206,7 @@ public class EstimateService {
         } else {
             List<EstimateImage> imageList = estimateImgRepository.findAllByEstimateId(estimateNumber);
             estimate.setEstimateInfo(estimateRequestDTO.getEstimateInfo());
-            estimate.setPrice(estimateRequestDTO.getPrice());
+            estimate.setReformPrice(estimateRequestDTO.getReformPrice());  // 리폼 비용
             estimateRepository.save(estimate);
 
             for (EstimateImage estimateImage : imageList) {
@@ -206,16 +221,100 @@ public class EstimateService {
     }
 
     @Transactional
-    public void selEstimateStatus(Long estimateNumber, EstimateStatus status) {
+    public void selEstimateAccept(Long estimateNumber) {
         Estimate estimate = estimateRepository.findEstimateById(estimateNumber)
                 .orElseThrow(() -> new IllegalArgumentException("견적서가 존재하지 않습니다."));
 
         if (estimate.getEstimateStatus() != EstimateStatus.REQUEST_WAITING) {
             throw new RuntimeException("이미 진행 중인 의뢰로 수정이 불가합니다.");
         } else {
-            estimate.setEstimateStatus(status);
+            ReformOrder reformOrder = new ReformOrder();
+            reformOrder.setOrderStatus(ReformOrderStatus.ORDERING);  // 주문 상태 : 주문 중
+            reformOrder.setTotalPrice(estimate.getPrice());  // 상품 총 가격
+            reformOrder.setEstimate(estimate);
+            reformOrderRepository.save(reformOrder);
+        }
+    }
+
+    @Transactional
+    public void selEstimateReject(Long estimateNumber) {
+        Estimate estimate = estimateRepository.findEstimateById(estimateNumber)
+                .orElseThrow(() -> new IllegalArgumentException("견적서가 존재하지 않습니다."));
+
+        if (estimate.getEstimateStatus() != EstimateStatus.REQUEST_WAITING) {
+            throw new RuntimeException("이미 진행 중인 의뢰로 수정이 불가합니다.");
+        } else {
+            estimate.setEstimateStatus(EstimateStatus.REQUEST_REJECTED);
             estimateRepository.save(estimate);
         }
+    }
+
+    @Transactional
+    public void acceptOrdering(ReformOrderRequestDTO reformOrderRequestDTO, Long estimateNumber) {
+
+        ReformOrder reformOrder = reformOrderRepository.findReformOrderByEstimateId(estimateNumber)
+                .orElseThrow(() -> new IllegalArgumentException("견적서가 존재하지 않습니다."));
+
+        reformOrder.setPhoneNumber(reformOrderRequestDTO.getPhoneNumber());
+        reformOrder.setDeliveryRequest(reformOrderRequestDTO.getDeliveryRequest());
+        reformOrder.setPostcode(reformOrderRequestDTO.getPostcode());
+        reformOrder.setAddress(reformOrderRequestDTO.getAddress());
+        reformOrder.setDetailAddress(reformOrderRequestDTO.getDetailAddress());
+
+        reformOrderRepository.save(reformOrder);
+
+    }
+
+    @Transactional
+    public ReformOrderResponseDTO getAcceptOrderingPrice(Long estimateNumber) {
+
+        Estimate estimate = estimateRepository.findEstimateById(estimateNumber)
+                .orElseThrow(() -> new IllegalArgumentException("견적서가 존재하지 않습니다."));
+
+        ReformOrderResponseDTO reformOrderResponseDTO = new ReformOrderResponseDTO();
+        reformOrderResponseDTO.setProductPrice(estimate.getRequestNumber().getProductNumber().getPrice());  // 상품 가격
+        reformOrderResponseDTO.setReformPrice(estimate.getReformPrice());  // 리폼 가격
+        reformOrderResponseDTO.setTotalPrice(estimate.getReformPrice());  // 총 가격
+
+        return reformOrderResponseDTO;
+    }
+
+    /**
+     * 구매자의 견적서 수락 최종 완료 시, 형상관리 시작
+     * @param estimateNumber
+     */
+    @Transactional
+    public void setAcceptComplete(Long estimateNumber) {
+        Estimate estimate = estimateRepository.findEstimateById(estimateNumber)
+                .orElseThrow(() -> new IllegalArgumentException("견적서가 존재하지 않습니다."));
+
+        ReformOrder reformOrder = reformOrderRepository.findReformOrderByEstimateId(estimateNumber)
+                .orElseThrow(() -> new IllegalArgumentException("견적서가 존재하지 않습니다."));
+
+        ReformRequest reformRequest = requestRepository.findReformRequestById(estimate.getRequestNumber().getId())
+                .orElseThrow(() -> new IllegalArgumentException("요청서가 존재하지 않습니다."));
+
+        estimate.setEstimateStatus(EstimateStatus.REQUEST_ACCEPTED);  // 견적서 상태 : 요청 수락
+        reformOrder.setOrderStatus(ReformOrderStatus.ORDER_COMPLETE);   // 리폼 주문 상태 : 주문 완료
+
+        estimateRepository.save(estimate);
+        reformOrderRepository.save(reformOrder);
+
+        Progressmanagement progressmanagement = new Progressmanagement();  // 형상관리 시작 -> 첫 번째 이미지(상품 사진) 등록
+
+        if (estimate.getEstimateStatus() != EstimateStatus.REQUEST_ACCEPTED) {
+            throw new RuntimeException("수락된 의뢰만 형상관리 진행이 가능합니다.");
+        } else {
+            progressmanagement.setProgressStatus(ProgressStatus.REFORM_START);
+            progressmanagement.setProductImgUrl(reformRequest.getProductNumber().getProductImg().get(0).getImgUrl());
+            progressmanagement.setClientEmail(estimate.getPurchaserEmail().getEmail());
+            progressmanagement.setDesignerEmail(estimate.getDesignerEmail().getEmail());
+            progressmanagement.setRequestNumber(reformRequest);
+            progressmanagement.setEstimateNumber(estimate);
+            progressRepository.save(progressmanagement);
+            log.info("형상관리 데이터 생성 완료");
+        }
+
     }
 
 

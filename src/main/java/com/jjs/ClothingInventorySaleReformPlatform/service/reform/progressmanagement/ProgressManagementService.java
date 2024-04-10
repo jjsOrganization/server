@@ -32,34 +32,6 @@ public class ProgressManagementService {
     private String imageUploadPath = "ProgressManagement/";
 
 
-    /**
-     * 구매자의 견적서 수락 시, 형상관리 시작
-     * @param estimateNumber
-     */
-    @Transactional
-    public void setProgressStart(Long estimateNumber) {
-        Estimate estimate = estimateRepository.findEstimateById(estimateNumber)
-                .orElseThrow(() -> new IllegalArgumentException("견적서가 존재하지 않습니다1."));
-
-        Progressmanagement progressmanagement = new Progressmanagement();
-
-        ReformRequest reformRequest = requestRepository.findReformRequestById(estimate.getRequestNumber().getId())
-                .orElseThrow(() -> new IllegalArgumentException("요청서가 존재하지 않습니다."));
-
-        if (estimate.getEstimateStatus() != EstimateStatus.REQUEST_ACCEPTED) {
-            throw new RuntimeException("수락된 의뢰만 형상관리 진행이 가능합니다.");
-        } else {
-            progressmanagement.setProgressStatus(ProgressStatus.REFORM_START);
-            progressmanagement.setProductImgUrl(reformRequest.getProductNumber().getProductImg().get(0).getImgUrl());
-            progressmanagement.setClientEmail(estimate.getPurchaserEmail().getEmail());
-            progressmanagement.setDesignerEmail(estimate.getDesignerEmail().getEmail());
-            progressmanagement.setRequestNumber(reformRequest);
-            progressmanagement.setEstimateNumber(estimate);
-            progressRepository.save(progressmanagement);
-            System.out.println("44444");
-        }
-    }
-
     @Transactional
     public void saveFirstImg(ProgressImgRequestDTO imgRequestDTO) throws IOException {
         Progressmanagement progressmanagement = progressRepository.findByEstimateNumber_Id(imgRequestDTO.getEstimateId())
