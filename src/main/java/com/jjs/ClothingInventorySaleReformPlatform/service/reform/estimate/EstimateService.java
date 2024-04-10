@@ -7,6 +7,8 @@ import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate.Estima
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.estimate.EstimateStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.order.ReformOrder;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.order.ReformOrderStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.progressmanagement.ProgressStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.progressmanagement.Progressmanagement;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.reformrequest.ReformRequestStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.DesignerInfo;
@@ -45,6 +47,7 @@ public class EstimateService {
     private final EstimateImgRepository estimateImgRepository;
     private final ReformRequestRepository requestRepository;
     private final ReformOrderRepository reformOrderRepository;
+    private final ProgressRepository progressRepository;
 
     /**
      * 로그인한 디자이너의 요청받은 모든 의뢰 리스트를 불러오는 메소드
@@ -275,5 +278,45 @@ public class EstimateService {
 
         return reformOrderResponseDTO;
     }
+
+    /**
+     * 구매자의 견적서 수락 최종 완료 시, 형상관리 시작
+     * @param estimateNumber
+     */
+    @Transactional
+    public void setAcceptComplete(Long estimateNumber) {
+        Estimate estimate = estimateRepository.findEstimateById(estimateNumber)
+                .orElseThrow(() -> new IllegalArgumentException("견적서가 존재하지 않습니다."));
+
+        ReformOrder reformOrder = reformOrderRepository.findReformOrderByEstimateId(estimateNumber)
+                .orElseThrow(() -> new IllegalArgumentException("견적서가 존재하지 않습니다."));
+
+        ReformRequest reformRequest = requestRepository.findReformRequestById(estimate.getRequestNumber().getId())
+                .orElseThrow(() -> new IllegalArgumentException("요청서가 존재하지 않습니다."));
+
+        estimate.setEstimateStatus(EstimateStatus.REQUEST_ACCEPTED);  // 견적서 상태 : 요청 수락
+        reformOrder.setOrderStatus(ReformOrderStatus.ORDER_COMPLETE);   // 리폼 주문 상태 : 주문 완료
+
+        estimateRepository.save(estimate);
+        reformOrderRepository.save(reformOrder);
+
+        Progressmanagement progressmanagement = new Progressmanagement();  // 형상관리 시작 -> 첫 번째 이미지(상품 사진) 등록
+
+        if (estimate.getEstimateStatus() != EstimateStatus.REQUEST_ACCEPTED) {
+            throw new RuntimeException("수락된 의뢰만 형상관리 진행이 가능합니다.");
+        } else {
+            progressmanagement.setProgressStatus(ProgressStatus.REFORM_START);
+            progressmanagement.setProductImgUrl(reformRequest.getProductNumber().getProductImg().get(0).getImgUrl());
+            progressmanagement.setClientEmail(estimate.getPurchaserEmail().getEmail());
+            progressmanagement.setDesignerEmail(estimate.getDesignerEmail().getEmail());
+            progressmanagement.setRequestNumber(reformRequest);
+            progressmanagement.setEstimateNumber(estimate);
+            progressRepository.save(progressmanagement);
+            log.info("형상관리 데이터 생성 완료");
+        }
+
+    }
+
+
 }
 

@@ -163,5 +163,30 @@ public class EstimateController {
         }
     }
 
+    /**
+     * 실행 전 -> estimate:REQUEST_WAITING, reformorders:ORDERING, progress_management:현재 생성X
+     * 실행 후 -> estimate:REQUEST_ACCEPTED, reformorders:ORDER_COMPLETE, progress_management:REFORM_START
+     * @param estimateNumber
+     * @return
+     */
+    @PatchMapping(value = "/estimate/purchaser/acceptReformOrder/{estimateNumber}/complete")
+    @Operation(summary = "견적서에 대한 리폼 및 상품을 최종적으로 결제 및 수락", description = "구매자는 리폼 주문 비용 확인 후 결제 및 수락 버튼(해당 API)으로 해당 견적서를 최종적으로 수락한다. 수락 시 형상관리 테이블에 초기 이미지가 저장된다.")
+    public ResponseEntity<?> setEstimateAccept(@PathVariable Long estimateNumber) {
+        try {
+            estimateService.setAcceptComplete(estimateNumber);
+            return response.success("리폼 결제 및 수락 완료", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage());
+            return response.fail("리폼 결제 및 수락 실패1 (견적서 조회)", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (RuntimeException e) {
+            log.error(e.getMessage());
+            return response.fail("리폼 결제 및 수락 실패2 (수락된 의뢰가 아님)", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return response.fail("리폼 결제 및 수락 실패3", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 }
 
