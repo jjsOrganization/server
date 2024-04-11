@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest # 이 작업을 실행할 가상 환경의 OS를 지정합니다. 여기서는 최신 버전의 Ubuntu를 사용합니다.
 
     # PR이 develop 브랜치로 병합될 때만 작업을 실행하도록 조건을 설정합니다.
-    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'develop'
+    #if: github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'develop'
 
     permissions:
       contents: read # 이 작업이 리포지토리의 콘텐츠를 읽을 수 있는 권한을 가지게 합니다.
