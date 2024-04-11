@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 @Setter
 public class ReformRequestCheckPurchaserDTO {
 
+    private Long id;  // 리폼 요청 id
+
     @NotEmpty
     private String requestPart; // 리폼 의뢰 부위
 
@@ -38,6 +40,7 @@ public class ReformRequestCheckPurchaserDTO {
 
         ReformRequestCheckPurchaserDTO reformRequestCheckPurchaserDTO = new ReformRequestCheckPurchaserDTO();
 
+        reformRequestCheckPurchaserDTO.setId(reformRequests.getId());
         reformRequestCheckPurchaserDTO.setDesignerName(portfolio.getName());
         reformRequestCheckPurchaserDTO.setRequestInfo(reformRequests.getRequestInfo());
         reformRequestCheckPurchaserDTO.setRequestPart(reformRequests.getRequestPart());
