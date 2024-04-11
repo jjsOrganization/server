@@ -27,9 +27,7 @@ public class ChatRoomDTO {
         chatRoomDTO.setPurchaserEmail(chat.getPurchaserEmail().getEmail());
         chatRoomDTO.setDesignerEmail(chat.getDesignerEmail().getEmail());
         chatRoomDTO.setProductCode(chat.getProduct().getId());
-        chatRoomDTO.setRoomId(chat.getReformRequest().getId());
         chatRoomDTO.setRequestId(chat.getReformRequest().getId());
-
 
         return chatRoomDTO;
     }
