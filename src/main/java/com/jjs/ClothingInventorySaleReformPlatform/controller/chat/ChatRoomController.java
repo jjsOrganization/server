@@ -27,7 +27,6 @@ public class ChatRoomController {
     private final ChatService chatService;
     private final AuthenticationFacade authenticationFacade;
     private final Response response;
-    private final ChatMessageRepository chatMessageRepository;
 
 
     // 채팅방 리스트 조회
