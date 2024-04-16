@@ -10,13 +10,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Value("${server.address}")
-    String ec2Host;
-
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://"+ ec2Host +":3000" , "http://"+ec2Host+"/","http://localhost:3000")
+                .allowedOrigins("http://3.38.128.50:3000" , "http://3.38.128.50/","http://localhost:3000")
                 .allowedMethods("OPTIONS","GET","POST","PUT","DELETE","PATCH");
     }
 }
