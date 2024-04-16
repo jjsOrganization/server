@@ -87,9 +87,8 @@ jobs:
           script: |
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             docker pull ${{ secrets.DOCKER_USERNAME }}/springjjs:latest
-            cd docker
-            docker compose down
-            docker compose up -d
+            docker-compose down
+            docker-compose up -d
             
             # 태그가 <none>인 이미지 삭제
             docker images | grep '<none>' | awk '{ print $3 }' | xargs -r docker rmi

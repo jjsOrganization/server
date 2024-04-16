@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.global.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -12,7 +13,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://3.38.128.50:3000", "http://3.38.128.50/","http://localhost:3000")
+                .allowedOrigins("http://3.38.128.50:3000" , "http://3.38.128.50/","http://localhost:3000")
                 .allowedMethods("OPTIONS","GET","POST","PUT","DELETE","PATCH");
     }
 }
+
