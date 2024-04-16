@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Value("${spring.data.redis.host}")
+    @Value("${server.address}")
     String ec2Host;
 
     @Override
