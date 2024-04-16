@@ -2,9 +2,9 @@ package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.service;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.entity.Portfolio;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.entity.Product;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.ReformRequest;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.ReformRequestImage;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.ReformRequestStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformRequest.ReformRequest;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformRequest.ReformRequestImage;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformRequest.ReformRequestStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.entity.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.entity.PurchaserInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.dto.response.ReformProductInfoDTO;

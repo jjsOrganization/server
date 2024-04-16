@@ -1,6 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.repository;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.EstimateImage;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.estimate.EstimateImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

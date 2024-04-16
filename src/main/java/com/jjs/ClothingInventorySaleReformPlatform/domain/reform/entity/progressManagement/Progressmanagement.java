@@ -1,5 +1,7 @@
-package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity;
+package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.progressManagement;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformRequest.ReformRequest;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.estimate.Estimate;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

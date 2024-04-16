@@ -4,7 +4,7 @@ import com.jjs.ClothingInventorySaleReformPlatform.global.common.authentication.
 import com.jjs.ClothingInventorySaleReformPlatform.domain.chat.entity.Chat;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.chat.entity.ChatMessage;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.entity.Product;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.ReformRequest;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformRequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.entity.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.entity.PurchaserInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.chat.dto.ChatMessageDTO;

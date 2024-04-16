@@ -1,5 +1,6 @@
-package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity;
+package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformOrder;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.estimate.Estimate;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

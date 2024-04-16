@@ -1,4 +1,4 @@
-package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity;
+package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformRequest;
 
 import com.jjs.ClothingInventorySaleReformPlatform.global.common.entity.BaseEntity;
 import jakarta.persistence.Entity;

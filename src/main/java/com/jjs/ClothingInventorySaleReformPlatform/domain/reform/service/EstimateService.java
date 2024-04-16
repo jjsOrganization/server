@@ -2,15 +2,15 @@ package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.service;
 
 
 import com.jjs.ClothingInventorySaleReformPlatform.global.common.authentication.AuthenticationFacade;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.Estimate;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.EstimateImage;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.EstimateStatus;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.ReformOrder;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.ReformOrderStatus;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.ProgressStatus;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.Progressmanagement;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.ReformRequest;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.ReformRequestStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.estimate.Estimate;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.estimate.EstimateImage;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.estimate.EstimateStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformOrder.ReformOrder;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformOrder.ReformOrderStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.progressManagement.ProgressStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.progressManagement.Progressmanagement;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformRequest.ReformRequest;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformRequest.ReformRequestStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.entity.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.dto.request.EstimateRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.dto.request.ReformOrderRequestDTO;

@@ -2,8 +2,8 @@ package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.dto.response;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.entity.Portfolio;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.dto.ReformRequestImgDTO;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.ReformRequest;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.ReformRequestStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformRequest.ReformRequest;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformRequest.ReformRequestStatus;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,7 +1,7 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.service;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.ProgressStatus;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.Progressmanagement;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.progressManagement.ProgressStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.progressManagement.Progressmanagement;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.dto.request.ProgressImgRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.dto.response.ProgressImgResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.repository.ProgressRepository;

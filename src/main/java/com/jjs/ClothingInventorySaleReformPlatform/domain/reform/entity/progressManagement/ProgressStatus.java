@@ -1,4 +1,4 @@
-package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity;
+package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.progressManagement;
 
 public enum ProgressStatus {
 

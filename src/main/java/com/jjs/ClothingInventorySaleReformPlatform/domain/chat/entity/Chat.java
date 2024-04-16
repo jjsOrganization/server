@@ -2,7 +2,7 @@ package com.jjs.ClothingInventorySaleReformPlatform.domain.chat.entity;
 
 import com.jjs.ClothingInventorySaleReformPlatform.global.common.entity.BaseEntity;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.entity.Product;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.ReformRequest;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformRequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.entity.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.entity.PurchaserInfo;
 import jakarta.persistence.*;

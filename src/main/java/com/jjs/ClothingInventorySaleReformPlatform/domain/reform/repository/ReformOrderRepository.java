@@ -1,6 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.repository;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.ReformOrder;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformOrder.ReformOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

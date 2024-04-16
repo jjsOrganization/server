@@ -1,5 +1,7 @@
-package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity;
+package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.estimate;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformOrder.ReformOrder;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformRequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.entity.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.entity.PurchaserInfo;
 import jakarta.persistence.*;
