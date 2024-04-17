@@ -67,11 +67,11 @@ public class ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found"));
 
-        // 상품 정보 삭제
-        productRepository.delete(product);
+        // 상품 정보 삭제(삭제 여부를 true로 설정)
+        product.setDeleted(true);
 
         // S3에서 이미지 파일 삭제 로직은 별도 메소드로 분리될 수 있음
-        productImgService.deleteImagesFromS3(product.getProductImg());
+        //productImgService.deleteImagesFromS3(product.getProductImg());
     }
 
     // 상품 수정 - 게시글 수정 시, 기존의 이미지를 삭제하고 새로운 이미지를 추가하는 방식
