@@ -22,7 +22,7 @@ public class CustomOrderRepositoryImpl implements CustomOrderRepository{
                 "join od.product p " +
                 "join od.order o " +
                 "join Delivery d on o.id = d.order.id " +
-                "where p.createBy = :sellerEmail AND o.orderStatus = com.jjs.ClothingInventorySaleReformPlatform.domain2222.order.OrderStatus.ORDER_COMPLETE";
+                "where p.createBy = :sellerEmail AND o.orderStatus = com.jjs.ClothingInventorySaleReformPlatform.domain.order.entity.OrderStatus.ORDER_COMPLETE";
 
         return em.createQuery(jpql, SellerOrderDTO.class)
                 .setParameter("sellerEmail", sellerEmail)
@@ -32,12 +32,12 @@ public class CustomOrderRepositoryImpl implements CustomOrderRepository{
     @Override
     public List<PurchaserOrderDTO> findOrderByPurchaser(String purchaserEmail) {
 
-        String jpql = "select new com.jjs.ClothingInventorySaleReformPlatform.dto.order.response.PurchaserOrderDTO(o, od, p, d) " +
+        String jpql = "select new com.jjs.ClothingInventorySaleReformPlatform.domain.order.dto.response.PurchaserOrderDTO(o, od, p, d) " +
                 "FROM OrderDetail od " +
                 "join od.product p " +
                 "join od.order o " +
                 "join Delivery d on o.id = d.order.id " +
-                "where o.purchaserInfo.email = :purchaserEmail AND o.orderStatus = com.jjs.ClothingInventorySaleReformPlatform.domain2222.order.OrderStatus.ORDER_COMPLETE";
+                "where o.purchaserInfo.email = :purchaserEmail AND o.orderStatus = com.jjs.ClothingInventorySaleReformPlatform.domain.order.entity.OrderStatus.ORDER_COMPLETE";
 
         return em.createQuery(jpql, PurchaserOrderDTO.class)
                 .setParameter("purchaserEmail", purchaserEmail)
