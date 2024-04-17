@@ -17,7 +17,7 @@ public class CustomOrderRepositoryImpl implements CustomOrderRepository{
     @Override
     public List<SellerOrderDTO> findOrdersBySeller(String sellerEmail) {
 
-        String jpql = "select new com.jjs.ClothingInventorySaleReformPlatform.dto.order.response.SellerOrderDTO(o, od, p, d) " +
+        String jpql = "select new com.jjs.ClothingInventorySaleReformPlatform.domain.order.dto.response.SellerOrderDTO(o, od, p, d) " +
                 "FROM OrderDetail od " +
                 "join od.product p " +
                 "join od.order o " +
