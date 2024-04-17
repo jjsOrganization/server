@@ -60,11 +60,11 @@ public class ProductLikeCountService {
     }
 
     /**
-     * 상품들을 좋아요 개수 순서로 내림차순 정렬하여 목록으로 조회
+     * 상품들을 좋아요 개수 순서로 내림차순 정렬하여 목록으로 조회, 삭제된 상품 제외
      * @return
      */
     public List<ProductListLikeDTO> getProductsOrderByLikeCountDesc() {
-        List<ProductLikeCount> likeCounts = productLikeCountRepository.findAllByOrderByLikeCountDesc();
+        List<ProductLikeCount> likeCounts = productLikeCountRepository.findAllByProductIsDeletedFalseOrderByLikeCountDesc();
         return likeCounts.stream()
                 .map(likeCount -> productsFindAll(likeCount.getProduct(), likeCount.getLikeCount()))
                 .collect(Collectors.toList());

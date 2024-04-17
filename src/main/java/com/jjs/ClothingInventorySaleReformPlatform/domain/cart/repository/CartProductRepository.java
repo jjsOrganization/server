@@ -12,4 +12,7 @@ public interface CartProductRepository extends JpaRepository<CartProduct, Long> 
     List<CartProduct> findByCartId(Long cartId);
     Optional<CartProduct> deleteByCartIdAndProductId(long cartId, long productId);
 
+    // 삭제된 상품은 조회되지 않음
+    List<CartProduct> findByCartIdAndProductIsDeletedFalse(Long cartId);
+
 }

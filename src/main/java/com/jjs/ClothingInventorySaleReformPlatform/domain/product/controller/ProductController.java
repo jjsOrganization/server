@@ -83,8 +83,8 @@ public class ProductController {
     }
 
     // 상품 삭제
-    @Operation(summary = "상품 삭제", description = "로그인한 판매자는 본인이 등록한 상품을 삭제한다.")
-    @DeleteMapping("/product/seller/register/{productId}")  // (DELETE)http://localhost:8080/item/delete/1
+    @Operation(summary = "상품 삭제", description = "로그인한 판매자는 본인이 등록한 상품을 논리적으로 삭제한다.(db에는 상품이 존재하지만 보이지 않도록 수정한다.)")
+    @PatchMapping("/product/seller/register/{productId}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long productId) {
         try {
             productService.deleteProduct(productId);

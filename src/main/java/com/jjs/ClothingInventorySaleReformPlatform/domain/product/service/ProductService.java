@@ -67,11 +67,11 @@ public class ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found"));
 
-        // 상품 정보 삭제
-        productRepository.delete(product);
+        // 상품 정보 삭제(삭제 여부를 true로 설정)
+        product.setDeleted(true);
 
         // S3에서 이미지 파일 삭제 로직은 별도 메소드로 분리될 수 있음
-        productImgService.deleteImagesFromS3(product.getProductImg());
+        //productImgService.deleteImagesFromS3(product.getProductImg());
     }
 
     // 상품 수정 - 게시글 수정 시, 기존의 이미지를 삭제하고 새로운 이미지를 추가하는 방식
@@ -91,18 +91,12 @@ public class ProductService {
 
     // 로그인한 판매자가 등록한 전체 상품 조회
     public List<ProductListDTO> getProductsFindAll(String createBy) {
-        List<Product> products = productRepository.findByCreateBy(createBy);
+        List<Product> products = productRepository.findByCreateByAndIsDeletedFalse(createBy);
         return products.stream().map(product -> {
             Long likeCount = productLikeCountRepository.findByProductId(product.getId())
                     .map(ProductLikeCount::getLikeCount).orElse(0L); // 상품 ID를 기준으로 좋아요 개수 조회
             return productsFindAll(product, likeCount); // 상품 정보와 좋아요 개수를 포함하여 DTO 변환
         }).collect(Collectors.toList());
-        /*
-        return productRepository.findByCreateBy(createBy)
-                .stream()
-                .map(this::productsFindAll)
-                .collect(Collectors.toList());
-         */
     }
     private ProductListDTO productsFindAll(Product product, Long likeCount) {  // 상품 전체 조회 dto
         ProductListDTO dto = new ProductListDTO();
@@ -148,18 +142,12 @@ public class ProductService {
 
     // 판매자들이 등록한 상품들 전체 조회(모든 상품)
     public List<ProductListDTO> getAllProducts() {
-        List<Product> products = productRepository.findAll();
+        List<Product> products = productRepository.findByIsDeletedFalse();
         return products.stream().map(product -> {
             Long likeCount = productLikeCountRepository.findByProductId(product.getId())
                     .map(ProductLikeCount::getLikeCount).orElse(0L); // 없는 경우 0으로 처리
             return productsFindAll(product, likeCount); // 상품 정보와 좋아요 개수를 DTO로 변환
         }).collect(Collectors.toList());
-        /*
-        return productRepository.findAll()
-                .stream()
-                .map(this::productsFindAll)
-                .collect(Collectors.toList());
-         */
     }
 
     // 특정 검색어가 포함된 상품들 전체 조회
@@ -180,13 +168,13 @@ public class ProductService {
 
     // 상품 상세 조회
     public Optional<ProductDetailDTO> getProductsFindDetail(Long productId) {
-        return productRepository.findById(productId)
+        return productRepository.findByIdAndIsDeletedFalse(productId)
                 .map(this::productsFindOne);
     }
 
     // 카테고리별 상품 조회
     public List<ProductListDTO> getProductsByCategory(Long categoryId) {
-        List<Product> products = productRepository.findByCategoryId(categoryId);
+        List<Product> products = productRepository.findByCategoryIdAndIsDeletedFalse(categoryId);
         return products.stream().map(product -> {
             Long likeCount = productLikeCountRepository.findByProductId(product.getId())
                     .map(ProductLikeCount::getLikeCount).orElse(0L); // 상품 ID를 기준으로 좋아요 개수 조회

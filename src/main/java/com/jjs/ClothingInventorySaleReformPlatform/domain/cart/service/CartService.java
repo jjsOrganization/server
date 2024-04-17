@@ -69,7 +69,7 @@ public class CartService {
 
     // 장바구니에 상품 조회
     public List<ProductInfoDTO> userCartView(Cart cart) {
-        List<CartProduct> cartProducts = cartProductRepository.findByCartId(cart.getId());
+        List<CartProduct> cartProducts = cartProductRepository.findByCartIdAndProductIsDeletedFalse(cart.getId());
         return cartProducts.stream()
                 .map(ProductInfoDTO::from)
                 .collect(Collectors.toList());

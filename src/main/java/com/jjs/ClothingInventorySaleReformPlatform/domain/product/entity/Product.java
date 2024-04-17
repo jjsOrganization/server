@@ -36,6 +36,10 @@ public class Product extends BaseEntity {  // BaseEntity가 등록시간, 수정
     @Enumerated(EnumType.STRING)
     private ProductSellStatus productSellStatus; // 상품 상태 (품절 or 판매 가능)[SELL, SOLD_OUT]
 
+    // 논리적 삭제를 위한 필드
+    @Column
+    private boolean isDeleted = false;  // true : 1,  false : 0
+
     // 상품 삭제 시 이미지 DB 도 같이 삭제 , cascade 옵션
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @OrderBy("id asc")
