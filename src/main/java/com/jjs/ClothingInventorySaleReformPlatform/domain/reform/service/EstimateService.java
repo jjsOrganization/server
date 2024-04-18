@@ -165,15 +165,17 @@ public class EstimateService {
 
     /**
      * 견적서 조회
-     * @param estimateNumber
+     * @param requestNumber
      * @return
      */
     @Transactional
-    public EstimateResponseDTO getEstimate(Long estimateNumber) {
-        Estimate estimateById = estimateRepository.findEstimateById(estimateNumber)
+    public EstimateResponseDTO getEstimate(Long requestNumber) {
+        ReformRequest reformRequest = requestRepository.findReformRequestById(requestNumber)
+                .orElseThrow(() -> new IllegalStateException("요청서가 존재하지 않습니다."));
+        Estimate estimateById = estimateRepository.findEstimateByRequestNumber(reformRequest)
                 .orElseThrow(() -> new IllegalStateException("견적서가 존재하지 않습니다."));
         EstimateResponseDTO estimateResponseDTO = new EstimateResponseDTO();
-        estimateResponseDTO.setId(estimateById.getId());
+        estimateResponseDTO.setEstimateNumber(estimateById.getId());
         estimateResponseDTO.setClientEmail(estimateById.getPurchaserEmail().getEmail());
         estimateResponseDTO.setDesignerEmail(estimateById.getDesignerEmail().getEmail());
         estimateResponseDTO.setEstimateInfo(estimateById.getEstimateInfo());
