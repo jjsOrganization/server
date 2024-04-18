@@ -2,9 +2,12 @@ package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.service;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.entity.Portfolio;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.entity.Product;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.dto.response.GetEstimateNumberResponseDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.estimate.Estimate;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformRequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformRequest.ReformRequestImage;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformRequest.ReformRequestStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.repository.EstimateRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.entity.DesignerInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.entity.PurchaserInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.dto.response.ReformProductInfoDTO;
@@ -44,6 +47,7 @@ public class ReformRequestService {
     private final DesignerRepository designerRepository;
     private final ProductImgRepository productImgRepository;
     private final PortfolioRepository portfolioRepository;
+    private final EstimateRepository estimateRepository;
 
     private String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -102,6 +106,20 @@ public class ReformRequestService {
 
         return reformRequestDTO;
     }
+
+    @Transactional
+    public GetEstimateNumberResponseDTO getEstimateNumber(Long requestNumber) {
+        ReformRequest reformRequest = reformRequestRepository.findReformRequestById(requestNumber)
+                .orElseThrow(() -> new IllegalArgumentException("의뢰서가 존재하지 않습니다."));
+        Estimate estimate = estimateRepository.findEstimateByRequestNumber(reformRequest)
+                .orElseThrow(() -> new IllegalArgumentException("견적서가 존재하지 않습니다."));
+
+        GetEstimateNumberResponseDTO getEstimateNumberResponseDTO = new GetEstimateNumberResponseDTO();
+        getEstimateNumberResponseDTO.setEstimateNumber(estimate.getId());
+
+        return getEstimateNumberResponseDTO;
+    }
+
     @Transactional
     public void updateReformRequest(ReformRequestDTO reformRequestDTO, Long requestId) throws IOException {
 
