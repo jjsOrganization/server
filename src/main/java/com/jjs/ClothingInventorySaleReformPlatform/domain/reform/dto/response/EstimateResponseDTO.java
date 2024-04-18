@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class EstimateResponseDTO {
 
-    private Long id;  // 견적서 번호
+    private Long estimateNumber;  // 견적서 번호
     private String clientEmail;  // 의뢰자 이메일
     private String designerEmail;  // 디자이너 이메일
     private String estimateInfo;  // 의뢰 정보(내용)

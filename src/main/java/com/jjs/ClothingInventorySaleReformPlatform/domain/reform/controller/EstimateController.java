@@ -71,11 +71,11 @@ public class EstimateController {
         }
     }
 
-    @GetMapping(value = "/estimate/designer/estimateForm/{estimateNumber}")
+    @GetMapping(value = "/estimate/designer/estimateForm/{requestNumber}")
     @Operation(summary = "디자이너의 견적서 조회", description = "디자이너가 견적서를 수정할 때, 기존의 정보를 불러오는 용도로 사용한다.")
-    public ResponseEntity<?> getEstimateDetails(@PathVariable Long estimateNumber) {
+    public ResponseEntity<?> getEstimateDetails(@PathVariable Long requestNumber) {
         try {
-            EstimateResponseDTO estimateResponseDTO = estimateService.getEstimate(estimateNumber);
+            EstimateResponseDTO estimateResponseDTO = estimateService.getEstimate(requestNumber);
             return response.success(estimateResponseDTO, "견적서 조회 성공", HttpStatus.OK);
         } catch (Exception e) {
             log.error("견적서 조회 실패", e);
