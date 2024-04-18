@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.controller;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.dto.response.GetEstimateNumberResponseDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.dto.response.ReformProductInfoDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.dto.response.ReformRequestCheckPurchaserDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.dto.request.ReformRequestDTO;
@@ -110,6 +111,14 @@ public class ReformRequestController {
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
         return null;
+    }
+
+    @GetMapping("/returnEstimateNumber/{reformRequest}")
+    @Operation(summary = "요청서id로 견적서id 반환 Api")
+    public ResponseEntity<?> getEstimateNumber(@PathVariable Long reformRequest) {
+
+        GetEstimateNumberResponseDTO getEstimateNumberResponseDTO = reformRequestService.getEstimateNumber(reformRequest);
+        return response.success(getEstimateNumberResponseDTO, "조회 성공", HttpStatus.OK);
     }
 
 
