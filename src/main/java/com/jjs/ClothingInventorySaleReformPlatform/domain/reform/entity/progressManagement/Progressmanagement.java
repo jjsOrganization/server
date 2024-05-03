@@ -2,6 +2,7 @@ package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.progres
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformRequest.ReformRequest;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.estimate.Estimate;
+import com.jjs.ClothingInventorySaleReformPlatform.global.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "ProgressManagement")
-public class Progressmanagement {
+public class Progressmanagement extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
