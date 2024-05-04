@@ -70,4 +70,19 @@ public class ReformOutputController {
             return response.fail(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @Operation(summary = "작업물 수정 API", description = "제목과 내용을 포함하는 DTO를 사용하여 나머지 고정 항목들을 건드리지 않고 유연하게 수정한다.")
+    @PatchMapping(value = "/portfolio/reformOutput/edit/{progressNumber}")
+    public ResponseEntity<?> editContentsReformOutput(@Valid @RequestBody ReformOutputDTO reformOutputDTO, @PathVariable Long progressNumber) {
+        try {
+            reformOutputService.editReformOutput(reformOutputDTO, progressNumber);
+            return response.success("포트폴리오 작업물 수정 성공.", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            log.error("IllegalArgumentException");
+            return response.fail(e.getMessage(), HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            log.error("포트폴리오 작업물 수정 실페",e);
+            return response.fail(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

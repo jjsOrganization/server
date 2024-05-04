@@ -122,7 +122,15 @@ public class ReformOutputService {
         return editContentsReformOutputDTO;
     }
 
+    public void editReformOutput(ReformOutputDTO reformOutputDTO, Long progressNumber) {
+        ReformOutput reformOutput = reformOutputRepository.findByProgress_id(progressNumber)
+                .orElseThrow(() -> new IllegalArgumentException("progressId에 해당되는 작업물 없음"));
 
+        reformOutput.setTitle(reformOutputDTO.getTitle());
+        reformOutput.setExplanation(reformOutputDTO.getExplanation());
+
+        reformOutputRepository.save(reformOutput);
+    }
 
 
 }
