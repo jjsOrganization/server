@@ -4,6 +4,7 @@ import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.request.
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.request.ReformPeriodDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.response.EditContentsReformOutputDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.response.FixedReformOutputDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.response.ReformOutputDetailDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.entity.Portfolio;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.entity.ReformOutput;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.repository.PortfolioRepository;
@@ -23,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -132,5 +134,25 @@ public class ReformOutputService {
         reformOutputRepository.save(reformOutput);
     }
 
+    public Optional<ReformOutputDetailDTO> getReformOutput(Long progressNumber) {
+        ReformOutput reformOutput = reformOutputRepository.findByProgress_id(progressNumber)
+                .orElseThrow(() -> new IllegalArgumentException("progressId에 해당되는 작업물 없음"));
 
+        ReformOutputDetailDTO reformOutputDetailDTO = new ReformOutputDetailDTO();
+        reformOutputDetailDTO.setDesignerName(reformOutput.getName());
+        reformOutputDetailDTO.setTitle(reformOutput.getTitle());
+        reformOutputDetailDTO.setDate(reformOutput.getRegDate().toLocalDate());
+
+        reformOutputDetailDTO.setProductImgUrl(reformOutput.getProductImgUrl());
+        reformOutputDetailDTO.setReformRequestImgUrl(reformOutput.getReformRequestImgUrl());
+        reformOutputDetailDTO.setEstimateImgUrl(reformOutput.getEstimateImgUrl());
+        reformOutputDetailDTO.setCompleteImgUrl(reformOutput.getCompleteImgUrl());
+
+        reformOutputDetailDTO.setWorkingPeriod(reformOutput.getWorkingPeriod());
+        reformOutputDetailDTO.setCategory(reformOutput.getCategory());
+        reformOutputDetailDTO.setPrice(reformOutput.getPrice());
+        reformOutputDetailDTO.setExplanation(reformOutput.getExplanation());
+
+        return Optional.of(reformOutputDetailDTO);
+    }
 }

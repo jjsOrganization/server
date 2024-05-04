@@ -1,6 +1,7 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.entity;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.progressManagement.Progressmanagement;
+import com.jjs.ClothingInventorySaleReformPlatform.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import java.time.temporal.ChronoUnit;
 @Setter
 @Entity
 @Table(name = "OUTPUT")
-public class ReformOutput {
+public class ReformOutput extends BaseEntity {
     /**
      * 형상관리 번호로 작성 가능해야 함 -> 디자이너는 리폼 완료 후 해당 리폼 구역의 버튼으로 작업물 등록이 가능하도록 해야 함.
      */

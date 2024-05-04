@@ -1,8 +1,10 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.controller;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.PortfolioInfoDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.request.ReformOutputDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.response.EditContentsReformOutputDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.response.FixedReformOutputDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.response.ReformOutputDetailDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.entity.ReformOutput;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.service.ReformOutputService;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.dto.request.ReformRequestDTO;
@@ -16,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -82,6 +86,21 @@ public class ReformOutputController {
             return response.fail(e.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception e) {
             log.error("포트폴리오 작업물 수정 실페",e);
+            return response.fail(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation(summary = "작업물 상세 조회", description = "모든 사용자들이 작업물의 내용을 조회할 수 있다.")
+    @GetMapping(value = "/portfolio/reformOutput/detail/{progressNumber}")
+    public ResponseEntity<?> getReformOutputDetail(@PathVariable Long progressNumber) {
+        try {
+            Optional<ReformOutputDetailDTO> reformOutputDetail = reformOutputService.getReformOutput(progressNumber);
+            return response.success(reformOutputDetail, "포드폴리오 작업물 등록 시, 변동 항목 조회 완료", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            log.error("IllegalArgumentException");
+            return response.fail(e.getMessage(), HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            log.error("Exception", e);
             return response.fail(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
