@@ -1,13 +1,11 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.controller;
 
-import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.PortfolioInfoDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.request.ReformOutputDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.response.EditContentsReformOutputDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.response.FixedReformOutputDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.response.ReformOutputDetailDTO;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.entity.ReformOutput;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.response.ReformOutputListDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.service.ReformOutputService;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.dto.request.ReformRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.global.common.returnResponse.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,10 +13,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -95,13 +93,24 @@ public class ReformOutputController {
     public ResponseEntity<?> getReformOutputDetail(@PathVariable Long progressNumber) {
         try {
             Optional<ReformOutputDetailDTO> reformOutputDetail = reformOutputService.getReformOutput(progressNumber);
-            return response.success(reformOutputDetail, "포드폴리오 작업물 등록 시, 변동 항목 조회 완료", HttpStatus.OK);
+            return response.success(reformOutputDetail, "포트폴리오 작업물 등록 시, 변동 항목 조회 완료", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             log.error("IllegalArgumentException");
             return response.fail(e.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception e) {
             log.error("Exception", e);
             return response.fail(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation(summary = "포트폴리오 작업물들 조회", description = "모든 사용자들이 작업물들을 리스트로 조회할 수 있다. 리스트의 항목으로는 결과물 사진과 제목이 포함된다.")
+    @GetMapping(value = "/portfolio/reformOutput/list")
+    public ResponseEntity<?> getAllReformOutputs() {
+        try {
+            List<ReformOutputListDTO> reformOutputs = reformOutputService.getAllReformOutputs();
+            return response.success(reformOutputs, "포트폴리오 작업물들 조회 완료", HttpStatus.OK);
+        } catch (Exception e) {
+            return response.fail(e.getMessage(), "포트폴리오 작업물들 조회 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

@@ -5,6 +5,7 @@ import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.request.
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.response.EditContentsReformOutputDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.response.FixedReformOutputDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.response.ReformOutputDetailDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.response.ReformOutputListDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.entity.Portfolio;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.entity.ReformOutput;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.repository.PortfolioRepository;
@@ -24,7 +25,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -154,5 +157,12 @@ public class ReformOutputService {
         reformOutputDetailDTO.setExplanation(reformOutput.getExplanation());
 
         return Optional.of(reformOutputDetailDTO);
+    }
+
+    public List<ReformOutputListDTO> getAllReformOutputs() {
+        List<ReformOutput> reformOutputs = reformOutputRepository.findAll();
+        return reformOutputs.stream()
+                .map(ReformOutputListDTO::convertToDTO)
+                .collect(Collectors.toList());
     }
 }
