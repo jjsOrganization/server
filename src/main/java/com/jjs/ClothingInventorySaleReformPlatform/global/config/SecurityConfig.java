@@ -63,7 +63,7 @@ public class SecurityConfig{
                                 "/estimate/purchaser/**", "/progress/purchaser/img/**").hasRole("PURCHASER")
                         .requestMatchers("/auth/update-designer/address","/designer/portfolio/**",
                                 "/estimate/designer/estimateForm/**","/estimate/designer/requestForm/{requestNumber}",
-                                "/progress/designer/setImg/**", "/portfolio/reformOutput/upload/**").hasRole("DESIGNER")
+                                "/progress/designer/setImg/**", "/portfolio/reformOutput/upload/**", "/portfolio/reformOutput/edit/**").hasRole("DESIGNER")
                         .requestMatchers("/chat/**", "/chat", "/chatroom").hasAnyRole("PURCHASER","DESIGNER")
                         .anyRequest().authenticated());
 

@@ -2,6 +2,7 @@ package com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.service;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.request.ReformOutputDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.request.ReformPeriodDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.response.EditContentsReformOutputDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.response.FixedReformOutputDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.entity.Portfolio;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.entity.ReformOutput;
@@ -34,8 +35,6 @@ public class ReformOutputService {
     private final ReformRequestRepository reformRequestRepository;
     private final ProgressRepository progressRepository;
     private final ReformOutputRepository reformOutputRepository;
-
-    private String imageUploadPath = "ReformOutputImages/";
 
     private String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -82,7 +81,7 @@ public class ReformOutputService {
     }
 
     /**
-     * 포트폴리오 작업물 등록 시, 고정 항목 조회
+     * 포트폴리오 작업물 등록 및 수정 시, 고정 항목 조회
      * @param progressNumber 형상관리 id
      * @return fixedReformOutputDTO
      */
@@ -108,10 +107,19 @@ public class ReformOutputService {
         LocalDate endDate = progress.getUpdateDate().toLocalDate();
         ReformOutput reformOutput = new ReformOutput();
         fixedReformOutputDTO.setWorkingPeriod(reformOutput.calWorkingPeriod(startDate, endDate));
-        //System.out.println("startDate: " + startDate + "  endDate: " + endDate);
 
         return fixedReformOutputDTO;
+    }
 
+    public EditContentsReformOutputDTO getEditContentsByProgressId(Long progressNumber) {
+        ReformOutput reformOutput = reformOutputRepository.findByProgress_id(progressNumber)
+                .orElseThrow(() -> new IllegalArgumentException("progressId에 해당되는 작업물 없음"));
+
+        EditContentsReformOutputDTO editContentsReformOutputDTO = new EditContentsReformOutputDTO();
+        editContentsReformOutputDTO.setTitle(reformOutput.getTitle());
+        editContentsReformOutputDTO.setExplanation(reformOutput.getExplanation());
+
+        return editContentsReformOutputDTO;
     }
 
 
