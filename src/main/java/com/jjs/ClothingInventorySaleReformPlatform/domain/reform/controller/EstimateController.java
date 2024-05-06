@@ -71,7 +71,7 @@ public class EstimateController {
         }
     }
 
-    @GetMapping(value = "/estimate/designer/estimateForm/{requestNumber}")
+    @GetMapping(value = "/estimate/estimateForm/{requestNumber}")
     @Operation(summary = "디자이너의 견적서 조회", description = "디자이너가 견적서를 수정할 때, 기존의 정보를 불러오는 용도로 사용한다.")
     public ResponseEntity<?> getEstimateDetails(@PathVariable Long requestNumber) {
         try {
