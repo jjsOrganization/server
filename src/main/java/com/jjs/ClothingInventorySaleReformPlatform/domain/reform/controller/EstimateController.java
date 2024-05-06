@@ -60,7 +60,7 @@ public class EstimateController {
     }
 
     @PostMapping(value = "/estimate/designer/estimateForm/{requestNumber}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "디자이너의 견적서 작성", description = "디자이너가 견적서를 작성합니다.")
+    @Operation(summary = "디자이너의 견적서 작성", description = "디자이너가 견적서를 작성 및 저장합니다. 저장 시 상태는 WRITING 입니다.")
     public ResponseEntity<?> sendEstimate(@ModelAttribute EstimateRequestDTO estimateRequestDTO, @PathVariable Long requestNumber) {
         try {
             estimateService.saveEstimate(estimateRequestDTO, requestNumber);

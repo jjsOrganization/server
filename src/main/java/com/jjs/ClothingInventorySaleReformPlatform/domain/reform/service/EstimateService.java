@@ -131,7 +131,7 @@ public class EstimateService {
         estimate.setPurchaserEmail(reformRequest.getPurchaserEmail());
         estimate.setDesignerEmail(reformRequest.getDesignerEmail());
         estimate.setRequestNumber(reformRequest);
-        estimate.setEstimateStatus(EstimateStatus.REQUEST_WAITING);
+        estimate.setEstimateStatus(EstimateStatus.WRITING);
 
         estimate.setEstimateInfo(estimateRequestDTO.getEstimateInfo());
         estimate.setReformPrice(estimateRequestDTO.getReformPrice());  // 리폼 비용
@@ -200,7 +200,7 @@ public class EstimateService {
         Estimate estimate = estimateRepository.findEstimateById(estimateNumber)
                 .orElseThrow(() -> new IllegalArgumentException("견적서가 존재하지 않습니다."));
 
-        if (estimate.getEstimateStatus() != EstimateStatus.REQUEST_WAITING) {
+        if (estimate.getEstimateStatus() != EstimateStatus.WRITING) {
             throw new RuntimeException("이미 진행 중인 의뢰로 수정이 불가합니다.");
         } else {
             List<EstimateImage> imageList = estimateImgRepository.findAllByEstimateId(estimateNumber);
