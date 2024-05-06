@@ -71,7 +71,7 @@ public class ProgressManagementController {
         }
     }
 
-    @GetMapping("/progress/purchaser/img/{estimateNumber}")
+    @GetMapping("/progress/img/{estimateNumber}")
     @Operation(summary = "형상관리 이미지 조회", description = "디자이너가 등록한 형상관리 이미지들을 구매자가 조회한다.")
     public ResponseEntity<?> getProcessImg(@PathVariable Long estimateNumber) {
         try {
