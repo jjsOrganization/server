@@ -163,8 +163,27 @@ public class EstimateService {
         });
     }
 
+    public void submitEstimate(Long requestNumber) throws Exception {
+        ReformRequest reformRequest = requestRepository.findReformRequestById(requestNumber)
+                .orElseThrow(() -> new IllegalStateException("요청서가 존재하지 않습니다."));
+        Estimate estimateById = estimateRepository.findEstimateByRequestNumber(reformRequest)
+                .orElseThrow(() -> new IllegalStateException("견적서가 존재하지 않습니다."));
+        EstimateStatus estimateStatus = estimateById.getEstimateStatus();
+
+        try{
+            if(estimateStatus.equals(EstimateStatus.WRITING)){
+                estimateById.setEstimateStatus(EstimateStatus.REQUEST_WAITING);
+                estimateRepository.save(estimateById);
+            }else{
+                throw new Exception("작성 상태가 아닙니다.");
+            }
+        }catch (Exception e){
+            throw new Exception("상태 변경에 실패하였습니다.",e);
+        }
+    }
+
     /**
-     * 견적서 조회
+     * 디자이너의 견적서 조회
      * @param requestNumber
      * @return
      */
@@ -186,6 +205,40 @@ public class EstimateService {
         estimateResponseDTO.setEstimateStatus(estimateById.getEstimateStatus().name());
 
         return estimateResponseDTO;
+    }
+
+    /**
+     * 구매자의 견적서 조회
+     * @param requestNumber
+     * @return
+     */
+    @Transactional
+    public Optional<EstimateResponseDTO> getPurEstimate(Long requestNumber) {
+        ReformRequest reformRequest = requestRepository.findReformRequestById(requestNumber)
+                .orElseThrow(() -> new IllegalStateException("요청서가 존재하지 않습니다."));
+        Optional<Estimate> estimate = estimateRepository.findByRequestNumberAndEstimateStatusNot(reformRequest, EstimateStatus.WRITING);
+
+        if (!estimate.isPresent()) {
+            return Optional.empty();  // 견적서가 없으면 빈 Optional 반환
+        }
+
+        // 견적서가 있으면 DTO를 생성하고 반환
+        EstimateResponseDTO estimateResponseDTO = convertToDTO(estimate.get());
+        return Optional.of(estimateResponseDTO);
+    }
+
+    private EstimateResponseDTO convertToDTO(Estimate estimate) {
+        EstimateResponseDTO dto = new EstimateResponseDTO();
+        dto.setEstimateNumber(estimate.getId());
+        dto.setClientEmail(estimate.getPurchaserEmail().getEmail());
+        dto.setDesignerEmail(estimate.getDesignerEmail().getEmail());
+        dto.setEstimateInfo(estimate.getEstimateInfo());
+        dto.setTotalPrice(estimate.getPrice());
+        dto.setPrice(estimate.getReformPrice());
+        dto.setEstimateImg(estimate.getEstimateImg().get(0).getImgUrl());
+        dto.setRequestNumber(estimate.getRequestNumber().getId());
+        dto.setEstimateStatus(estimate.getEstimateStatus().name());
+        return dto;
     }
 
     /**

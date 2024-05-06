@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -61,7 +62,7 @@ public class EstimateController {
 
     @PostMapping(value = "/estimate/designer/estimateForm/{requestNumber}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "디자이너의 견적서 작성", description = "디자이너가 견적서를 작성 및 저장합니다. 저장 시 상태는 WRITING 입니다.")
-    public ResponseEntity<?> sendEstimate(@ModelAttribute EstimateRequestDTO estimateRequestDTO, @PathVariable Long requestNumber) {
+    public ResponseEntity<?> saveEstimate(@ModelAttribute EstimateRequestDTO estimateRequestDTO, @PathVariable Long requestNumber) {
         try {
             estimateService.saveEstimate(estimateRequestDTO, requestNumber);
             return response.success("견적서 등록 성공.", HttpStatus.OK);
@@ -71,7 +72,22 @@ public class EstimateController {
         }
     }
 
-    @GetMapping(value = "/estimate/estimateForm/{requestNumber}")
+    @PatchMapping(value = "/estimate/designer/estimateForm/{requestNumber}/submit")
+    @Operation(summary = "디자이너의 견적서 제출", description = "디자이너가 견적서를 저장 및 수정 이후 최종 제출하는 단계로 제출 시, 구매자에게 노출됩니다.")
+    public ResponseEntity<?> submitEstimate(@PathVariable Long requestNumber) {
+        try {
+            estimateService.submitEstimate(requestNumber);
+            return response.success("견적서 제출 성공.", HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            log.error("illegalStateException");
+            return response.fail(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            log.error("제출 실패",e);
+            return response.fail(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/estimate/designer/estimateForm/{requestNumber}")
     @Operation(summary = "디자이너의 견적서 조회", description = "디자이너가 견적서를 수정할 때, 기존의 정보를 불러오는 용도로 사용한다.")
     public ResponseEntity<?> getEstimateDetails(@PathVariable Long requestNumber) {
         try {
@@ -81,8 +97,24 @@ public class EstimateController {
             log.error("견적서 조회 실패", e);
             return response.fail("견적서 조회 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
+
+    @GetMapping(value = "/estimate/purchaser/estimateForm/{requestNumber}")
+    @Operation(summary = "구매자의 견적서 조회", description = "구매자가 견적서를 조회할 때 사용. 디자이너가 제출한 견적서에 대해 조회 가능")
+    public ResponseEntity<?> getPurEstimateDetails(@PathVariable Long requestNumber) {
+        try {
+            Optional<EstimateResponseDTO> estimateResponseDTO = estimateService.getPurEstimate(requestNumber);
+            return response.success(estimateResponseDTO, "견적서 조회 성공", HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            log.error("견적서가 존재하지 않습니다.");
+            return response.fail(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            log.error("견적서 조회 실패", e);
+            return response.fail("견적서 조회 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 
     @PutMapping(value = "/estimate/designer/estimateForm/{estimateNumber}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "디자이너의 견적서 수정", description = "디자이너가 견적서를 수정한다. getEstimateDetails으로 조회하고 수정하면 전체 내용이 덮어쓰기 형식으로 저장된다.")
