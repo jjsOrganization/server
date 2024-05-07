@@ -163,6 +163,7 @@ public class EstimateService {
         });
     }
 
+    @Transactional
     public void submitEstimate(Long requestNumber) throws Exception {
         ReformRequest reformRequest = requestRepository.findReformRequestById(requestNumber)
                 .orElseThrow(() -> new IllegalStateException("요청서가 존재하지 않습니다."));
