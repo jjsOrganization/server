@@ -1,5 +1,7 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.order.service;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.product.entity.Category;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.product.repository.CategoryRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.entity.PurchaserInfo;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.cart.entity.Cart;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.order.entity.Order;
@@ -20,6 +22,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -30,6 +35,7 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final PurchaserRepository purchaserRepository;
     private final CartRepository cartRepository;
+    private final CategoryRepository categoryRepository;
 
     @Transactional
     public Long createCartOrder(OrderDTO orderDTO) {
@@ -134,6 +140,20 @@ public class OrderService {
         }
         order.setTotalPrice(totalPrice);
         orderRepository.save(order);
+
+        Map<Category, Long> categoryCounts = order.getOrderDetails().stream()
+                .collect(Collectors.groupingBy(
+                        orderDetail -> orderDetail.getProduct().getCategory(),
+                        Collectors.summingLong(orderDetail -> orderDetail.getQuantity()) // 여기에서 각 상품의 개수를 합산합니다.
+                ));
+
+        // 집계된 데이터를 카테고리 테이블에 업데이트
+        categoryCounts.forEach((category, count) -> {
+            Category loadedCategory = categoryRepository.findById(category.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+            loadedCategory.setCompletedProductCount(loadedCategory.getCompletedProductCount() + count);
+            categoryRepository.save(loadedCategory);
+        });
     }
 
     /**

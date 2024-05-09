@@ -26,8 +26,8 @@ public class Category {  // 카테고리
     private List<Product> products = new ArrayList<>();
 
 
-    @Column(name = "water_usage_category")
-    private Integer waterUsageCategory;  // 카테고리별 물 사용량
+    @Column(name = "completed_product_count", nullable = false)
+    private Long completedProductCount = 0L;  // 초기값을 0으로 설정
 
     public Category(String name) {
         this.categoryName = name;
