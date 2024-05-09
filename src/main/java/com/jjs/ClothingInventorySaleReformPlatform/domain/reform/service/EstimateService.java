@@ -327,7 +327,7 @@ public class EstimateService {
         ReformOrderResponseDTO reformOrderResponseDTO = new ReformOrderResponseDTO();
         reformOrderResponseDTO.setProductPrice(estimate.getRequestNumber().getProductNumber().getPrice());  // 상품 가격
         reformOrderResponseDTO.setReformPrice(estimate.getReformPrice());  // 리폼 가격
-        reformOrderResponseDTO.setTotalPrice(estimate.getReformPrice());  // 총 가격
+        reformOrderResponseDTO.setTotalPrice(estimate.getReformPrice() + estimate.getRequestNumber().getProductNumber().getPrice());  // 총 가격
 
         return reformOrderResponseDTO;
     }
