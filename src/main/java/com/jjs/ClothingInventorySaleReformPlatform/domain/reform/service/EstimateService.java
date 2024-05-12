@@ -1,6 +1,8 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.service;
 
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.product.entity.Category;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.product.repository.CategoryRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.global.common.authentication.AuthenticationFacade;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.estimate.Estimate;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.estimate.EstimateImage;
@@ -45,6 +47,7 @@ public class EstimateService {
     private final ReformRequestRepository requestRepository;
     private final ReformOrderRepository reformOrderRepository;
     private final ProgressRepository progressRepository;
+    private final CategoryRepository categoryRepository;
 
     /**
      * 로그인한 디자이너의 요청받은 모든 의뢰 리스트를 불러오는 메소드
@@ -352,6 +355,15 @@ public class EstimateService {
 
         estimateRepository.save(estimate);
         reformOrderRepository.save(reformOrder);
+
+        // 카테고리 집계
+        Category category = reformOrder.getEstimate().getRequestNumber().getProductNumber().getCategory();
+        Category loadedCategory = categoryRepository.findById(category.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+
+        // 해당 카테고리의 completedProductCount를 1 증가시키고 저장
+        loadedCategory.setCompletedProductCount(loadedCategory.getCompletedProductCount() + 1);
+        categoryRepository.save(loadedCategory);
 
         Progressmanagement progressmanagement = new Progressmanagement();  // 형상관리 시작 -> 첫 번째 이미지(상품 사진) 등록
 
