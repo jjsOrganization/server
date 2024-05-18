@@ -51,7 +51,7 @@ public class SecurityConfig{
                         .requestMatchers("/auth/login", "/auth/login-test", "/auth/reissue", "/", "/auth/join-purchaser", "/auth/join-seller", "/auth/join-designer",
                                 "/designer/portfolio","/swagger-ui/**","/v3/api-docs/**", "/swagger-resources/**",
                                 "/product/all/like/desc","/ws/chat/**", "/returnEstimateNumber/{reformRequest}", "/portfolio/reformOutput/detail/{progressNumber}",
-                                "/calculate/saveWater").permitAll()
+                                "/portfolio/reformOutput/list", "/calculate/saveWater").permitAll()
                         .requestMatchers("/admin", "/auth/login-test", "/product/all", "/product/all/{keyword}", "/product/all/{productId}",
                                 "/product/all/detail/{productId}", "/product/category/{categoryId}", "/product/all/detail/{productId}/**",
                                 "/product/all/detail/{productId}/seller", "/user/role", "/auth/logout", "/auth/edit/**", "/auth/info/**",
@@ -64,7 +64,8 @@ public class SecurityConfig{
                                 "/estimate/purchaser/**", "/estimate/purchaser/estimateForm/{requestNumber}").hasRole("PURCHASER")
                         .requestMatchers("/auth/update-designer/address","/designer/portfolio/**",
                                 "/estimate/designer/estimateForm/**","/estimate/designer/requestForm/{requestNumber}",
-                                "/progress/designer/setImg/**", "/portfolio/reformOutput/upload/**", "/portfolio/reformOutput/edit/**").hasRole("DESIGNER")
+                                "/progress/designer/setImg/**", "/portfolio/reformOutput/upload/**", "/portfolio/reformOutput/edit/**",
+                                "/portfolio/reformOutput/designer/list").hasRole("DESIGNER")
                         .requestMatchers("/chat/**", "/chat", "/chatroom", "/progress/img/**").hasAnyRole("PURCHASER","DESIGNER")
                         .anyRequest().authenticated());
 

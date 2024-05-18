@@ -6,6 +6,7 @@ import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.response
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.response.ReformOutputDetailDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto.response.ReformOutputListDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.service.ReformOutputService;
+import com.jjs.ClothingInventorySaleReformPlatform.global.common.authentication.AuthenticationFacade;
 import com.jjs.ClothingInventorySaleReformPlatform.global.common.returnResponse.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,6 +28,7 @@ public class ReformOutputController {
 
     private final Response response;
     private final ReformOutputService reformOutputService;
+    private final AuthenticationFacade authenticationFacade;
 
     @Operation(summary = "포트폴리오 작업물 등록", description = "디자이너의 리폼 진행이 끝나면 형상관리 id로 작업물들을 등록한다.")
     @PostMapping(value = "/portfolio/reformOutput/upload/{progressNumber}")
@@ -108,6 +110,18 @@ public class ReformOutputController {
     public ResponseEntity<?> getAllReformOutputs() {
         try {
             List<ReformOutputListDTO> reformOutputs = reformOutputService.getAllReformOutputs();
+            return response.success(reformOutputs, "포트폴리오 작업물들 조회 완료", HttpStatus.OK);
+        } catch (Exception e) {
+            return response.fail(e.getMessage(), "포트폴리오 작업물들 조회 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation(summary = "로그인 한 디자이너의 포트폴리오 작업물들 조회", description = "로그인 한 디자이너의 작업물들을 리스트로 조회할 수 있다. 리스트의 항목으로는 결과물 사진과 제목이 포함된다.")
+    @GetMapping(value = "/portfolio/reformOutput/designer/list")
+    public ResponseEntity<?> getLoginReformOutputs() {
+        try {
+            String currentUsername = authenticationFacade.getCurrentUsername();
+            List<ReformOutputListDTO> reformOutputs = reformOutputService.getLoginReformOutputs(currentUsername);
             return response.success(reformOutputs, "포트폴리오 작업물들 조회 완료", HttpStatus.OK);
         } catch (Exception e) {
             return response.fail(e.getMessage(), "포트폴리오 작업물들 조회 실패", HttpStatus.INTERNAL_SERVER_ERROR);
