@@ -10,6 +10,9 @@ import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.entity.Portf
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.entity.ReformOutput;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.repository.PortfolioRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.repository.ReformOutputRepository;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.product.dto.response.ProductListDTO;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.product.entity.Product;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.product.entity.ProductLikeCount;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.estimate.Estimate;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.progressManagement.Progressmanagement;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformRequest.ReformRequest;
@@ -161,6 +164,13 @@ public class ReformOutputService {
 
     public List<ReformOutputListDTO> getAllReformOutputs() {
         List<ReformOutput> reformOutputs = reformOutputRepository.findAll();
+        return reformOutputs.stream()
+                .map(ReformOutputListDTO::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<ReformOutputListDTO> getLoginReformOutputs(String createBy) {
+        List<ReformOutput> reformOutputs = reformOutputRepository.findByCreateBy(createBy);
         return reformOutputs.stream()
                 .map(ReformOutputListDTO::convertToDTO)
                 .collect(Collectors.toList());
