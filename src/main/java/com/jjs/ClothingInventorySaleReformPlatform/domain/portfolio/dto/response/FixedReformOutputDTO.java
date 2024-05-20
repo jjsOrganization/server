@@ -8,6 +8,10 @@ import lombok.Setter;
 public class FixedReformOutputDTO {
 
     private String designerName;  // 디자이너 명
+    private String productName;  // 상품 명
+    private String designerProfileImg;  // 디자이너 사진
+    private String reformRequestInfo;  // 요청서 요청 사항
+    private String estimateInfo;  // 견적서 내용
 
     private String productImgUrl;  // 리폼 전 사진 - 상품 사진 -> 형상관리의 productImgUrl
     private String reformRequestImgUrl;  // 구매자 요청 사진 -> 요청서에서 [0]사진만 가져옴

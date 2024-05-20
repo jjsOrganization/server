@@ -104,6 +104,10 @@ public class ReformOutputService {
 
         FixedReformOutputDTO fixedReformOutputDTO = new FixedReformOutputDTO();
         fixedReformOutputDTO.setDesignerName(portfolio.getName());
+        fixedReformOutputDTO.setProductName(reformRequest.getProductNumber().getProductName());
+        fixedReformOutputDTO.setDesignerProfileImg(portfolio.getDesignerImage());
+        fixedReformOutputDTO.setReformRequestInfo(reformRequest.getRequestInfo());
+        fixedReformOutputDTO.setEstimateInfo(estimate.getEstimateInfo());
         fixedReformOutputDTO.setProductImgUrl(progress.getProductImgUrl());
         fixedReformOutputDTO.setReformRequestImgUrl(reformRequest.getReformRequestImageList().get(0).getImgUrl());
         fixedReformOutputDTO.setEstimateImgUrl(String.valueOf(estimate.getEstimateImg().get(0).getImgUrl()));
