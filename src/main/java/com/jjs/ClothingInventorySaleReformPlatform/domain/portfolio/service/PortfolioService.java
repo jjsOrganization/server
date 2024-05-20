@@ -102,13 +102,14 @@ public class PortfolioService {
 
         s3Service.fileDelete(imageUrlById.getDesignerImage()); // 저장된 이미지 삭제
 
-        String storedImageUrl = s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath); // s3에 저장한 이미지의 URL 반환
+        //String storedImageUrl = s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath); // s3에 저장한 이미지의 URL 반환
 
         portfolio.setDesignerEmail(user);
         portfolio.setId(portfolioDTO.getID());
         portfolio.setExplanation(portfolioDTO.getExplanation());
         portfolio.setName(portfolioDTO.getDesignerName());
-        portfolio.setDesignerImage(storedImageUrl);
+        portfolio.setDesignerImage(s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath));
+        portfolio.setReformPrice(s3Service.uploadFile(portfolioDTO.getPriceImage(), priceImageUploadPath));
 
         portfolioRepository.save(portfolio);
     }
