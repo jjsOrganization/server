@@ -37,6 +37,7 @@ public class PortfolioService {
      * @throws IOException
      */
     private String imageUploadPath = "PortfolioImages/";
+    private String priceImageUploadPath = "PortfolioImages/price/";
 
     private String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -60,6 +61,7 @@ public class PortfolioService {
             portfolio.setDesignerEmail(user);
             portfolio.setExplanation(portfolioDTO.getExplanation());
             portfolio.setDesignerImage(s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath));
+            portfolio.setReformPrice(s3Service.uploadFile(portfolioDTO.getPriceImage(), priceImageUploadPath));
             portfolio.setName(portfolioDTO.getDesignerName());
 
             portfolioRepository.save(portfolio);
@@ -100,13 +102,14 @@ public class PortfolioService {
 
         s3Service.fileDelete(imageUrlById.getDesignerImage()); // 저장된 이미지 삭제
 
-        String storedImageUrl = s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath); // s3에 저장한 이미지의 URL 반환
+        //String storedImageUrl = s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath); // s3에 저장한 이미지의 URL 반환
 
         portfolio.setDesignerEmail(user);
         portfolio.setId(portfolioDTO.getID());
         portfolio.setExplanation(portfolioDTO.getExplanation());
         portfolio.setName(portfolioDTO.getDesignerName());
-        portfolio.setDesignerImage(storedImageUrl);
+        portfolio.setDesignerImage(s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath));
+        portfolio.setReformPrice(s3Service.uploadFile(portfolioDTO.getPriceImage(), priceImageUploadPath));
 
         portfolioRepository.save(portfolio);
     }
@@ -121,6 +124,7 @@ public class PortfolioService {
         portfolioInfoDTO.setExplanation(portfolio.getExplanation());
         portfolioInfoDTO.setDesignerName(portfolio.getName());
         portfolioInfoDTO.setDesignerImagePath(portfolio.getDesignerImage());
+        portfolioInfoDTO.setPriceImagePath(portfolio.getReformPrice());
 
         User designer = portfolio.getDesignerEmail();
         portfolioInfoDTO.setDesignerEmail(designer.getEmail());
