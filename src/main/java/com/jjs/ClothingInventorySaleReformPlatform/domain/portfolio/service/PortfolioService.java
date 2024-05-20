@@ -124,6 +124,7 @@ public class PortfolioService {
         portfolioInfoDTO.setExplanation(portfolio.getExplanation());
         portfolioInfoDTO.setDesignerName(portfolio.getName());
         portfolioInfoDTO.setDesignerImagePath(portfolio.getDesignerImage());
+        portfolioInfoDTO.setPriceImagePath(portfolio.getReformPrice());
 
         User designer = portfolio.getDesignerEmail();
         portfolioInfoDTO.setDesignerEmail(designer.getEmail());
