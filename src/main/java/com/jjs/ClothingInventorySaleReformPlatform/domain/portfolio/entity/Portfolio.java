@@ -33,5 +33,8 @@ public class Portfolio extends BaseEntity {  // 포트폴리오 - 디자이너�
     @Column(name = "DESIGNER_IMAGE", nullable = false)
     private String designerImage;  // 디자이너 사진
 
+    @Column(name = "PRICE")
+    private String reformPrice;  // 가격표 이미지
+
 
 }

@@ -37,6 +37,7 @@ public class PortfolioService {
      * @throws IOException
      */
     private String imageUploadPath = "PortfolioImages/";
+    private String priceImageUploadPath = "PortfolioImages/price/";
 
     private String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -60,6 +61,7 @@ public class PortfolioService {
             portfolio.setDesignerEmail(user);
             portfolio.setExplanation(portfolioDTO.getExplanation());
             portfolio.setDesignerImage(s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath));
+            portfolio.setReformPrice(s3Service.uploadFile(portfolioDTO.getPriceImage(), priceImageUploadPath));
             portfolio.setName(portfolioDTO.getDesignerName());
 
             portfolioRepository.save(portfolio);
