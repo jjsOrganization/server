@@ -36,6 +36,7 @@ public class PortfolioService {
      * @param portfolioDTO(포트폴리오 입력 정보)
      * @throws IOException
      */
+
     private String imageUploadPath = "PortfolioImages/";
     private String priceImageUploadPath = "PortfolioImages/price/";
 
@@ -58,11 +59,9 @@ public class PortfolioService {
             throw new RuntimeException("이미 존재하는 이메일입니다.");
         }
         else{
-            portfolio.setDesignerEmail(user);
-            portfolio.setExplanation(portfolioDTO.getExplanation());
+
             portfolio.setDesignerImage(s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath));
             portfolio.setReformPrice(s3Service.uploadFile(portfolioDTO.getPriceImage(), priceImageUploadPath));
-            portfolio.setName(portfolioDTO.getDesignerName());
 
             portfolioRepository.save(portfolio);
 
@@ -86,7 +85,7 @@ public class PortfolioService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
 
         if(portfolioByDesignerEmail != null){
-            return Optional.of(convertToDTO(portfolioByDesignerEmail));
+            return Optional.of(Portfolio.convertToDTO(portfolioByDesignerEmail));
         }else{
             throw new RuntimeException("포트폴리오가 존재하지 않습니다.");
         }
@@ -94,8 +93,6 @@ public class PortfolioService {
 
     public void updatePortfolio(PortfolioDTO portfolioDTO) throws IOException {
         Portfolio portfolio = new Portfolio();
-        User user = new User();
-        user.setEmail(portfolioDTO.getDesignerEmail());
 
         ImageUrlMapping imageUrlById = portfolioRepository.findPortfolioById(portfolioDTO.getID()) // 저장되어있는 이미지의 URL 반환
                 .orElseThrow(() -> new IllegalArgumentException("이미지가 존재하지 않습니다."));
@@ -104,33 +101,12 @@ public class PortfolioService {
 
         //String storedImageUrl = s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath); // s3에 저장한 이미지의 URL 반환
 
-        portfolio.setDesignerEmail(user);
-        portfolio.setId(portfolioDTO.getID());
-        portfolio.setExplanation(portfolioDTO.getExplanation());
-        portfolio.setName(portfolioDTO.getDesignerName());
-        portfolio.setDesignerImage(s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath));
-        portfolio.setReformPrice(s3Service.uploadFile(portfolioDTO.getPriceImage(), priceImageUploadPath));
-
+        // portfolio 값 set
+        portfolio.updatePortfolio(portfolioDTO, portfolio, s3Service, imageUploadPath, priceImageUploadPath);
         portfolioRepository.save(portfolio);
     }
 
-    /**
-     * 포트폴리오 정보 DTO 객체로 변환 해주는 메소드
-     * @param portfolio
-     * @return
-     */
-    private PortfolioInfoDTO convertToDTO(Portfolio portfolio) {
-        PortfolioInfoDTO portfolioInfoDTO = new PortfolioInfoDTO();
-        portfolioInfoDTO.setExplanation(portfolio.getExplanation());
-        portfolioInfoDTO.setDesignerName(portfolio.getName());
-        portfolioInfoDTO.setDesignerImagePath(portfolio.getDesignerImage());
-        portfolioInfoDTO.setPriceImagePath(portfolio.getReformPrice());
 
-        User designer = portfolio.getDesignerEmail();
-        portfolioInfoDTO.setDesignerEmail(designer.getEmail());
-
-        return portfolioInfoDTO;
-    }
 
     /**
      * 모든 디자이너 정보 검색 메소드
@@ -142,7 +118,7 @@ public class PortfolioService {
     public List<PortfolioInfoDTO> getAllPortfolio() throws IOException{
         return portfolioRepository.findAll()
                 .stream()
-                .map(this::convertToDTO)
+                .map(Portfolio::convertToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -154,11 +130,11 @@ public class PortfolioService {
 
     public List<PortfolioInfoDTO> getPortfolioByName(String keyword) {
         Optional<List<Portfolio>> optionalPortfolios = portfolioRepository.findByNameContaining(keyword);
-        List<Portfolio> portfolios = optionalPortfolios.orElse(Collections.emptyList());
+        List<Portfolio> findPortfolioList = optionalPortfolios.orElse(Collections.emptyList());
 
-        return portfolios
+        return findPortfolioList
                 .stream()
-                .map(this::convertToDTO)
+                .map(Portfolio::convertToDTO)
                 .collect(Collectors.toList());
     }
 
