@@ -42,10 +42,10 @@ public class Portfolio extends BaseEntity {  // 포트폴리오 - 디자이너�
     @Column(name = "PRICE")
     private String reformPrice;  // 가격표 이미지
 
-    public void updatePortfolio(PortfolioDTO portfolioDTO, Portfolio portfolio, S3Service s3Service,
+    public void changePortfolio(PortfolioDTO portfolioDTO, Portfolio portfolio, String userEmail,S3Service s3Service,
                                 String imageUploadPath, String priceImageUploadPath) throws IOException {
         User user = new User();
-        user.setEmail(portfolioDTO.getDesignerEmail());
+        user.setEmail(userEmail);
 
         portfolio.setDesignerEmail(user);
         portfolio.setId(portfolioDTO.getID());

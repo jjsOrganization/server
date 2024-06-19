@@ -34,7 +34,6 @@ public class PortfolioDTO {
     @Schema(description = "디자이너 이메일")
     private String designerEmail; // 디자이너 이메일
 
-
     @Schema(description = "가격표 이미지")
     private MultipartFile priceImage; // 가격표 이미지
 
