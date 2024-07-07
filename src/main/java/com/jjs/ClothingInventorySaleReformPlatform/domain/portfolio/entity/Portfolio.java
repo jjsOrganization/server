@@ -42,18 +42,13 @@ public class Portfolio extends BaseEntity {  // 포트폴리오 - 디자이너�
     @Column(name = "PRICE")
     private String reformPrice;  // 가격표 이미지
 
-    public void changePortfolio(PortfolioDTO portfolioDTO, Portfolio portfolio, String userEmail,S3Service s3Service,
-                                String imageUploadPath, String priceImageUploadPath) throws IOException {
-        User user = new User();
-        user.setEmail(userEmail);
+    public void setPortfolio(String userEmail,
+                                String designerImageUploadPath, String priceImageUploadPath) throws IOException {
+        User user = new User(userEmail);
 
-        portfolio.setDesignerEmail(user);
-        portfolio.setId(portfolioDTO.getID());
-        portfolio.setExplanation(portfolioDTO.getExplanation());
-        portfolio.setName(portfolioDTO.getDesignerName());
-        portfolio.setDesignerImage(s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath));
-        portfolio.setReformPrice(s3Service.uploadFile(portfolioDTO.getPriceImage(), priceImageUploadPath));
-
+        this.setDesignerEmail(user);
+        this.setDesignerImage(designerImageUploadPath);
+        this.setReformPrice(priceImageUploadPath);
     }
 
     /**
@@ -61,6 +56,7 @@ public class Portfolio extends BaseEntity {  // 포트폴리오 - 디자이너�
      * @param portfolio
      * @return
      */
+
     public static PortfolioInfoDTO convertToDTO(Portfolio portfolio) {
         PortfolioInfoDTO portfolioInfoDTO = new PortfolioInfoDTO();
         portfolioInfoDTO.setExplanation(portfolio.getExplanation());

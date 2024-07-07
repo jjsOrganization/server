@@ -37,6 +37,9 @@ public class User implements UserDetails {  // 구매자
     @Column(name = "ROLE", nullable = false)
     private String role;  // 권한
 
+    public User(String email) {
+        this.email = email;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

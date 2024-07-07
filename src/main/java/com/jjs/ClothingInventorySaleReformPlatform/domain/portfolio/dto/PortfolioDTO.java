@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.entity.Portfolio;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -38,5 +39,13 @@ public class PortfolioDTO {
     private MultipartFile priceImage; // 가격표 이미지
 
 
+    public Portfolio toEntity(PortfolioDTO portfolioDTO) { // DTO 값으로 Entity 세팅
+        Portfolio portfolio = new Portfolio();
+        portfolio.setId(portfolioDTO.getID());
+        portfolio.setExplanation(portfolioDTO.getExplanation());
+        portfolio.setName(portfolioDTO.getDesignerName());
+
+        return portfolio;
+    }
 
 }

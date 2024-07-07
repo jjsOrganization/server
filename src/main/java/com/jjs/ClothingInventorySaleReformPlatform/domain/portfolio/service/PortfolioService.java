@@ -31,7 +31,6 @@ public class PortfolioService {
     private final S3Service s3Service;
     private final AuthenticationFacade authenticationFacade;
 
-
     private String imageUploadPath = "PortfolioImages/";
     private String priceImageUploadPath = "PortfolioImages/price/";
 
@@ -52,7 +51,7 @@ public class PortfolioService {
      */
     @Transactional
     public String savePortfolio(PortfolioDTO portfolioDTO) throws IOException {
-        Portfolio portfolio = new Portfolio();
+        Portfolio portfolio = portfolioDTO.toEntity(portfolioDTO);
 
         String userEmail = getCurrentUsername(); // 서비스 레이어에서는 현재 유저의 이메일만 파라미터로 제공하면 됨.
         // 이전에 User 객체를 생성해서 이메일을 set 해서 DesignerEmail에 set 했다면 현재는 이메일만 제공하면 엔티티 레이어에서 값 세팅하는 로직 수행
@@ -62,11 +61,34 @@ public class PortfolioService {
             throw new RuntimeException("이미 존재하는 이메일입니다.");
         }
         else{
-            portfolio.changePortfolio(portfolioDTO, portfolio, userEmail ,s3Service, imageUploadPath, priceImageUploadPath);
+            String storedDesignerImageUrl = s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath); // s3에 저장한 이미지의 URL 반환
+            String storedPriceImageUrl = s3Service.uploadFile(portfolioDTO.getPriceImage(), priceImageUploadPath); // s3에 저장한 가격표 이미지 URL 반환
+
+            portfolio.setPortfolio(userEmail , storedDesignerImageUrl, storedPriceImageUrl);
             portfolioRepository.save(portfolio);
 
             return portfolio.getDesignerEmail().getEmail();
         }
+    }
+
+    @Transactional
+    public void updatePortfolio(PortfolioDTO portfolioDTO) throws IOException {
+        Portfolio portfolio = portfolioDTO.toEntity(portfolioDTO);
+
+        String userEmail = getCurrentUsername(); // 서비스 레이어에서는 현재 유저의 이메일만 파라미터로 제공하면 됨.
+        // 이전에 User 객체를 생성해서 이메일을 set 해서 DesignerEmail에 set 했다면 현재는 이메일만 제공하면 엔티티 레이어에서 값 세팅하는 로직 수행
+
+        ImageUrlMapping imageUrlById = portfolioRepository.findPortfolioById(portfolioDTO.getID()) // 저장되어있는 이미지의 URL 반환
+                .orElseThrow(() -> new IllegalArgumentException("이미지가 존재하지 않습니다."));
+
+        s3Service.fileDelete(imageUrlById.getDesignerImage()); // 저장된 이미지 삭제
+
+        String storedDesignerImageUrl = s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath); // s3에 저장한 이미지의 URL 반환
+        String storedPriceImageUrl = s3Service.uploadFile(portfolioDTO.getPriceImage(), priceImageUploadPath); // s3에 저장한 가격표 이미지 URL 반환
+
+        // portfolio 값 set
+        portfolio.setPortfolio(userEmail, storedDesignerImageUrl, storedPriceImageUrl);
+        portfolioRepository.save(portfolio);
     }
 
     /**
@@ -79,7 +101,6 @@ public class PortfolioService {
 
         String designerEmail = authenticationFacade.getCurrentUsername(); // 로그인되어 있는 유저의 이메일
 
-
         Portfolio portfolioByDesignerEmail = (portfolioRepository.findByDesignerEmail_Email(designerEmail))
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
 
@@ -88,24 +109,6 @@ public class PortfolioService {
         }else{
             throw new RuntimeException("포트폴리오가 존재하지 않습니다.");
         }
-    }
-
-    @Transactional
-    public void updatePortfolio(PortfolioDTO portfolioDTO) throws IOException {
-        Portfolio portfolio = new Portfolio();
-        String userEmail = getCurrentUsername();
-
-        ImageUrlMapping imageUrlById = portfolioRepository.findPortfolioById(portfolioDTO.getID()) // 저장되어있는 이미지의 URL 반환
-                .orElseThrow(() -> new IllegalArgumentException("이미지가 존재하지 않습니다."));
-
-        s3Service.fileDelete(imageUrlById.getDesignerImage()); // 저장된 이미지 삭제
-
-        //String storedImageUrl = s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath); // s3에 저장한 이미지의 URL 반환
-
-        // portfolio 값 set
-        portfolio.changePortfolio(portfolioDTO, portfolio, userEmail
-                ,s3Service, imageUploadPath, priceImageUploadPath);
-        portfolioRepository.save(portfolio);
     }
 
 
