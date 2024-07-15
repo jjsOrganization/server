@@ -55,7 +55,7 @@ public class SecurityConfig{
                         .requestMatchers("/admin", "/auth/login-test", "/product/all", "/product/all/{keyword}", "/product/all/{productId}",
                                 "/product/all/detail/{productId}", "/product/category/{categoryId}", "/product/all/detail/{productId}/**",
                                 "/product/all/detail/{productId}/seller", "/user/role", "/auth/logout", "/auth/edit/**", "/auth/info/**",
-                                "/auth/update/**", "/chatroom/{requestNo}/email").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
+                                "/auth/update/**", "/chatroom/{requestNo}/email", "/portfolio/reformOutput/upload/**").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
                         .requestMatchers("/product/seller/register", "/product/seller/register/{productId}", "/product/seller/register", "/seller/info",
                                 "/order/seller-list/**", "/auth/update-seller/**").hasRole("SELLER")
                         .requestMatchers("/cart/purchaser/add/{productId}", "/cart/purchaser/**", "/reform-request/purchaser/**",
@@ -64,7 +64,7 @@ public class SecurityConfig{
                                 "/estimate/purchaser/**", "/estimate/purchaser/estimateForm/{requestNumber}").hasRole("PURCHASER")
                         .requestMatchers("/auth/update-designer/address","/designer/portfolio/**",
                                 "/estimate/designer/estimateForm/**","/estimate/designer/requestForm/{requestNumber}",
-                                "/progress/designer/setImg/**", "/portfolio/reformOutput/upload/**", "/portfolio/reformOutput/edit/**",
+                                "/progress/designer/setImg/**", "/portfolio/reformOutput/edit/**",
                                 "/portfolio/reformOutput/designer/list").hasRole("DESIGNER")
                         .requestMatchers("/chat/**", "/chat", "/chatroom", "/progress/img/**").hasAnyRole("PURCHASER","DESIGNER")
                         .anyRequest().authenticated());
