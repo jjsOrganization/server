@@ -12,7 +12,6 @@ import com.jjs.ClothingInventorySaleReformPlatform.domain.order.dto.OrderDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.order.dto.OrderDetailDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.repository.PurchaserRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.cart.repository.CartRepository;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.order.repository.OrderDetailRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.order.repository.OrderRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,55 +30,26 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final OrderDetailRepository orderDetailRepository;
     private final ProductRepository productRepository;
     private final PurchaserRepository purchaserRepository;
     private final CartRepository cartRepository;
     private final CategoryRepository categoryRepository;
 
     @Transactional
-    public Long createCartOrder(OrderDTO orderDTO) {
+    public Long createOrder(OrderDTO orderDTO, boolean isCart) {
         // 인증 정보에서 구매자 이메일 가져오기
         String currentUsername = getAuthentication();
 
-        // 사용자의 장바구니를 식별하기 위한 추가 로직
-        Cart cart = cartRepository.findByPurchaserInfoEmail(currentUsername);
-        if (cart == null) {
-            throw new IllegalStateException("현재 사용자에 대한 장바구니를 찾을 수 없습니다.");
-        }
         // 구매자 정보 조회
         PurchaserInfo purchaserInfo = purchaserRepository.findPurchaserByEmail(currentUsername);
 
-        // Order 엔티티 생성 - 코드에서 DTO 분리를 유지하고, 필요 시 toEntity 메소드를 통해 DTO에서 엔티티로 변환
-        Order saveOrder = orderDTO.toEntity(purchaserInfo);
-
-        // OrderDetail 생성
-        for (OrderDetailDTO detail : orderDTO.getOrderDetails()) {
-            Product product = productRepository.findById(detail.getProductId())
-                    .orElseThrow(() -> new IllegalArgumentException("상품 정보를 찾을 수 없습니다."));
-
-            if (detail.getQuantity() > product.getProductStock()) {
-                throw new IllegalArgumentException("상품 [" + product.getProductName() + "]의 재고가 부족합니다. 요청 수량: "
-                        + detail.getQuantity() + ", 재고: " + product.getProductStock());
+        // 사용자의 장바구니를 식별하기 위한 추가 로직 - 장바구니 내의 상품 id로 주문이 진행되야 되는데 현재는 전체 상품 id로 구매가 진행됨.(로직이 잘못됨) -> 추후 수정 필요
+        if (isCart) {
+            Cart cart = cartRepository.findByPurchaserInfoEmail(currentUsername);
+            if (cart == null) {
+                throw new IllegalStateException("현재 사용자에 대한 장바구니를 찾을 수 없습니다.");
             }
-
-            // OrderDetail 엔티티 생성 - 코드에서 DTO 분리를 유지하고, 필요 시 toEntity 메소드를 통해 DTO에서 엔티티로 변환
-            OrderDetail orderDetail = detail.toEntity(saveOrder, product);
-            saveOrder.addOrderDetail(orderDetail);
         }
-        orderRepository.save(saveOrder);
-        return saveOrder.getOrderId();
-    }
-
-
-
-    @Transactional
-    public Long createPageOrder(OrderDTO orderDTO) {
-        // 인증 정보에서 구매자 이메일 가져오기
-        String currentUsername = getAuthentication();
-
-        // 구매자 정보 조회
-        PurchaserInfo purchaserInfo = purchaserRepository.findPurchaserByEmail(currentUsername);
 
         // Order 엔티티 생성 - 코드에서 DTO 분리를 유지하고, 필요 시 toEntity 메소드를 통해 DTO에서 엔티티로 변환
         Order saveOrder = orderDTO.toEntity(purchaserInfo);

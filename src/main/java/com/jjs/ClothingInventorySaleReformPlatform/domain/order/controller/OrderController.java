@@ -28,7 +28,7 @@ public class OrderController {
     @Operation(summary = "장바구니에서 상품 구매(상품 구매 진행 중)", description = "장바구니에서 선택한 상품들(1개 이상)에 대하여 상품 구매가 진행된다. 주문자에 대한 정보 작성 이전 단계로 orders와 order_detail 테이블에 정보가 담기는 첫 단계이다.")
     public ResponseEntity<?> createCartOrder(@RequestBody OrderDTO orderDTO) {
         try {
-            Long orderId = orderService.createCartOrder(orderDTO);
+            Long orderId = orderService.createOrder(orderDTO, true);
             return response.success(orderId, "상품 구매 중", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
           log.error("Order post fail: ", e);
@@ -43,7 +43,7 @@ public class OrderController {
     @Operation(summary = "상품 상세 페이지에서 상품 구매(상품 구매 진행 중)", description = "상품상세페이지에서 선택한 상품(1개)에 대하여 상품 구매가 진행된다.")
     public ResponseEntity<?> createPageOrder(@RequestBody OrderDTO orderDTO) {
         try {
-            Long orderId = orderService.createPageOrder(orderDTO);
+            Long orderId = orderService.createOrder(orderDTO, false);
             return response.success(orderId, "상품 구매 중", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             log.error("Order post fail: ", e);
