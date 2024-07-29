@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.entity.Portfolio;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -34,10 +35,17 @@ public class PortfolioDTO {
     @Schema(description = "디자이너 이메일")
     private String designerEmail; // 디자이너 이메일
 
-
     @Schema(description = "가격표 이미지")
     private MultipartFile priceImage; // 가격표 이미지
 
 
+    public Portfolio toEntity() { // DTO 값으로 Entity 세팅
+        Portfolio portfolio = new Portfolio();
+        portfolio.setId(this.getID()); // 이렇게 수정하면 파라미터로 받던 PortfolioDTO를 안받아도 되는지 확인 필요
+        portfolio.setExplanation(this.getExplanation());
+        portfolio.setName(this.getDesignerName());
+
+        return portfolio;
+    }
 
 }

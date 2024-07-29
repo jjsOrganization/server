@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.service;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.repository.UserRepository;
 import com.jjs.ClothingInventorySaleReformPlatform.global.common.authentication.AuthenticationFacade;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.entity.Portfolio;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.entity.User;
@@ -30,14 +31,9 @@ public class PortfolioService {
     private final S3Service s3Service;
     private final AuthenticationFacade authenticationFacade;
 
-    /**
-     *
-     * portfolio 저장 메소드
-     * @param portfolioDTO(포트폴리오 입력 정보)
-     * @throws IOException
-     */
     private String imageUploadPath = "PortfolioImages/";
     private String priceImageUploadPath = "PortfolioImages/price/";
+
 
     private String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -47,27 +43,52 @@ public class PortfolioService {
         return null;
     }
 
+    /**
+     *
+     * portfolio 저장 메소드
+     * @param portfolioDTO(포트폴리오 입력 정보)
+     * @throws IOException
+     */
+    @Transactional
     public String savePortfolio(PortfolioDTO portfolioDTO) throws IOException {
-        Portfolio portfolio = new Portfolio();
-        User user = new User();  //이메일은 User타입이기 때문에 엔티티로 변환해주는 과정 필요
+        Portfolio portfolio = portfolioDTO.toEntity();
 
-        user.setEmail(getCurrentUsername());
+        String userEmail = getCurrentUsername(); // 서비스 레이어에서는 현재 유저의 이메일만 파라미터로 제공하면 됨.
+        // 이전에 User 객체를 생성해서 이메일을 set 해서 DesignerEmail에 set 했다면 현재는 이메일만 제공하면 엔티티 레이어에서 값 세팅하는 로직 수행
 
         // 이메일 이미 존재 할 경우
-        if (portfolioRepository.findByDesignerEmail(user).isPresent()) {
+        if (portfolioRepository.findByDesignerEmail_Email(userEmail).isPresent()) {
             throw new RuntimeException("이미 존재하는 이메일입니다.");
         }
-        else{
-            portfolio.setDesignerEmail(user);
-            portfolio.setExplanation(portfolioDTO.getExplanation());
-            portfolio.setDesignerImage(s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath));
-            portfolio.setReformPrice(s3Service.uploadFile(portfolioDTO.getPriceImage(), priceImageUploadPath));
-            portfolio.setName(portfolioDTO.getDesignerName());
 
-            portfolioRepository.save(portfolio);
+        String storedDesignerImageUrl = s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath); // s3에 저장한 이미지의 URL 반환
+        String storedPriceImageUrl = s3Service.uploadFile(portfolioDTO.getPriceImage(), priceImageUploadPath); // s3에 저장한 가격표 이미지 URL 반환
 
-            return user.getEmail();
-        }
+        portfolio.setPortfolio(userEmail, storedDesignerImageUrl, storedPriceImageUrl);
+        portfolioRepository.save(portfolio);
+
+        return portfolio.getDesignerEmail().getEmail();
+
+    }
+
+    @Transactional
+    public void updatePortfolio(PortfolioDTO portfolioDTO) throws IOException {
+        Portfolio portfolio = portfolioDTO.toEntity();
+
+        String userEmail = getCurrentUsername(); // 서비스 레이어에서는 현재 유저의 이메일만 파라미터로 제공하면 됨.
+        // 이전에 User 객체를 생성해서 이메일을 set 해서 DesignerEmail에 set 했다면 현재는 이메일만 제공하면 엔티티 레이어에서 값 세팅하는 로직 수행
+
+        ImageUrlMapping imageUrlById = portfolioRepository.findPortfolioById(portfolioDTO.getID()) // 저장되어있는 이미지의 URL 반환
+                .orElseThrow(() -> new IllegalArgumentException("이미지가 존재하지 않습니다."));
+
+        s3Service.fileDelete(imageUrlById.getDesignerImage()); // 저장된 이미지 삭제
+
+        String storedDesignerImageUrl = s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath); // s3에 저장한 이미지의 URL 반환
+        String storedPriceImageUrl = s3Service.uploadFile(portfolioDTO.getPriceImage(), priceImageUploadPath); // s3에 저장한 가격표 이미지 URL 반환
+
+        // portfolio 값 set
+        portfolio.setPortfolio(userEmail, storedDesignerImageUrl, storedPriceImageUrl);
+        portfolioRepository.save(portfolio);
     }
 
     /**
@@ -75,62 +96,21 @@ public class PortfolioService {
      * @param  -> String으로 입력 받으나, 엔티티 타입으로 선언되어 있기에 User 타입으로 변환하여 사용해야 함.
      * @return
      */
+    @Transactional
     public Optional<PortfolioInfoDTO> getPortfolio(){
 
         String designerEmail = authenticationFacade.getCurrentUsername(); // 로그인되어 있는 유저의 이메일
 
-        User user = new User();
-        user.setEmail(designerEmail);
-
-        Portfolio portfolioByDesignerEmail = (portfolioRepository.findByDesignerEmail(user))
+        Portfolio portfolioByDesignerEmail = (portfolioRepository.findByDesignerEmail_Email(designerEmail))
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
 
         if(portfolioByDesignerEmail != null){
-            return Optional.of(convertToDTO(portfolioByDesignerEmail));
+            return Optional.of(Portfolio.convertToDTO(portfolioByDesignerEmail));
         }else{
             throw new RuntimeException("포트폴리오가 존재하지 않습니다.");
         }
     }
 
-    public void updatePortfolio(PortfolioDTO portfolioDTO) throws IOException {
-        Portfolio portfolio = new Portfolio();
-        User user = new User();
-        user.setEmail(portfolioDTO.getDesignerEmail());
-
-        ImageUrlMapping imageUrlById = portfolioRepository.findPortfolioById(portfolioDTO.getID()) // 저장되어있는 이미지의 URL 반환
-                .orElseThrow(() -> new IllegalArgumentException("이미지가 존재하지 않습니다."));
-
-        s3Service.fileDelete(imageUrlById.getDesignerImage()); // 저장된 이미지 삭제
-
-        //String storedImageUrl = s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath); // s3에 저장한 이미지의 URL 반환
-
-        portfolio.setDesignerEmail(user);
-        portfolio.setId(portfolioDTO.getID());
-        portfolio.setExplanation(portfolioDTO.getExplanation());
-        portfolio.setName(portfolioDTO.getDesignerName());
-        portfolio.setDesignerImage(s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath));
-        portfolio.setReformPrice(s3Service.uploadFile(portfolioDTO.getPriceImage(), priceImageUploadPath));
-
-        portfolioRepository.save(portfolio);
-    }
-
-    /**
-     * 포트폴리오 정보 DTO 객체로 변환 해주는 메소드
-     * @param portfolio
-     * @return
-     */
-    private PortfolioInfoDTO convertToDTO(Portfolio portfolio) {
-        PortfolioInfoDTO portfolioInfoDTO = new PortfolioInfoDTO();
-        portfolioInfoDTO.setExplanation(portfolio.getExplanation());
-        portfolioInfoDTO.setDesignerName(portfolio.getName());
-        portfolioInfoDTO.setDesignerImagePath(portfolio.getDesignerImage());
-        portfolioInfoDTO.setPriceImagePath(portfolio.getReformPrice());
-
-        User designer = portfolio.getDesignerEmail();
-        portfolioInfoDTO.setDesignerEmail(designer.getEmail());
-
-        return portfolioInfoDTO;
-    }
 
     /**
      * 모든 디자이너 정보 검색 메소드
@@ -142,7 +122,7 @@ public class PortfolioService {
     public List<PortfolioInfoDTO> getAllPortfolio() throws IOException{
         return portfolioRepository.findAll()
                 .stream()
-                .map(this::convertToDTO)
+                .map(Portfolio::convertToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -152,13 +132,14 @@ public class PortfolioService {
      * @return 검색된 디자이너 정보 List
      */
 
+    @Transactional
     public List<PortfolioInfoDTO> getPortfolioByName(String keyword) {
         Optional<List<Portfolio>> optionalPortfolios = portfolioRepository.findByNameContaining(keyword);
-        List<Portfolio> portfolios = optionalPortfolios.orElse(Collections.emptyList());
+        List<Portfolio> findPortfolioList = optionalPortfolios.orElse(Collections.emptyList());
 
-        return portfolios
+        return findPortfolioList
                 .stream()
-                .map(this::convertToDTO)
+                .map(Portfolio::convertToDTO)
                 .collect(Collectors.toList());
     }
 
