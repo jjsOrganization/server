@@ -39,11 +39,11 @@ public class PortfolioDTO {
     private MultipartFile priceImage; // 가격표 이미지
 
 
-    public Portfolio toEntity(PortfolioDTO portfolioDTO) { // DTO 값으로 Entity 세팅
+    public Portfolio toEntity() { // DTO 값으로 Entity 세팅
         Portfolio portfolio = new Portfolio();
-        portfolio.setId(portfolioDTO.getID());
-        portfolio.setExplanation(portfolioDTO.getExplanation());
-        portfolio.setName(portfolioDTO.getDesignerName());
+        portfolio.setId(this.getID()); // 이렇게 수정하면 파라미터로 받던 PortfolioDTO를 안받아도 되는지 확인 필요
+        portfolio.setExplanation(this.getExplanation());
+        portfolio.setName(this.getDesignerName());
 
         return portfolio;
     }
