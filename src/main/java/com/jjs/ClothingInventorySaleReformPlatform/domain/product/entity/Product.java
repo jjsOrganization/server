@@ -74,4 +74,13 @@ public class Product extends BaseEntity {  // BaseEntity가 등록시간, 수정
         this.productDetailText = productFormDTO.getItemDetail();
         this.productSellStatus = productFormDTO.getProductSellStatus();
     }
+
+    public Product(String productName, int price, int productStock, String productDetailText, ProductSellStatus productSellStatus, Category category) {
+        this.productName = productName;
+        this.price = price;
+        this.productStock = productStock;
+        this.productDetailText = productDetailText;
+        this.productSellStatus = productSellStatus;
+        this.category = category;
+    }
 }

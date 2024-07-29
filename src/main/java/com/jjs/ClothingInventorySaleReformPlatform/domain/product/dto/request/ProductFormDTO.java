@@ -2,6 +2,7 @@ package com.jjs.ClothingInventorySaleReformPlatform.domain.product.dto.request;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.dto.ProductImgDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.entity.Category;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.product.entity.Product;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.entity.ProductSellStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -32,30 +33,17 @@ public class ProductFormDTO {  // 화면단에서 정보를 가져올 것
 
     private Category categoryId;
 
-
-
     private List<ProductImgDTO> productImgDtoList = new ArrayList<>();  // 상품 이미지 리스트
     private List<Long> productImgIds = new ArrayList<>();  // 상품 아이디만 관리하는 리스트
 
-
-
-/*
-    private static ModelMapper modelMapper = new ModelMapper();
-
-    public Product createProduct() {
-        Product product = modelMapper.map(this, Product.class);
-        return product;
+    public Product toEntity() {
+        return new Product(
+                this.productName,
+                this.price,
+                this.productStock,
+                this.itemDetail,
+                this.productSellStatus = ProductSellStatus.SELL,
+                this.categoryId
+        );
     }
-
-
-    public static ProductFormDTO entityToDto(Product product) {
-        ProductFormDTO productFormDTO = modelMapper.map(product, ProductFormDTO.class);
-        return productFormDTO;
-    }
-
- */
-
-    /*
-    private Category category;  // 카테고리 (상품 검색의 카테고리 선택을 위해 클래스 파일로 분류)
-     */
 }
