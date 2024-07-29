@@ -40,23 +40,18 @@ public class OrderService {
     @Transactional
     public Long createCartOrder(OrderDTO orderDTO) {
         // 인증 정보에서 구매자 이메일 가져오기
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
+        String currentUsername = getAuthentication();
 
         // 사용자의 장바구니를 식별하기 위한 추가 로직
         Cart cart = cartRepository.findByPurchaserInfoEmail(currentUsername);
         if (cart == null) {
             throw new IllegalStateException("현재 사용자에 대한 장바구니를 찾을 수 없습니다.");
         }
-
         // 구매자 정보 조회
         PurchaserInfo purchaserInfo = purchaserRepository.findPurchaserByEmail(currentUsername);
 
-        // Order 엔티티 생성
-        Order order = new Order();
-        order.setPurchaserInfo(purchaserInfo);
-        order.setOrderStatus(OrderStatus.ORDER_WAITING);  // 초기 상태
-        Order saveOrder = orderRepository.save(order);
+        // Order 엔티티 생성 - 코드에서 DTO 분리를 유지하고, 필요 시 toEntity 메소드를 통해 DTO에서 엔티티로 변환
+        Order saveOrder = orderDTO.toEntity(purchaserInfo);
 
         // OrderDetail 생성
         for (OrderDetailDTO detail : orderDTO.getOrderDetails()) {
@@ -68,31 +63,26 @@ public class OrderService {
                         + detail.getQuantity() + ", 재고: " + product.getProductStock());
             }
 
-            OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setOrder(saveOrder);
-            orderDetail.setProduct(product);
-            orderDetail.setQuantity(detail.getQuantity());
-            orderDetail.setPrice(product.getPrice() * detail.getQuantity());
-            orderDetailRepository.save(orderDetail);
+            // OrderDetail 엔티티 생성 - 코드에서 DTO 분리를 유지하고, 필요 시 toEntity 메소드를 통해 DTO에서 엔티티로 변환
+            OrderDetail orderDetail = detail.toEntity(saveOrder, product);
+            saveOrder.addOrderDetail(orderDetail);
         }
-
+        orderRepository.save(saveOrder);
         return saveOrder.getOrderId();
     }
+
+
 
     @Transactional
     public Long createPageOrder(OrderDTO orderDTO) {
         // 인증 정보에서 구매자 이메일 가져오기
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
+        String currentUsername = getAuthentication();
 
         // 구매자 정보 조회
         PurchaserInfo purchaserInfo = purchaserRepository.findPurchaserByEmail(currentUsername);
 
-        // Order 엔티티 생성
-        Order order = new Order();
-        order.setPurchaserInfo(purchaserInfo);
-        order.setOrderStatus(OrderStatus.ORDER_WAITING);  // 초기 상태
-        Order saveOrder = orderRepository.save(order);
+        // Order 엔티티 생성 - 코드에서 DTO 분리를 유지하고, 필요 시 toEntity 메소드를 통해 DTO에서 엔티티로 변환
+        Order saveOrder = orderDTO.toEntity(purchaserInfo);
 
         // OrderDetail 생성
         for (OrderDetailDTO detail : orderDTO.getOrderDetails()) {
@@ -104,14 +94,11 @@ public class OrderService {
                         + detail.getQuantity() + ", 재고: " + product.getProductStock());
             }
 
-            OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setOrder(saveOrder);
-            orderDetail.setProduct(product);
-            orderDetail.setQuantity(detail.getQuantity());
-            orderDetail.setPrice(product.getPrice() * detail.getQuantity());
-            orderDetailRepository.save(orderDetail);
+            // OrderDetail 엔티티 생성 - 코드에서 DTO 분리를 유지하고, 필요 시 toEntity 메소드를 통해 DTO에서 엔티티로 변환
+            OrderDetail orderDetail = detail.toEntity(saveOrder, product);
+            saveOrder.addOrderDetail(orderDetail);
         }
-
+        orderRepository.save(saveOrder);
         return saveOrder.getOrderId();
     }
 
@@ -183,5 +170,11 @@ public class OrderService {
             product.setProductStock(newStock);  // 업데이트된 재고 수량 설정
             productRepository.save(product);  // 변경된 상품 정보를 저장
         }
+    }
+
+    private static String getAuthentication() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        return currentUsername;
     }
 }

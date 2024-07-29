@@ -43,4 +43,8 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;  // 주문 상태
+
+    public void addOrderDetail(OrderDetail orderDetail) {
+        this.orderDetails.add(orderDetail);
+    }
 }
