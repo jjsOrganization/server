@@ -27,8 +27,7 @@ public class ProductLikeService {
      */
     public void addLike(Long productId) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
+        String currentUsername = getAuthentication();
 
         PurchaserInfo purchaser = purchaserRepository.findById(currentUsername)
                 .orElseThrow(() -> new IllegalArgumentException("구매자를 찾을 수 없습니다. -> 로그인 확인 필요"));
@@ -49,8 +48,7 @@ public class ProductLikeService {
      */
     public void removeLike(Long productId) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
+        String currentUsername = getAuthentication();
 
         PurchaserInfo purchaser = purchaserRepository.findById(currentUsername)
                 .orElseThrow(() -> new IllegalArgumentException("구매자를 찾을 수 없습니다. -> 로그인 확인 필요"));
@@ -66,8 +64,7 @@ public class ProductLikeService {
      * @return
      */
     public boolean isLikedByPurchaser(Long productId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
+        String currentUsername = getAuthentication();
 
         PurchaserInfo purchaser = purchaserRepository.findById(currentUsername)
                 .orElseThrow(() -> new IllegalArgumentException("구매자를 찾을 수 없습니다. -> 로그인 확인"));
@@ -75,5 +72,11 @@ public class ProductLikeService {
                 .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
 
         return productLikeRepository.existsByPurchaserAndProduct(purchaser, product);
+    }
+
+    private static String getAuthentication() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        return currentUsername;
     }
 }
