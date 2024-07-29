@@ -36,13 +36,7 @@ public class ProductService {
     public Long saveItem(ProductFormDTO productFormDTO, List<MultipartFile> itemImgFileList) throws Exception{
 
         //상품 등록
-        Product product = new Product();
-        product.setProductName(productFormDTO.getProductName());
-        product.setPrice(productFormDTO.getPrice());
-        product.setProductStock(productFormDTO.getProductStock());
-        product.setProductDetailText(productFormDTO.getItemDetail());
-        product.setProductSellStatus(ProductSellStatus.SELL);  // 초기값은 판매중으로 고정
-        product.setCategory(productFormDTO.getCategoryId());
+        Product product = productFormDTO.toEntity();
         productRepository.save(product);
 
         //이미지 등록
@@ -55,11 +49,10 @@ public class ProductService {
             else
                 productImg.setRepimgYn("N");
 
-            productImgService.uploadFile(productImg, itemImgFileList.get(i));
+            String imageUrl = productImgService.uploadFile(productImg, itemImgFileList.get(i));
+            productImg.setImgUrl(imageUrl);
         }
-
         return product.getId();
-
     }
 
     // 상품 삭제
@@ -69,9 +62,6 @@ public class ProductService {
 
         // 상품 정보 삭제(삭제 여부를 true로 설정)
         product.setDeleted(true);
-
-        // S3에서 이미지 파일 삭제 로직은 별도 메소드로 분리될 수 있음
-        //productImgService.deleteImagesFromS3(product.getProductImg());
     }
 
     // 상품 수정 - 게시글 수정 시, 기존의 이미지를 삭제하고 새로운 이미지를 추가하는 방식
@@ -158,12 +148,6 @@ public class ProductService {
                     .map(ProductLikeCount::getLikeCount).orElse(0L); // 상품 ID를 기준으로 좋아요 개수 조회, 없으면 0
             return productsFindAll(product, likeCount); // 상품 정보와 좋아요 개수를 포함하여 DTO 변환
         }).collect(Collectors.toList());
-        /*
-        return productRepository.findByProductNameContaining(keyword)
-                .stream()
-                .map(this::productsFindAll)
-                .collect(Collectors.toList());
-         */
     }
 
     // 상품 상세 조회
@@ -180,13 +164,5 @@ public class ProductService {
                     .map(ProductLikeCount::getLikeCount).orElse(0L); // 상품 ID를 기준으로 좋아요 개수 조회
             return productsFindAll(product, likeCount); // 상품 정보와 좋아요 개수를 포함하여 DTO 변환
         }).collect(Collectors.toList());
-        /*
-        return productRepository.findByCategoryId(categoryId)
-                .stream()
-                // 상품 엔티티를 ProductListDTO로 변환
-                .map(this::productsFindAll)
-                .collect(Collectors.toList());
-         */
-
     }
 }
