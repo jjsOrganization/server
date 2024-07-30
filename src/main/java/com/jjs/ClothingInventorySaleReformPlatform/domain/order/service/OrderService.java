@@ -6,7 +6,6 @@ import com.jjs.ClothingInventorySaleReformPlatform.domain.user.entity.PurchaserI
 import com.jjs.ClothingInventorySaleReformPlatform.domain.cart.entity.Cart;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.order.entity.Order;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.order.entity.OrderDetail;
-import com.jjs.ClothingInventorySaleReformPlatform.domain.order.entity.OrderStatus;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.entity.Product;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.order.dto.OrderDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.order.dto.OrderDetailDTO;
@@ -84,10 +83,8 @@ public class OrderService {
      */
     @Transactional
     public void updateOrder(String purchaserEmail, OrderDTO orderDTO) {
-
         // 현재 로그인한 사용자(구매자)의 가장 최근 주문을 조회
-        Order order = orderRepository.findTopByPurchaserInfoEmailOrderByOrderDateDesc(purchaserEmail)
-                        .orElseThrow(() -> new IllegalArgumentException("주문 정보를 찾을 수 없습니다."));
+        Order order = getLastOrder(purchaserEmail);
 
         order.updateOrderDetails(orderDTO);
 
@@ -100,35 +97,41 @@ public class OrderService {
         updateCategoryCounts(order.calculateCategoryCounts());
     }
 
-
-
     /**
      * 상품을 구매하면 구매한 상품의 개수만큼 상품의 재고를 감소시켜야됨.
-     *
      */
     @Transactional
     public void decreaseProductStock(String purchaserEmail) {
-        /*
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("주문 정보를 찾을 수 없습니다."));
-        */
-
         // 현재 로그인한 사용자(구매자)의 가장 최근 주문을 조회
-        Order order = orderRepository.findTopByPurchaserInfoEmailOrderByOrderDateDesc(purchaserEmail)
-                .orElseThrow(() -> new IllegalArgumentException("주문 정보를 찾을 수 없습니다."));
+        Order order = getLastOrder(purchaserEmail);
+        order.getOrderDetails().forEach(this::decreaseStock);  // 재고 감소
+    }
 
-        for (OrderDetail detail : order.getOrderDetails()) {
-            Product product = detail.getProduct();
-            int purchaseQuantity = detail.getQuantity();
+    /**
+     * 재고 감소
+     * @param detail
+     */
+    private void decreaseStock(OrderDetail detail) {
+        Product product = detail.getProduct();
+        int purchaseQuantity = detail.getQuantity();
 
-            // 현재 재고에서 수량 차감
-            int newStock = product.getProductStock() - purchaseQuantity;
-            if (newStock < 0) {
-                throw new IllegalStateException("상품의 재고가 부족합니다. 상품 ID: " + product.getId());
-            }
-            product.setProductStock(newStock);  // 업데이트된 재고 수량 설정
-            productRepository.save(product);  // 변경된 상품 정보를 저장
+        // 현재 재고에서 수량 차감
+        int newStock = product.getProductStock() - purchaseQuantity;
+        if (newStock < 0) {
+            throw new IllegalStateException("상품의 재고가 부족합니다. 상품명: " + product.getProductName() + ", 상품 ID: " + product.getId());
         }
+        product.setProductStock(newStock);  // 업데이트된 재고 수량 설정
+        productRepository.save(product);  // 변경된 상품 정보를 저장
+    }
+
+    /**
+     * // 현재 로그인한 사용자(구매자)의 가장 최근 주문을 조회
+     * @param purchaserEmail
+     * @return
+     */
+    private Order getLastOrder(String purchaserEmail) {
+        return orderRepository.findTopByPurchaserInfoEmailOrderByOrderDateDesc(purchaserEmail)
+                .orElseThrow(() -> new IllegalArgumentException("주문 정보를 찾을 수 없습니다."));
     }
 
     /**
