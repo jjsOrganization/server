@@ -33,4 +33,12 @@ public class Category {  // 카테고리
         this.categoryName = name;
     }
 
+    /**
+     * 상품 주문 완료 시, 상품에 해당되는 카테고리 수 증가
+     * @param count
+     */
+    public void incrementCompletedProductCount(Long count) {
+        this.completedProductCount += count;
+    }
+
 }

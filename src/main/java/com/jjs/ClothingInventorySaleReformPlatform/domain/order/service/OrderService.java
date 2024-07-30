@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +34,12 @@ public class OrderService {
     private final CartRepository cartRepository;
     private final CategoryRepository categoryRepository;
 
+    /**
+     * 상품 주문 첫 번째 절차 - db에 상품 정보 저장
+     * @param orderDTO
+     * @param isCart
+     * @return
+     */
     @Transactional
     public Long createOrder(OrderDTO orderDTO, boolean isCart) {
         // 인증 정보에서 구매자 이메일 가져오기
@@ -72,46 +77,30 @@ public class OrderService {
         return saveOrder.getOrderId();
     }
 
+    /**
+     * 상품 주문 두 번째 절차 - db에 회원 주문 정보(개인 정보) 저장
+     * @param purchaserEmail
+     * @param orderDTO
+     */
     @Transactional
     public void updateOrder(String purchaserEmail, OrderDTO orderDTO) {
-
-        /*
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("주문 정보를 찾을 수 없습니다."));
-         */
 
         // 현재 로그인한 사용자(구매자)의 가장 최근 주문을 조회
         Order order = orderRepository.findTopByPurchaserInfoEmailOrderByOrderDateDesc(purchaserEmail)
                         .orElseThrow(() -> new IllegalArgumentException("주문 정보를 찾을 수 없습니다."));
 
-        order.setPostcode(orderDTO.getPostcode());
-        order.setAddress(orderDTO.getAddress());
-        order.setDetailAddress(orderDTO.getDetailAddress());
-        order.setPhoneNumber(orderDTO.getPhoneNumber());
-        order.setDeliveryRequest(orderDTO.getDeliveryRequest());
-        order.setOrderStatus(OrderStatus.ORDER_COMPLETE); // 주문 완료 상태로 업데이트
+        order.updateOrderDetails(orderDTO);
+
         // 총 가격 계산
-        int totalPrice = 0;
-        for (OrderDetail detail : order.getOrderDetails()) {
-            totalPrice += detail.getPrice();  // detail.getPrice() : 상품 가격 * 수량
-        }
+        int totalPrice = order.calculateTotalPrice();
         order.setTotalPrice(totalPrice);
         orderRepository.save(order);
 
-        Map<Category, Long> categoryCounts = order.getOrderDetails().stream()
-                .collect(Collectors.groupingBy(
-                        orderDetail -> orderDetail.getProduct().getCategory(),
-                        Collectors.summingLong(orderDetail -> orderDetail.getQuantity()) // 여기에서 각 상품의 개수를 합산합니다.
-                ));
-
         // 집계된 데이터를 카테고리 테이블에 업데이트
-        categoryCounts.forEach((category, count) -> {
-            Category loadedCategory = categoryRepository.findById(category.getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Category not found"));
-            loadedCategory.setCompletedProductCount(loadedCategory.getCompletedProductCount() + count);
-            categoryRepository.save(loadedCategory);
-        });
+        updateCategoryCounts(order.calculateCategoryCounts());
     }
+
+
 
     /**
      * 상품을 구매하면 구매한 상품의 개수만큼 상품의 재고를 감소시켜야됨.
@@ -140,6 +129,19 @@ public class OrderService {
             product.setProductStock(newStock);  // 업데이트된 재고 수량 설정
             productRepository.save(product);  // 변경된 상품 정보를 저장
         }
+    }
+
+    /**
+     * 상품에 해당되는 카테고리의 집계 update
+     * @param categoryCounts
+     */
+    private void updateCategoryCounts(Map<Category, Long> categoryCounts) {
+        categoryCounts.forEach((category, count) -> {
+            Category loadedCategory = categoryRepository.findById(category.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+            loadedCategory.incrementCompletedProductCount(count);  // 상품 주문 완료 시, 상품에 해당되는 카테고리 수 증가
+            categoryRepository.save(loadedCategory);
+        });
     }
 
     private static String getAuthentication() {
