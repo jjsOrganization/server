@@ -1,5 +1,8 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.order.dto;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.order.entity.Order;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.order.entity.OrderStatus;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.entity.PurchaserInfo;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,4 +19,11 @@ public class OrderDTO {
     private String detailAddress;
     private String phoneNumber;
     private String deliveryRequest;
+
+    public Order toEntity(PurchaserInfo purchaserInfo) {
+        Order order = new Order();
+        order.setPurchaserInfo(purchaserInfo);
+        order.setOrderStatus(OrderStatus.ORDER_WAITING);
+        return order;
+    }
 }
