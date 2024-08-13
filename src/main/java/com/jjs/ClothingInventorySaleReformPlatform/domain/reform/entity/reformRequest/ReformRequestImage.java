@@ -25,4 +25,12 @@ public class ReformRequestImage extends BaseEntity {
     @JoinColumn(name = "REQUEST_NUMBER")
     private ReformRequest reformRequest;
 
+    /**
+     * 요청서 첨부 이미지 설정
+     */
+    public void setReformRequestImage(ReformRequest reformRequest, String imgPath) {
+        this.setReformRequest(reformRequest);
+        this.setImgUrl(imgPath);
+
+    }
 }

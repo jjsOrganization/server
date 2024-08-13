@@ -64,7 +64,7 @@ public class PortfolioService {
         String storedDesignerImageUrl = s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath); // s3에 저장한 이미지의 URL 반환
         String storedPriceImageUrl = s3Service.uploadFile(portfolioDTO.getPriceImage(), priceImageUploadPath); // s3에 저장한 가격표 이미지 URL 반환
 
-        portfolio.setPortfolio(userEmail, storedDesignerImageUrl, storedPriceImageUrl);
+        portfolio.setPortfolio(userEmail, storedDesignerImageUrl, storedPriceImageUrl); // toEntity 메소드에 파라미터로 넘겨서 합쳐버리는게 더 좋을듯?
         portfolioRepository.save(portfolio);
 
         return portfolio.getDesignerEmail().getEmail();
@@ -89,6 +89,7 @@ public class PortfolioService {
         // portfolio 값 set
         portfolio.setPortfolio(userEmail, storedDesignerImageUrl, storedPriceImageUrl);
         portfolioRepository.save(portfolio);
+
     }
 
     /**
