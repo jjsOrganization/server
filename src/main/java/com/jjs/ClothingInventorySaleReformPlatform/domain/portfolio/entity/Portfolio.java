@@ -42,15 +42,6 @@ public class Portfolio extends BaseEntity {  // 포트폴리오 - 디자이너�
     @Column(name = "PRICE")
     private String reformPrice;  // 가격표 이미지
 
-    public void setPortfolio(String userEmail,
-                                String designerImageUploadPath, String priceImageUploadPath) throws IOException {
-        User user = new User(userEmail);
-
-        this.setDesignerEmail(user);
-        this.setDesignerImage(designerImageUploadPath);
-        this.setReformPrice(priceImageUploadPath);
-    }
-
     /**
      * 포트폴리오 정보 DTO 객체로 변환 해주는 메소드
      * @param portfolio

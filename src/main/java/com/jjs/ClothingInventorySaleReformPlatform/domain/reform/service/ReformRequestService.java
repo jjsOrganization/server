@@ -128,6 +128,7 @@ public class ReformRequestService {
             // 수정할 리폼 의뢰서 정보 가져옴
             List<ReformRequestImage> requestImgList = reformRequestImgRepository.findAllByReformRequestId(requestId);
 
+            // entity 레이어에 메소드로 추출필요
             reformRequestById.setId(requestId); // 의뢰서 수정
             reformRequestById.setRequestPart(reformRequestDTO.getRequestPart());
             reformRequestById.setRequestPrice(reformRequestDTO.getRequestPrice());
