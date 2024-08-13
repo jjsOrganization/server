@@ -71,27 +71,23 @@ public class ReformRequestService {
         return reformProductInfoDTO;
     }
 
+    /**
+     * 리폼 요청서 저장 및 첨부 이미지 저장
+     */
     @Transactional
     public void saveReformRequest(ReformRequestDTO reformRequestDTO, Long itemId) throws Exception{
+
         // 구매자와 디자이너의 이메일 삽입을 위한 객체 생성
         PurchaserInfo purchaserInfo = purchaserRepository.findPurchaserByEmail(getCurrentUsername());
         DesignerInfo designerInfo = designerRepository.findDesignerByEmail(reformRequestDTO.getDesignerEmail());
+        Product productNumber = productRepository.findProductById(itemId);
 
         // 의뢰서 등록
-        ReformRequest reformRequest = new ReformRequest();
-        reformRequest.setRequestInfo(reformRequestDTO.getRequestInfo());
-        reformRequest.setRequestPart(reformRequestDTO.getRequestPart());
-        reformRequest.setRequestPrice(reformRequestDTO.getRequestPrice());
-        reformRequest.setRequestStatus(ReformRequestStatus.REQUEST_WAITING);
-
-        reformRequest.setPurchaserEmail(purchaserInfo);
-        reformRequest.setDesignerEmail(designerInfo);
-        reformRequest.setProductNumber(productRepository.findProductById(itemId));
+        ReformRequest reformRequest = reformRequestDTO.toEntity(purchaserInfo,designerInfo,productNumber);
         reformRequestRepository.save(reformRequest);
 
         // 첨부 이미지 등록
         saveImageList(reformRequestDTO,reformRequest);
-
     }
 
     @Transactional
@@ -100,7 +96,7 @@ public class ReformRequestService {
                 .orElseThrow(() -> new IllegalArgumentException("의뢰서가 존재하지 않습니다."));
 
         ReformRequestDTO reformRequestDTO = new ReformRequestDTO();
-        reformRequestDTO.setRequestInfo(reformRequestById.getRequestInfo());
+        reformRequestDTO.setRequestInfo(reformRequestById.getRequestInfo()); // 이런 부분에 대해서도 생성자를 만들어서 사용하는게 나은지?
         reformRequestDTO.setRequestPrice(reformRequestById.getRequestPrice());
         reformRequestDTO.setRequestPart(reformRequestById.getRequestPart());
 
@@ -149,13 +145,17 @@ public class ReformRequestService {
 
     }
 
+    /**
+     * 요청서에 첨부되는 이미지 저장
+     */
     @Transactional
     public void saveImageList(ReformRequestDTO reformRequestDTO, ReformRequest reformRequest) throws IOException {// 의뢰서 수정 이미지 저장
         reformRequestDTO.getRequestImg().forEach(requestImage -> {
             try {
                 ReformRequestImage reformRequestImage = new ReformRequestImage();
-                reformRequestImage.setImgUrl(s3Service.uploadFile(requestImage, "ReformRequestImage/"));
-                reformRequestImage.setReformRequest(reformRequest);
+                String imgPath = s3Service.uploadFile(requestImage, "ReformRequestImage/"); // 이미지 저장한 경로
+
+                reformRequestImage.setReformRequestImage(reformRequest, imgPath);
                 reformRequestImgRepository.save(reformRequestImage);
 
             } catch (IOException e) {

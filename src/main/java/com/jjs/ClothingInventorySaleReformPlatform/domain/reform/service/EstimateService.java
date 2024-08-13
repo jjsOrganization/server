@@ -98,7 +98,7 @@ public class EstimateService {
 
         ReformRequest reformRequestById = requestRepository.findReformRequestById(requestNumber)
                 .orElseThrow(() -> new IllegalArgumentException("의뢰서가 존재하지 않습니다."));
-        ReformRequestStatus requestStatus = reformRequestById.getRequestStatus();
+        ReformRequestStatus requestStatus = reformRequestById.getRequestStatus(); // enum 값 할당됨
         try{
             if(requestStatus.equals(ReformRequestStatus.REQUEST_WAITING)){
                 if(clientResponse.equals("수락")){

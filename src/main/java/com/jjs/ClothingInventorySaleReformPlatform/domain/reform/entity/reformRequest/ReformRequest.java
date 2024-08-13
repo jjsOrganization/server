@@ -16,7 +16,10 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "REFORM_REQUEST")
+
 public class ReformRequest extends BaseEntity {  // 의뢰서 - 의뢰번호, 의뢰자이메일, 디자이너이메일, 의뢰정보, 의뢰사진, 상태, 상품번호
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "REQUEST_NUMBER", nullable = false)
@@ -55,6 +58,16 @@ public class ReformRequest extends BaseEntity {  // 의뢰서 - 의뢰번호, �
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "PRODUCT_NUMBER", nullable = false)
     private Product productNumber;  // 상품 번호
+
+    /**
+     * 요청서 값 설정
+     */
+    public void setReformRequest(PurchaserInfo purchaserInfo,
+                                    DesignerInfo designerInfo, Product productNumber) {
+        this.setPurchaserEmail(purchaserInfo);
+        this.setDesignerEmail(designerInfo);
+        this.setProductNumber(productNumber);
+        }
 
 /*
 
