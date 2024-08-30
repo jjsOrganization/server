@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.dto.response;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.product.entity.Product;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.entity.ProductImg;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,4 +17,10 @@ public class ReformProductInfoDTO {
     private int price;  // 가격
     private List<ProductImg> productImg;
 
+    public ReformProductInfoDTO(Long id, Product product , List<ProductImg> productImg) {
+        this.id = id;
+        this.productName = product.getProductName();
+        this.price = product.getPrice();
+        this.productImg = productImg;
+    }
 }

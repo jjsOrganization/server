@@ -35,18 +35,19 @@ public class ReformRequestController {
     private final ReformRequestService reformRequestService;
     private final Response response;
 
-    @GetMapping("/reform-request/purchaser/creation/{itemId}")
-    @Operation(summary = "리폼 의뢰 페이지 이동", description = "리폼 의뢰를 위한 폼을 불러옵니다.")
-    public ResponseEntity<?> getReformRequestForm(@Valid @PathVariable Long itemId) {
-
-        try{
-            ReformProductInfoDTO reformProductInfoDTO = reformRequestService.getProductInfo(itemId);
-            return response.success(reformProductInfoDTO, "리폼 페이지에 접속했습니다.", HttpStatus.OK);
-
-        }catch(Exception e){
-            return response.fail("상품 정보를 찾을 수 없습니다.", HttpStatus.BAD_REQUEST);
-        }
-    }
+    // 사용 안하는 API
+//    @GetMapping("/reform-request/purchaser/creation/{itemId}")
+//    @Operation(summary = "리폼 의뢰 페이지 이동", description = "리폼 의뢰를 위한 폼을 불러옵니다.")
+//    public ResponseEntity<?> getReformRequestForm(@Valid @PathVariable Long itemId) {
+//
+//        try{
+//            ReformProductInfoDTO reformProductInfoDTO = reformRequestService.getProductInfo(itemId);
+//            return response.success(reformProductInfoDTO, "리폼 페이지에 접속했습니다.", HttpStatus.OK);
+//
+//        }catch(Exception e){
+//            return response.fail("상품 정보를 찾을 수 없습니다.", HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
     @PostMapping(value = "/reform-request/purchaser/creation/{itemId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "리폼 요청 사항 저장", description = "리폼 요청 사항을 저장합니다.")
@@ -77,7 +78,7 @@ public class ReformRequestController {
         }
     }
 
-    @PutMapping(value = "/reform-request/purchaser/modification/{requestId}", consumes = MediaType.MULTIPART_MIXED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/reform-request/purchaser/modification/{requestId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "리폼 수정 사항 저장", description = "리폼 수정 사항을 저장합니다. ")
     public ResponseEntity<?> updateReformRequest(@ModelAttribute ReformRequestDTO reformRequestDTO, BindingResult bindingResult,
                                                  @PathVariable Long requestId) throws Exception {
@@ -98,21 +99,6 @@ public class ReformRequestController {
         return response.success(reformRequestCheckDTOList, "구매자 요청 의뢰 내역 조회 완료", HttpStatus.OK);
     }
 
-    private static ResponseEntity<Object> getObjectResponseEntity(boolean bindingResult, BindingResult bindingResult1, ErrorCode invalidBadRequest) {
-        if (bindingResult) {
-            List<ErrorResponse.FieldError> fieldErrors = bindingResult1.getFieldErrors().stream()
-                    .map(fieldError -> new ErrorResponse.FieldError(
-                            fieldError.getField(),
-                            fieldError.getRejectedValue() == null ? "" : fieldError.getRejectedValue().toString(),
-                            fieldError.getDefaultMessage()))
-                    .collect(Collectors.toList());
-
-            ErrorResponse errorResponse = new ErrorResponse(invalidBadRequest, fieldErrors);
-            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-        }
-        return null;
-    }
-
     @GetMapping("/returnEstimateNumber/{reformRequest}")
     @Operation(summary = "요청서id로 견적서id 반환 Api")
     public ResponseEntity<?> getEstimateNumber(@PathVariable Long reformRequest) {
@@ -121,5 +107,19 @@ public class ReformRequestController {
         return response.success(getEstimateNumberResponseDTO, "조회 성공", HttpStatus.OK);
     }
 
+//    private static ResponseEntity<Object> getObjectResponseEntity(boolean bindingResult, BindingResult bindingResult1, ErrorCode invalidBadRequest) {
+//        if (bindingResult) {
+//            List<ErrorResponse.FieldError> fieldErrors = bindingResult1.getFieldErrors().stream()
+//                    .map(fieldError -> new ErrorResponse.FieldError(
+//                            fieldError.getField(),
+//                            fieldError.getRejectedValue() == null ? "" : fieldError.getRejectedValue().toString(),
+//                            fieldError.getDefaultMessage()))
+//                    .collect(Collectors.toList());
+//
+//            ErrorResponse errorResponse = new ErrorResponse(invalidBadRequest, fieldErrors);
+//            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+//        }
+//        return null;
+//    }
 
 }

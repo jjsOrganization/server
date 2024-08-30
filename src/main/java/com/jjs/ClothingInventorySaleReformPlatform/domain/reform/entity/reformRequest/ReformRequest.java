@@ -1,5 +1,6 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.reform.entity.reformRequest;
 
+import com.jjs.ClothingInventorySaleReformPlatform.domain.reform.dto.request.ReformRequestDTO;
 import com.jjs.ClothingInventorySaleReformPlatform.global.common.entity.BaseEntity;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.product.entity.Product;
 import com.jjs.ClothingInventorySaleReformPlatform.domain.user.entity.DesignerInfo;
@@ -8,6 +9,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,18 +62,23 @@ public class ReformRequest extends BaseEntity {  // 의뢰서 - 의뢰번호, �
     private Product productNumber;  // 상품 번호
 
     /**
-     * 요청서 값 설정
+     * 요청서 값 수정
      */
-    public void setReformRequest(PurchaserInfo purchaserInfo,
-                                    DesignerInfo designerInfo, Product productNumber) {
-        this.setPurchaserEmail(purchaserInfo);
-        this.setDesignerEmail(designerInfo);
-        this.setProductNumber(productNumber);
+    public void updateReformRequestInfo(String requestInfo, String requestPart, String requestPrice) {
+        this.requestInfo = requestInfo;
+        this.requestPart = requestPart;
+        this.requestPrice = requestPrice;
         }
 
-/*
+        // 서비스 레이어에서 객체 생성, 값 세팅까지 하는거보다는 이렇게 DTO를 생성하는 메소드로 바꾸는게 좋은지?
+    public ReformRequestDTO toDTO() {
+        ReformRequestDTO reformRequestDTO = new ReformRequestDTO();
+        reformRequestDTO.setRequestInfo(this.getRequestInfo());
+        reformRequestDTO.setRequestPart(this.getRequestPart());
+        reformRequestDTO.setRequestPrice(this.getRequestPrice());
+        reformRequestDTO.setDesignerEmail(this.getDesignerEmail().getEmail());
+//        reformRequestDTO.setRequestImg(this.getReformRequestImageList());
+        return reformRequestDTO;
+    }
 
-    @OneToMany(mappedBy = "requestNumber")
-    private Set<Estimate> estimates = new LinkedHashSet<>();
-*/
 }
