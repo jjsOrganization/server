@@ -37,9 +37,16 @@ public class Progressmanagement extends BaseTimeEntity {
     @JoinColumn(name = "ESTIMATE_NUMBER", nullable = false)
     private Estimate estimateNumber;  // 견적서 번호
 
+    @Column(name = "PRODUCT_IMG_URL", nullable = false, length = 1000)
     private String productImgUrl;  // 리폼 전 사진 - 상품 사진
+
+    @Column(name = "FIRST_IMG_URL", nullable = false, length = 1000)
     private String firstImgUrl;  // 리폼 중 사진 1
+
+    @Column(name = "SECOND_IMG_URL", nullable = false, length = 1000)
     private String secondImgUrl;  // 리폼 중 사진 2
+
+    @Column(name = "COMPLETE_IMG_URL", nullable = false, length = 1000)
     private String completeImgUrl;  // 리폼 완료 사진
 
     /**

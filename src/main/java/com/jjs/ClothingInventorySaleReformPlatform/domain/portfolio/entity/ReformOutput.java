@@ -30,9 +30,16 @@ public class ReformOutput extends BaseEntity {
     @Column(name = "DESIGNER_NAME")
     private String name;  // 디자이너명
 
+    @Column(name = "PRODUCT_IMG_URL", length = 1000)
     private String productImgUrl;  // 리폼 전 사진 - 상품 사진 -> 형상관리의 productImgUrl
+
+    @Column(name = "REFORM_REQUEST_IMG_URL", length = 1000)
     private String reformRequestImgUrl;  // 구매자 요청 사진 -> 요청서에서 [0]사진만 가져옴
+
+    @Column(name = "ESTIMATE_IMG_URL", length = 1000)
     private String estimateImgUrl;  // 디자이너 견적서 사진 -> 견적서에서 가져옴
+
+    @Column(name = "COMPLETE_IMG_URL", length = 1000)
     private String completeImgUrl;  // 리폼 완료 사진 -> 형상관리에서 completeImgUrl
 
     @NotNull

@@ -18,7 +18,7 @@ public class ReformRequestImage extends BaseEntity {
     @Column(name = "REQUEST_IMG_NUMBER", nullable = false)
     private Long id;  // 리폼 의뢰 이미지 번호
 
-    @Column(name = "REQUEST_IMG", nullable = false)
+    @Column(name = "REQUEST_IMG", nullable = false, length = 1000)
     private String imgUrl;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
