@@ -51,9 +51,9 @@ public class SecurityConfig{
                         .requestMatchers("/auth/login", "/auth/login-test", "/auth/reissue", "/", "/auth/join-purchaser", "/auth/join-seller", "/auth/join-designer",
                                 "/designer/portfolio","/swagger-ui/**","/v3/api-docs/**", "/swagger-resources/**",
                                 "/product/all/like/desc","/ws/chat/**", "/returnEstimateNumber/{reformRequest}", "/portfolio/reformOutput/detail/{progressNumber}",
-                                "/portfolio/reformOutput/list", "/calculate/saveWater").permitAll()
-                        .requestMatchers("/admin", "/auth/login-test", "/product/all", "/product/all/{keyword}", "/product/all/{productId}",
-                                "/product/all/detail/{productId}", "/product/category/{categoryId}", "/product/all/detail/{productId}/**",
+                                "/portfolio/reformOutput/list", "/calculate/saveWater", "/portfolio/all", "/portfolio/{portfolioid}/detail",
+                                "/product/all", "/product/all/{keyword}", "/product/all/{productId}", "/product/all/detail/{productId}", "/portfolio/{keyword}").permitAll()
+                        .requestMatchers("/admin", "/auth/login-test", "/product/category/{categoryId}", "/product/all/detail/{productId}/**",
                                 "/product/all/detail/{productId}/seller", "/user/role", "/auth/logout", "/auth/edit/**", "/auth/info/**",
                                 "/auth/update/**", "/chatroom/{requestNo}/email", "/portfolio/reformOutput/upload/**").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
                         .requestMatchers("/product/seller/register", "/product/seller/register/{productId}", "/product/seller/register", "/seller/info",
