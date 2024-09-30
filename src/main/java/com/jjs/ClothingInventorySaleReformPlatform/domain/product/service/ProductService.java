@@ -48,8 +48,7 @@ public class ProductService {
             else
                 productImg.setRepimgYn("N");
 
-            String imageUrl = productImgService.uploadFile(productImg, itemImgFileList.get(i));
-            productImg.setImgUrl(imageUrl);
+            productImgService.uploadFile(productImg, itemImgFileList.get(i));
         }
         return product.getId();
     }
