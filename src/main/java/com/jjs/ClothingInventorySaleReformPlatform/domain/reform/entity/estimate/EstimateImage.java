@@ -16,7 +16,7 @@ public class EstimateImage extends BaseEntity {
     @Column(name = "ESTIMATE_IMG_NUMBER", nullable = false)
     private Long id;  // 견적서 이미지 번호
 
-    @Column(name = "ESTIMATE_IMG", nullable = false)
+    @Column(name = "ESTIMATE_IMG", nullable = false, length = 1000)
     private String imgUrl;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
