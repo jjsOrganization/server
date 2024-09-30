@@ -15,7 +15,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
@@ -37,12 +37,19 @@ spring:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
 
 logging:
   level:
+    org.apache.kafka: ERROR
     org:
       springframework: DEBUG
       security: DEBUG
+
         # Uncomment the following line if needed
       # web: DEBUG
 
