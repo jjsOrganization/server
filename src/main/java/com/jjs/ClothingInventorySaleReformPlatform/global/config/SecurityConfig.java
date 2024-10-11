@@ -62,7 +62,7 @@ public class SecurityConfig{
                                 "/product/all/detail/{productId}/like", "/order/purchaser-list", "/auth/update-purchaser/address",
                                 "/reform/purchaser/requests/**",
                                 "/estimate/purchaser/**", "/estimate/purchaser/estimateForm/{requestNumber}").hasRole("PURCHASER")
-                        .requestMatchers("/auth/update-designer/address","/designer/portfolio/**",
+                        .requestMatchers("/auth/update-designer/address","/portfolio/designer/**",
                                 "/estimate/designer/estimateForm/**","/estimate/designer/requestForm/{requestNumber}",
                                 "/progress/designer/setImg/**", "/portfolio/reformOutput/edit/**",
                                 "/portfolio/reformOutput/designer/list").hasRole("DESIGNER")
