@@ -13,6 +13,9 @@ import lombok.Setter;
 @Setter
 public class PortfolioInfoDTO {
 
+    @Schema(description = "포트폴리오 ID")
+    private Long PortfolioId; // 포트폴리오 ID
+
     @Schema(description = "자기소개 및 설명")
     private String explanation; // 자기소개 & 설명
 

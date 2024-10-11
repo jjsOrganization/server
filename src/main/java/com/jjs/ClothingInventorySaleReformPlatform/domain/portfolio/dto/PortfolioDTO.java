@@ -1,6 +1,7 @@
 package com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.dto;
 
 import com.jjs.ClothingInventorySaleReformPlatform.domain.portfolio.entity.Portfolio;
+import com.jjs.ClothingInventorySaleReformPlatform.domain.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -39,11 +40,17 @@ public class PortfolioDTO {
     private MultipartFile priceImage; // 가격표 이미지
 
 
-    public Portfolio toEntity() { // DTO 값으로 Entity 세팅
+    public Portfolio toEntity(String userEmail,String storedDesignerImageUrl,String storedPriceImageUrl) { // DTO 값으로 Entity 세팅
         Portfolio portfolio = new Portfolio();
-        portfolio.setId(this.getID()); // 이렇게 수정하면 파라미터로 받던 PortfolioDTO를 안받아도 되는지 확인 필요
+        User user = new User(userEmail);
+
+        // DTO 객체에서 값을 뽑아와서 Entity에 set하는 로직이기에 this 사용
+        portfolio.setId(this.getID());
         portfolio.setExplanation(this.getExplanation());
         portfolio.setName(this.getDesignerName());
+        portfolio.setDesignerEmail(user);
+        portfolio.setDesignerImage(storedDesignerImageUrl);
+        portfolio.setReformPrice(storedPriceImageUrl);
 
         return portfolio;
     }

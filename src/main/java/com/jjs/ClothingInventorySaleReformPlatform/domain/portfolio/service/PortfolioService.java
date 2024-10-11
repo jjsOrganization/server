@@ -51,8 +51,9 @@ public class PortfolioService {
      */
     @Transactional
     public String savePortfolio(PortfolioDTO portfolioDTO) throws IOException {
-        Portfolio portfolio = portfolioDTO.toEntity();
 
+        String storedDesignerImageUrl = s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath); // s3에 저장한 이미지의 URL 반환
+        String storedPriceImageUrl = s3Service.uploadFile(portfolioDTO.getPriceImage(), priceImageUploadPath); // s3에 저장한 가격표 이미지 URL 반환
         String userEmail = getCurrentUsername(); // 서비스 레이어에서는 현재 유저의 이메일만 파라미터로 제공하면 됨.
         // 이전에 User 객체를 생성해서 이메일을 set 해서 DesignerEmail에 set 했다면 현재는 이메일만 제공하면 엔티티 레이어에서 값 세팅하는 로직 수행
 
@@ -61,10 +62,7 @@ public class PortfolioService {
             throw new RuntimeException("이미 존재하는 이메일입니다.");
         }
 
-        String storedDesignerImageUrl = s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath); // s3에 저장한 이미지의 URL 반환
-        String storedPriceImageUrl = s3Service.uploadFile(portfolioDTO.getPriceImage(), priceImageUploadPath); // s3에 저장한 가격표 이미지 URL 반환
-
-        portfolio.setPortfolio(userEmail, storedDesignerImageUrl, storedPriceImageUrl); // toEntity 메소드에 파라미터로 넘겨서 합쳐버리는게 더 좋을듯?
+        Portfolio portfolio = portfolioDTO.toEntity(userEmail, storedDesignerImageUrl, storedPriceImageUrl);
         portfolioRepository.save(portfolio);
 
         return portfolio.getDesignerEmail().getEmail();
@@ -73,8 +71,9 @@ public class PortfolioService {
 
     @Transactional
     public void updatePortfolio(PortfolioDTO portfolioDTO) throws IOException {
-        Portfolio portfolio = portfolioDTO.toEntity();
 
+        String storedDesignerImageUrl = s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath); // s3에 저장한 이미지의 URL 반환
+        String storedPriceImageUrl = s3Service.uploadFile(portfolioDTO.getPriceImage(), priceImageUploadPath); // s3에 저장한 가격표 이미지 URL 반환
         String userEmail = getCurrentUsername(); // 서비스 레이어에서는 현재 유저의 이메일만 파라미터로 제공하면 됨.
         // 이전에 User 객체를 생성해서 이메일을 set 해서 DesignerEmail에 set 했다면 현재는 이메일만 제공하면 엔티티 레이어에서 값 세팅하는 로직 수행
 
@@ -83,11 +82,8 @@ public class PortfolioService {
 
         s3Service.fileDelete(imageUrlById.getDesignerImage()); // 저장된 이미지 삭제
 
-        String storedDesignerImageUrl = s3Service.uploadFile(portfolioDTO.getDesignerImage(),imageUploadPath); // s3에 저장한 이미지의 URL 반환
-        String storedPriceImageUrl = s3Service.uploadFile(portfolioDTO.getPriceImage(), priceImageUploadPath); // s3에 저장한 가격표 이미지 URL 반환
-
+        Portfolio portfolio = portfolioDTO.toEntity(userEmail, storedDesignerImageUrl, storedPriceImageUrl);
         // portfolio 값 set
-        portfolio.setPortfolio(userEmail, storedDesignerImageUrl, storedPriceImageUrl);
         portfolioRepository.save(portfolio);
 
     }
