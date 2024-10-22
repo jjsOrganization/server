@@ -46,7 +46,7 @@ public class ReformOutputController {
     }
 
     @Operation(summary = "포트폴리오 작업물 등록 및 수정 시, 고정 항목 조회", description = "디자이너가 작업물 등록 시, 직접 작성하는 항목을 제외한 나머지 항목들을 확인할 수 있다.")
-    @GetMapping(value = "/portfolio/reformOutput/upload/{progressNumber}")
+    @GetMapping(value = "/portfolio/reformOutput/get/{progressNumber}")
     public ResponseEntity<?> getUploadReformOutput(@PathVariable Long progressNumber) {
         try {
             FixedReformOutputDTO fixedReformOutputDTO = reformOutputService.getReformOutputByProgressId(progressNumber);

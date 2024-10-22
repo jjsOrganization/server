@@ -52,7 +52,8 @@ public class SecurityConfig{
                                 "/designer/portfolio","/swagger-ui/**","/v3/api-docs/**", "/swagger-resources/**",
                                 "/product/all/like/desc","/ws/chat/**", "/returnEstimateNumber/{reformRequest}", "/portfolio/reformOutput/detail/{progressNumber}",
                                 "/portfolio/reformOutput/list", "/calculate/saveWater", "/portfolio/all", "/portfolio/{portfolioid}/detail",
-                                "/product/all", "/product/all/{keyword}", "/product/all/{productId}", "/product/all/detail/{productId}", "/portfolio/{keyword}").permitAll()
+                                "/product/all", "/product/all/{keyword}", "/product/all/{productId}", "/product/all/detail/{productId}", "/portfolio/{keyword}",
+                                "/portfolio/reformOutput/get/{progressNumber}").permitAll()
                         .requestMatchers("/admin", "/auth/login-test", "/product/category/{categoryId}", "/product/all/detail/{productId}/**",
                                 "/product/all/detail/{productId}/seller", "/user/role", "/auth/logout", "/auth/edit/**", "/auth/info/**",
                                 "/auth/update/**", "/chatroom/{requestNo}/email", "/portfolio/reformOutput/upload/**").hasAnyRole("PURCHASER", "SELLER", "DESIGNER")
